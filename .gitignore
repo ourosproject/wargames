@@ -1,0 +1,21 @@
+# secrets & lab-specific config — NEVER commit these
+range.config.json
+.env
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+known_hosts
+
+# dependencies / build / heavy artifacts
+node_modules/
+dist/
+downloads/
+*.iso
+*.qcow2
+*.tar.gz
+*.tar.zst
+
+# os / editor noise
+.DS_Store
+*.log

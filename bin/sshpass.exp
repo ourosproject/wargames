@@ -1,0 +1,17 @@
+#!/usr/bin/env expect
+# Generic SSH password helper for Purple Range.
+#   Usage: sshpass.exp <password> ssh [args...] user@host 'cmd'
+# Feeds <password> to the ssh password prompt so password-auth hosts work
+# without sshpass installed. Authorized-lab use only — see SECURITY.md.
+set timeout 40
+set pw  [lindex $argv 0]
+set cmd [lrange $argv 1 end]
+log_user 0
+eval spawn $cmd
+expect {
+  -re "(?i)\\(yes/no"  { send "yes\r"; exp_continue }
+  -re "(?i)password:"  { send "$pw\r"; log_user 1; exp_continue }
+  eof
+}
+catch wait result
+exit [lindex $result 3]
