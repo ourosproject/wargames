@@ -8,6 +8,7 @@ id_ed25519*
 known_hosts
 
 # dependencies / build / heavy artifacts
+target/
 node_modules/
 dist/
 downloads/
@@ -19,3 +20,6 @@ downloads/
 # os / editor noise
 .DS_Store
 *.log
+
+# local tooling config
+.claude/

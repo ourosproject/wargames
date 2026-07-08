@@ -30,29 +30,40 @@ streamed live.
 
 | Path | What |
 |---|---|
-| `command-center/` | The zero-dependency Node dashboard + backend (the star). |
-| `range.config.example.json` | The one file you edit — your hosts, zones, firewall policy, and (pluggable) AI victim. |
-| `ops` (in `server.js`) | The operations catalog: recon · access · AI-injection · governance/defense. |
+| `command-center/` | The dashboard + backend — **one static Rust binary** (axum + tokio, frontend embedded). The star. |
+| `range.config.example.json` | The one file you edit — your hosts, zones, firewall policy, and (pluggable) AI victim. Generate it with `purple-range setup`. |
+| `ops` (in `command-center/src/main.rs`) | The operations catalog: recon · access · AI-injection · governance/defense. |
 | `wargame/` | The red-cell / blue-cell agents + rules of engagement _(Claude Code powered — coming)_. |
-| `mini-range/` | A `docker compose` single-box range for people without Proxmox _(coming)_. |
+| `mini-range/` | A `docker compose` single-box range for people without Proxmox. |
 
 ## Quickstart (bring-your-own hosts)
 
 ```bash
 git clone <your-fork> purple-range && cd purple-range
 
-cp range.config.example.json range.config.json   # edit: your hosts, IPs, zones, AI agent
-cp .env.example .env                              # fill in any SSH/sudo passwords
+# build the command center — one static binary, no runtime deps
+cargo build --release --manifest-path command-center/Cargo.toml
+BIN=command-center/target/release/purple-range
 
-node command-center/server.js                     # → http://localhost:4899
+# configure your range — the wizard writes range.config.json (+ a gitignored .env)
+$BIN setup
+#   ...or copy the example and edit it by hand:
+#   cp range.config.example.json range.config.json && cp .env.example .env
+
+# launch — run from the repo root; it reads ./range.config.json and ./bin
+$BIN                                              # → http://localhost:4899
 ```
 
 You need SSH access to your range hosts (key or password, configured per host) and,
 optionally, a Wazuh SIEM for the live telemetry feed. Everything lab-specific lives in
 `range.config.json` and `.env` — **both are gitignored; no secrets ever enter the repo.**
 
-Don't have a Proxmox lab? A `docker compose` mini-range is coming so you can try the whole
-thing on one box (with reduced network-segmentation fidelity).
+Don't have a Proxmox lab? See [`mini-range/`](mini-range/) — a `docker compose` single-box
+range that runs the whole thing on one host (with reduced network-segmentation fidelity):
+
+```bash
+cd mini-range && docker compose up --build         # → http://localhost:4899
+```
 
 ## The wargame
 
