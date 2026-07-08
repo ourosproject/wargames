@@ -1,0 +1,81 @@
+{
+  "$comment": "Copy to range.config.json and edit for YOUR lab. Never commit range.config.json or .env — both are gitignored. Passwords are NOT stored here; they are referenced by environment-variable name and loaded from .env (see .env.example).",
+
+  "name": "My Homelab Purple Range",
+  "port": 4899,
+
+  "transport": {
+    "ssh_config": "~/.ssh/range_config",
+    "password_helper": "bin/sshpass.exp",
+    "connect_timeout": 8
+  },
+
+  "inference": {
+    "url": "http://10.20.40.20:11434",
+    "model": "qwen2.5:7b",
+    "allow_insecure": true
+  },
+
+  "siem": {
+    "host": "siem",
+    "alerts_path": "/var/ossec/logs/alerts/alerts.json",
+    "sudo_pw_env": "RANGE_SIEM_SUDO_PW"
+  },
+
+  "hosts": {
+    "attacker": {
+      "ip": "10.20.10.5", "role": "attacker", "zone": "v10",
+      "auth": "pw", "user": "kali", "pw_env": "RANGE_ATTACKER_PW"
+    },
+    "target-a": {
+      "ip": "10.20.20.11", "role": "victim", "zone": "v20",
+      "auth": "key", "cfg": "range-target-a", "home": "/home/user",
+      "ai_victim": {
+        "$comment": "Pluggable: point these at YOUR governed agent. {input}=payload file, {report}=batch report path. env is prepended to the command.",
+        "env": "AGENT=/home/user/agent/bin/agent OUROS_ALLOW_INSECURE=1",
+        "headless": "$AGENT --headless --input-file {input}",
+        "batch": "$AGENT --batch {input} --batch-report {report}",
+        "list_tools": "$AGENT --list-tools",
+        "audit_verify": "$AGENT --audit-verify",
+        "secret_path": "/srv/agent/secret/flag.txt",
+        "gov_dir": "~/gov"
+      }
+    },
+    "target-b": {
+      "ip": "10.20.20.12", "role": "victim", "zone": "v20",
+      "auth": "key", "cfg": "range-target-b", "home": "/root",
+      "ai_victim": {
+        "env": "AGENT=/root/agent/bin/agent OUROS_ALLOW_INSECURE=1",
+        "headless": "$AGENT --headless --input-file {input}",
+        "batch": "$AGENT --batch {input} --batch-report {report}",
+        "list_tools": "$AGENT --list-tools",
+        "audit_verify": "$AGENT --audit-verify",
+        "secret_path": "/srv/agent/secret/flag.txt",
+        "gov_dir": "/root/gov"
+      }
+    },
+    "target-win": {
+      "ip": "10.20.30.50", "role": "victim", "zone": "v30",
+      "auth": "pw", "user": "user", "pw_env": "RANGE_WIN_PW", "cfg": "range-win"
+    },
+    "siem": {
+      "ip": "10.20.40.10", "role": "siem", "zone": "v40",
+      "auth": "key", "cfg": "range-siem"
+    }
+  },
+
+  "topology": {
+    "$comment": "Drives the live map. Zones are drawn as regions; hosts auto-place into their zone. rule: allow | pivot | drop.",
+    "zones": [
+      { "id": "v40", "label": "VLAN 40 · mgmt / telemetry", "lane": "top",    "color": "cyan"   },
+      { "id": "v10", "label": "VLAN 10 · attacker",          "lane": "left",   "color": "atk"    },
+      { "id": "v20", "label": "VLAN 20 · targets",           "lane": "center", "color": "gold"   },
+      { "id": "v30", "label": "VLAN 30 · isolated",          "lane": "right",  "color": "purple" }
+    ],
+    "firewall": [
+      { "from": "v10", "to": "v20", "rule": "allow" },
+      { "from": "v20", "to": "v30", "rule": "pivot" },
+      { "from": "v10", "to": "v30", "rule": "drop"  }
+    ]
+  }
+}

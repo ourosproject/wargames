@@ -1,0 +1,41 @@
+name: purple-range-mini
+
+# A self-contained, single-box range: an attacker box, two SSH targets with a
+# planted flag, and the command center — all on one Docker network. No Proxmox,
+# no VMs. `docker compose up --build`, then open http://localhost:4899.
+#
+# This is an intentionally-weak practice range. Keep it on your own machine.
+
+services:
+  attacker:
+    build: { context: .., dockerfile: mini-range/attacker.Dockerfile }
+    hostname: attacker
+    networks: [range]
+    restart: unless-stopped
+
+  target-a:
+    build: { context: .., dockerfile: mini-range/target.Dockerfile }
+    hostname: target-a
+    networks: [range]
+    restart: unless-stopped
+
+  target-b:
+    build: { context: .., dockerfile: mini-range/target.Dockerfile }
+    hostname: target-b
+    networks: [range]
+    restart: unless-stopped
+
+  command-center:
+    build: { context: .., dockerfile: mini-range/command-center.Dockerfile }
+    depends_on: [attacker, target-a, target-b]
+    environment:
+      - RANGE_DEMO_PW=changeme          # throwaway demo password for the range
+    volumes:
+      - ./range.config.mini.json:/app/range.config.json:ro
+    ports:
+      - "4899:4899"
+    networks: [range]
+
+networks:
+  range:
+    driver: bridge

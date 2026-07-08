@@ -1,0 +1,32 @@
+{
+  "name": "Purple Range · Docker Mini-Range",
+  "port": 4899,
+  "transport": {
+    "ssh_config": "/dev/null",
+    "password_helper": "bin/sshpass.exp",
+    "connect_timeout": 6
+  },
+  "hosts": {
+    "attacker": {
+      "ip": "attacker", "role": "attacker", "zone": "v10",
+      "auth": "pw", "user": "demo", "pw_env": "RANGE_DEMO_PW"
+    },
+    "target-a": {
+      "ip": "target-a", "role": "victim", "zone": "v20",
+      "auth": "pw", "user": "demo", "pw_env": "RANGE_DEMO_PW", "home": "/home/demo"
+    },
+    "target-b": {
+      "ip": "target-b", "role": "victim", "zone": "v20",
+      "auth": "pw", "user": "demo", "pw_env": "RANGE_DEMO_PW", "home": "/home/demo"
+    }
+  },
+  "topology": {
+    "zones": [
+      { "id": "v10", "label": "attacker", "lane": "left",   "color": "atk"  },
+      { "id": "v20", "label": "targets",  "lane": "center", "color": "gold" }
+    ],
+    "firewall": [
+      { "from": "v10", "to": "v20", "rule": "allow" }
+    ]
+  }
+}
