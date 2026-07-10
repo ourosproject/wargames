@@ -13,6 +13,8 @@ use std::collections::{HashMap, HashSet};
 use serde_json::Value;
 
 use crate::card::{Card, Environment, Outcome};
+use crate::category::Category;
+use crate::facts::{Fact, Requirement};
 use crate::state::{GameState, Side, Technique};
 
 /// Blackboard passed between primitives — outputs of one node become inputs of dependents.
@@ -98,9 +100,11 @@ pub struct CompositeCard {
     pub side: Side,
     pub technique: Technique,
     pub summary: &'static str,
+    pub category: Category,
+    pub requires: Vec<Requirement>,
+    pub produces: Vec<Fact>,
+    pub surface: Vec<Technique>,
     pub nodes: Vec<Box<dyn Primitive>>,
-    /// Gate on game state (e.g. reachability). Defaults to always-legal via `CompositeCard::new`.
-    pub precond: fn(&GameState) -> bool,
 }
 
 impl Card for CompositeCard {
@@ -116,8 +120,17 @@ impl Card for CompositeCard {
     fn describe(&self) -> &'static str {
         self.summary
     }
-    fn precondition(&self, state: &GameState) -> bool {
-        (self.precond)(state)
+    fn category(&self) -> Category {
+        self.category
+    }
+    fn requires(&self) -> Vec<Requirement> {
+        self.requires.clone()
+    }
+    fn produces(&self) -> Vec<Fact> {
+        self.produces.clone()
+    }
+    fn detection_surface(&self) -> Vec<Technique> {
+        self.surface.clone()
     }
     fn play(&self, state: &mut GameState, _params: &Value, env: &mut dyn Environment) -> Outcome {
         let mut ctx = Context::new();
@@ -148,5 +161,27 @@ impl Card for CompositeCard {
             narrative: format!("[{}] dependency order: {}", self.id, steps.join(" -> ")),
             detection_surface: surface,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::category::Category;
+    use crate::facts::Requirement;
+    use crate::card::Card;
+
+    #[test]
+    fn composite_precondition_uses_requires_data() {
+        let c = CompositeCard {
+            id: "t", side: Side::Red, technique: Technique::Kerberoast, summary: "t",
+            category: Category::CredentialAccess,
+            requires: vec![Requirement::have(crate::facts::Fact::ReachesDc)],
+            produces: vec![], surface: vec![], nodes: vec![],
+        };
+        let mut s = GameState::new(vec![]);
+        assert!(!c.precondition(&s), "ReachesDc false → illegal");
+        s.add_zone("vlan30");
+        assert!(c.precondition(&s), "ReachesDc true → legal");
     }
 }
