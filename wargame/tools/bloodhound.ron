@@ -1,0 +1,10 @@
+ToolDef(
+    id: "bloodhound", side: Red, technique: BloodHound, category: Discovery,
+    summary: "Collect the AD graph, find the path to DA",
+    gate: [Category(fact: HasCred, want: true), Instance(probe: Performed(BloodHound), want: false)],
+    produces: [PathMapped, Scouted],
+    nodes: [ Node(
+        id: "bloodhound", effect: Attempt, ok_surface: [BloodHound],
+        ok_narrative: "BloodHound — svc_mssql holds DCSync => krbtgt => DA",
+    ) ],
+)

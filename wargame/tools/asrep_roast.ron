@@ -1,0 +1,15 @@
+ToolDef(
+    id: "asrep_roast", side: Red, technique: AsRepRoast, category: CredentialAccess,
+    summary: "AS-REP roast a no-preauth user (fails if pre-auth enforced)",
+    gate: [Category(fact: ReachesDc, want: true)],
+    produces: [HasCred],
+    nodes: [ Node(
+        id: "asrep_roast",
+        guards: [
+          Guard(req: Instance(probe: Vuln(AsRepRoast), want: true), else_narrative: "no AS-REP-roastable user in this environment", else_surface: []),
+          Guard(req: Category(fact: PreauthEnforced, want: false), else_narrative: "AS-REP blocked — pre-auth enforced", else_surface: [AsRepRoast]),
+        ],
+        effect: GrantCred(principal: "range.local\\jbecker", secret: Some("Baseball2023"), via: AsRepRoast),
+        ok_surface: [AsRepRoast], ok_narrative: "AS-REP roast — cracked jbecker",
+    ) ],
+)

@@ -120,3 +120,18 @@ pub fn assert_equivalent(id: &str, def_src: &str) {
 fn monitor_is_equivalent() {
     assert_equivalent("monitor", include_str!("../tools/monitor.ron"));
 }
+
+#[test]
+fn initial_access_is_equivalent() { assert_equivalent("initial_access", include_str!("../tools/initial_access.ron")); }
+#[test]
+fn pivot_is_equivalent() { assert_equivalent("pivot", include_str!("../tools/pivot.ron")); }
+#[test]
+fn recon_is_equivalent() { assert_equivalent("recon", include_str!("../tools/recon.ron")); }
+#[test]
+fn kerberoast_is_equivalent() { assert_equivalent("kerberoast", include_str!("../tools/kerberoast.ron")); }
+#[test]
+fn asrep_roast_is_equivalent() { assert_equivalent("asrep_roast", include_str!("../tools/asrep_roast.ron")); }
+#[test]
+fn bloodhound_is_equivalent() { assert_equivalent("bloodhound", include_str!("../tools/bloodhound.ron")); }
+#[test]
+fn escalate_da_is_equivalent() { assert_equivalent("escalate_da", include_str!("../tools/escalate_da.ron")); }

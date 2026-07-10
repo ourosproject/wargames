@@ -1,0 +1,16 @@
+ToolDef(
+    id: "escalate_da", side: Red, technique: LateralMove, category: PrivilegeEscalation,
+    summary: "Abuse the ACL path to Domain Admin (gone if remediated)",
+    gate: [
+      Instance(probe: LateralPathPlanted, want: true),
+      Category(fact: HasCred, want: true),
+      Category(fact: PathMapped, want: true),
+      Category(fact: DomainAdmin, want: false),
+      Category(fact: PathSevered, want: false),
+    ],
+    produces: [DomainAdmin],
+    nodes: [ Node(
+        id: "escalate_da", effect: SetFlag(DomainAdmin), ok_surface: [LateralMove],
+        ok_narrative: "DCSync via svc_mssql -> dumped krbtgt -> DOMAIN ADMIN",
+    ) ],
+)
