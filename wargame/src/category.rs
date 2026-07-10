@@ -38,13 +38,16 @@ pub enum Category {
 
 impl Category {
     /// Categories that must each hold at least one tool in the current arsenal.
-    pub const ENFORCED: [Category; 6] = [
+    pub const ENFORCED: [Category; 9] = [
         Category::InitialAccess,
         Category::Discovery,
         Category::CredentialAccess,
         Category::PrivilegeEscalation,
         Category::LateralMovement,
         Category::Detection,
+        Category::Harden,
+        Category::Isolate,
+        Category::Evict,
     ];
 
     pub fn key(&self) -> &'static str {
