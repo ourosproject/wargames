@@ -92,6 +92,18 @@ impl Technique {
             Technique::Exfil => "Exfiltration Over C2",
         }
     }
+    /// The ATT&CK tactic (kill-chain stage) this technique belongs to.
+    pub fn category(&self) -> crate::category::Category {
+        use crate::category::Category;
+        match self {
+            Technique::InitialAccess => Category::InitialAccess,
+            Technique::Recon | Technique::BloodHound => Category::Discovery,
+            Technique::Pivot => Category::LateralMovement,
+            Technique::Kerberoast | Technique::AsRepRoast | Technique::CredSpray
+                | Technique::LateralMove => Category::CredentialAccess,
+            Technique::Exfil => Category::Exfiltration,
+        }
+    }
     /// The telemetry a detection for this technique should key on — so a GAP names the rule to write.
     pub fn data_source(&self) -> &'static str {
         match self {
@@ -444,5 +456,25 @@ impl GameState {
         let robust_pct = if fired_t > 0 { robust_t * 100 / fired_t } else { 0 };
         let mttd_rounds = if all_lat.is_empty() { None } else { Some(all_lat.iter().sum::<i64>() as f64 / all_lat.len() as f64) };
         Coverage { rows, techniques_fired: fired_t, techniques_detected: det_t, coverage_pct, robust_pct, gaps, overfit, noisy, mttd_rounds }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn every_technique_maps_to_an_attack_category() {
+        use Technique::*;
+        use crate::category::Category;
+        assert_eq!(Pivot.category(), Category::LateralMovement);
+        assert_eq!(LateralMove.category(), Category::CredentialAccess);
+        assert_eq!(Recon.category(), Category::Discovery);
+        assert_eq!(BloodHound.category(), Category::Discovery);
+        assert_eq!(Kerberoast.category(), Category::CredentialAccess);
+        assert_eq!(InitialAccess.category(), Category::InitialAccess);
+        for t in [InitialAccess, Recon, Pivot, Kerberoast, AsRepRoast, BloodHound, CredSpray, LateralMove, Exfil] {
+            assert!(!t.category().is_defensive(), "attack technique must map to an attack category");
+        }
     }
 }

@@ -15,8 +15,25 @@ pub enum Category {
     Exfiltration,
     /// Blue's cross-cutting monitoring/hunting lane — not a single attack stage.
     Detection,
-    /// Red's cross-cutting evasion lane — reserved, no tool yet.
+    /// Red's cross-cutting evasion lane — reserved, no tool yet. (ATT&CK TA0005 — an attack
+    /// tactic, NOT a defensive lane; see `is_defensive`.)
     DefenseEvasion,
+
+    // ── remaining ATT&CK tactics ──
+    Reconnaissance,
+    ResourceDevelopment,
+    Execution,
+    Persistence,
+    Collection,
+    CommandAndControl,
+    Impact,
+
+    // ── D3FEND defensive lanes (cross-cutting, no chain order, no tactic id) ──
+    Harden,
+    Isolate,
+    Evict,
+    Deceive,
+    Model,
 }
 
 impl Category {
@@ -40,6 +57,18 @@ impl Category {
             Category::Exfiltration => "exfiltration",
             Category::Detection => "detection",
             Category::DefenseEvasion => "defense_evasion",
+            Category::Reconnaissance => "reconnaissance",
+            Category::ResourceDevelopment => "resource_development",
+            Category::Execution => "execution",
+            Category::Persistence => "persistence",
+            Category::Collection => "collection",
+            Category::CommandAndControl => "command_and_control",
+            Category::Impact => "impact",
+            Category::Harden => "harden",
+            Category::Isolate => "isolate",
+            Category::Evict => "evict",
+            Category::Deceive => "deceive",
+            Category::Model => "model",
         }
     }
 
@@ -52,7 +81,28 @@ impl Category {
             Category::PrivilegeEscalation => Some(3),
             Category::LateralMovement => Some(4),
             Category::Exfiltration => Some(5),
-            Category::Detection | Category::DefenseEvasion => None,
+            _ => None,
+        }
+    }
+
+    /// True for D3FEND defensive lanes (including the pre-existing `Detection`). All ATT&CK
+    /// tactics — including `DefenseEvasion`, which is red's evasion tactic (TA0005) — are false.
+    pub fn is_defensive(&self) -> bool {
+        matches!(self, Category::Detection | Category::Harden | Category::Isolate
+            | Category::Evict | Category::Deceive | Category::Model)
+    }
+
+    /// MITRE ATT&CK tactic id; empty string for D3FEND defensive lanes (no ATT&CK id applies).
+    pub fn tactic_id(&self) -> &'static str {
+        match self {
+            Category::Reconnaissance => "TA0043", Category::ResourceDevelopment => "TA0042",
+            Category::InitialAccess => "TA0001", Category::Execution => "TA0002",
+            Category::Persistence => "TA0003", Category::PrivilegeEscalation => "TA0004",
+            Category::DefenseEvasion => "TA0005", Category::CredentialAccess => "TA0006",
+            Category::Discovery => "TA0007", Category::LateralMovement => "TA0008",
+            Category::Collection => "TA0009", Category::CommandAndControl => "TA0011",
+            Category::Exfiltration => "TA0010", Category::Impact => "TA0040",
+            _ => "",
         }
     }
 }
@@ -83,11 +133,23 @@ mod tests {
             Category::InitialAccess, Category::Discovery, Category::CredentialAccess,
             Category::PrivilegeEscalation, Category::LateralMovement, Category::Exfiltration,
             Category::Detection, Category::DefenseEvasion,
+            Category::Reconnaissance, Category::ResourceDevelopment, Category::Execution,
+            Category::Persistence, Category::Collection, Category::CommandAndControl,
+            Category::Impact, Category::Harden, Category::Isolate, Category::Evict,
+            Category::Deceive, Category::Model,
         ];
         let mut keys: Vec<&str> = all.iter().map(|c| c.key()).collect();
         keys.sort();
         keys.dedup();
         assert_eq!(keys.len(), all.len(), "every category needs a distinct key");
         assert_eq!(Category::CredentialAccess.key(), "credential_access");
+    }
+
+    #[test]
+    fn defensive_lanes_have_no_attack_id_or_chain_order() {
+        assert_eq!(Category::Harden.tactic_id(), "");
+        assert_eq!(Category::Harden.chain_order(), None);
+        assert!(Category::Detection.is_defensive());
+        assert!(!Category::DefenseEvasion.is_defensive());
     }
 }
