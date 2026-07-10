@@ -13,6 +13,8 @@
 use serde_json::{json, Value};
 
 use crate::card::{realize, Card, Environment, Outcome};
+use crate::category::Category;
+use crate::facts::{Fact, Requirement};
 use crate::graph::{CompositeCard, Context, Primitive, PrimitiveResult};
 use crate::registry::CardRegistry;
 use crate::state::{grade_rule, Alert, Cred, Detection, GameState, Side, Technique};
@@ -75,9 +77,12 @@ fn kerberoast_card() -> CompositeCard {
         side: Side::Red,
         technique: Technique::Kerberoast,
         summary: "Kerberoast: enum SPNs -> request TGS -> crack (fails vs AES)",
-        nodes: vec![Box::new(CrackHash), Box::new(EnumSpns), Box::new(RequestTgs)],
+        category: Category::CredentialAccess,
         // Can't roast the domain until red has crossed the network to reach it.
-        precond: |s| s.attack_ready(),
+        requires: vec![Requirement::have(Fact::ReachesDc)],
+        produces: vec![Fact::HasCred], // on a successful crack
+        surface: vec![Technique::Recon, Technique::Kerberoast], // enum_spns + request_tgs
+        nodes: vec![Box::new(CrackHash), Box::new(EnumSpns), Box::new(RequestTgs)],
     }
 }
 
