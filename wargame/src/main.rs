@@ -17,7 +17,7 @@ use axum::{
 use serde_json::{json, Value};
 
 use purple_wargame::card::Environment;
-use purple_wargame::cards::default_registry;
+use purple_wargame::arsenal::default_registry;
 use purple_wargame::env::{LiveEnvironment, SimEnvironment};
 use purple_wargame::referee::{Agent, HeuristicAgent, ModelAgent, Referee};
 use purple_wargame::session::{side_from_key, Match, Seat};

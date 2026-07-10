@@ -1,12 +1,10 @@
 //! Migration proof: each data move plays byte-for-byte identically to the legacy card it
-//! replaces. We compare the `play()` outcome AND the resulting game state (the referee's
-//! bookkeeping around play is unchanged, so play() is the exact unit under change).
+//! replaced. The legacy cards are gone; their behavior is preserved as frozen golden fixtures
+//! (`tests/fixtures/arsenal_goldens.json`), and this suite proves the data moves still match.
 
 use purple_wargame::card::Card;
-use purple_wargame::cards::default_registry;
 use purple_wargame::env::SimEnvironment;
 use purple_wargame::state::{Alert, Cred, Detection, GameState, Host, Technique};
-use purple_wargame::tool::DataTool;
 use serde_json::{json, Value};
 
 /// A diverse set of states that, between them, exercise every effect and guard branch.
@@ -95,81 +93,23 @@ fn run(card: &dyn Card, state: &GameState, params: &Value) -> (Value, Value) {
     (serde_json::to_value(&o).unwrap(), serde_json::to_value(&s).unwrap())
 }
 
-/// Assert the data move `def_src` plays identically to the legacy card with the same id,
-/// across the whole matrix.
-pub fn assert_equivalent(id: &str, def_src: &str) {
-    let legacy_reg = default_registry();
-    let legacy = legacy_reg.get(id).unwrap_or_else(|| panic!("no legacy card '{id}'"));
-    let def = purple_wargame::arsenal::parse_tool(def_src).unwrap_or_else(|e| panic!("parse '{id}': {e}"));
-    purple_wargame::arsenal::validate(&def).unwrap_or_else(|e| panic!("validate '{id}': {e:?}"));
-    let data = DataTool::new(def);
-
-    for (label, state, params) in matrix() {
-        // legality equivalence — this is what v2 changed for the blue counters (the gate),
-        // so the data-tool's requires() must produce the identical legal/illegal verdict.
-        assert_eq!(legacy.precondition(&state), data.precondition(&state), "legality mismatch for '{id}' in state '{label}'");
-        // play equivalence — the effect + resulting state must match byte-for-byte.
-        let (lo, ls) = run(legacy, &state, &params);
-        let (do_, ds) = run(&data, &state, &params);
-        assert_eq!(lo, do_, "outcome mismatch for '{id}' in state '{label}'");
-        assert_eq!(ls, ds, "state mismatch for '{id}' in state '{label}'");
-    }
-}
-
+// Standing behavioral guard after the legacy code is gone: every data move still matches the
+// frozen golden captured from the original hand-written cards.
 #[test]
-fn monitor_is_equivalent() {
-    assert_equivalent("monitor", include_str!("../tools/monitor.ron"));
-}
-
-#[test]
-fn initial_access_is_equivalent() { assert_equivalent("initial_access", include_str!("../tools/initial_access.ron")); }
-#[test]
-fn pivot_is_equivalent() { assert_equivalent("pivot", include_str!("../tools/pivot.ron")); }
-#[test]
-fn recon_is_equivalent() { assert_equivalent("recon", include_str!("../tools/recon.ron")); }
-#[test]
-fn kerberoast_is_equivalent() { assert_equivalent("kerberoast", include_str!("../tools/kerberoast.ron")); }
-#[test]
-fn asrep_roast_is_equivalent() { assert_equivalent("asrep_roast", include_str!("../tools/asrep_roast.ron")); }
-#[test]
-fn bloodhound_is_equivalent() { assert_equivalent("bloodhound", include_str!("../tools/bloodhound.ron")); }
-#[test]
-fn escalate_da_is_equivalent() { assert_equivalent("escalate_da", include_str!("../tools/escalate_da.ron")); }
-
-#[test]
-fn active_response_is_equivalent() { assert_equivalent("active_response", include_str!("../tools/active_response.ron")); }
-#[test]
-fn remediate_acl_is_equivalent() { assert_equivalent("remediate_acl", include_str!("../tools/remediate_acl.ron")); }
-#[test]
-fn enforce_aes_is_equivalent() { assert_equivalent("enforce_aes", include_str!("../tools/enforce_aes.ron")); }
-#[test]
-fn enforce_preauth_is_equivalent() { assert_equivalent("enforce_preauth", include_str!("../tools/enforce_preauth.ron")); }
-#[test]
-fn rotate_creds_is_equivalent() { assert_equivalent("rotate_creds", include_str!("../tools/rotate_creds.ron")); }
-#[test]
-fn hunt_is_equivalent() { assert_equivalent("hunt", include_str!("../tools/hunt.ron")); }
-#[test]
-fn segment_is_equivalent() { assert_equivalent("segment", include_str!("../tools/segment.ron")); }
-
-// deploy_detection: prove equivalence with explicit params (valid, invalid) as well as defaults.
-#[test]
-fn deploy_detection_is_equivalent() {
-    assert_equivalent("deploy_detection", include_str!("../tools/deploy_detection.ron"));
-}
-#[test]
-fn deploy_detection_param_cases_match_legacy() {
-    use purple_wargame::cards::default_registry;
-    let src = include_str!("../tools/deploy_detection.ron");
-    let def = purple_wargame::arsenal::parse_tool(src).unwrap();
-    let data = DataTool::new(def);
-    let legacy_reg = default_registry();
-    let legacy = legacy_reg.get("deploy_detection").unwrap();
-    for p in [json!({"technique": "kerberoast"}), json!({"technique": "not_a_technique"}), json!({})] {
-        for (label, state, _) in matrix() {
-            let (lo, ls) = run(legacy, &state, &p);
-            let (do_, ds) = run(&data, &state, &p);
-            assert_eq!(lo, do_, "deploy_detection outcome mismatch, params {p}, state '{label}'");
-            assert_eq!(ls, ds, "deploy_detection state mismatch, params {p}, state '{label}'");
-        }
+fn data_moves_match_frozen_goldens() {
+    let golden: Value = serde_json::from_str(include_str!("fixtures/arsenal_goldens.json")).unwrap();
+    let golden = golden.as_object().unwrap();
+    let reg = purple_wargame::arsenal::default_registry();
+    let param_cases = |id: &str| -> Vec<Value> {
+        if id == "deploy_detection" { vec![json!({"technique":"kerberoast"}), json!({"technique":"not_a_technique"}), json!({})] } else { vec![json!({})] }
+    };
+    for (key, expected) in golden {
+        let parts: Vec<&str> = key.split('|').collect();
+        let (id, label, pi) = (parts[0], parts[1], parts[2].parse::<usize>().unwrap());
+        let card = reg.get(id).unwrap_or_else(|| panic!("no move '{id}' in data registry"));
+        let (_, state, _) = matrix().into_iter().find(|(l, _, _)| l == label).unwrap();
+        let p = param_cases(id).into_iter().nth(pi).unwrap();
+        let (o, s) = run(card, &state, &p);
+        assert_eq!(&json!({ "outcome": o, "state": s }), expected, "move '{id}' drifted from golden in state '{label}' (params #{pi})");
     }
 }

@@ -2,7 +2,7 @@
 //! The `legacy` fn mirrors the ORIGINAL closures (card.rs @ baseline commit) verbatim.
 //! NOTE: not a standing invariant — adding sibling tools later may change menus by design.
 
-use purple_wargame::cards::default_registry;
+use purple_wargame::arsenal::default_registry;
 use purple_wargame::state::{Alert, Cred, GameState, Technique};
 
 const TECHS: [Technique; 9] = [
