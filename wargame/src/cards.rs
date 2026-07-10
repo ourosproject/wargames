@@ -14,7 +14,7 @@ use serde_json::{json, Value};
 
 use crate::card::{realize, Card, Environment, Outcome};
 use crate::category::Category;
-use crate::facts::{Fact, Requirement};
+use crate::facts::{Fact, InstanceProbe, Requirement};
 use crate::graph::{CompositeCard, Context, Primitive, PrimitiveResult};
 use crate::registry::CardRegistry;
 use crate::state::{grade_rule, Alert, Cred, Detection, GameState, Side, Technique};
@@ -98,10 +98,12 @@ impl Card for InitialAccess {
     fn side(&self) -> Side { Side::Red }
     fn technique(&self) -> Technique { Technique::InitialAccess }
     fn describe(&self) -> &'static str { "Breach the perimeter (edge exploit / phish) for a first foothold" }
-    fn precondition(&self, s: &GameState) -> bool {
-        // only from the outside, and only if there's a way in
-        !s.has_internal() && !s.next_hops().is_empty()
+    fn category(&self) -> Category { Category::InitialAccess }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![Requirement::lack(Fact::Foothold), Requirement::probe(InstanceProbe::HasForwardPath)]
     }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::Foothold] }
+    fn detection_surface(&self) -> Vec<Technique> { vec![Technique::InitialAccess] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let hop = s.next_hops().into_iter().next();
         let o = realize(e, self.id(), p, s, "breached the perimeter — landed an internal foothold", vec![Technique::InitialAccess]);
@@ -121,10 +123,12 @@ impl Card for Pivot {
     fn side(&self) -> Side { Side::Red }
     fn technique(&self) -> Technique { Technique::Pivot }
     fn describe(&self) -> &'static str { "Pivot across internal segmentation toward the domain" }
-    fn precondition(&self, s: &GameState) -> bool {
-        // already inside, not yet in position to hit AD, and there's a next hop toward it
-        s.has_internal() && !s.attack_ready() && !s.next_hops().is_empty()
+    fn category(&self) -> Category { Category::LateralMovement }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![Requirement::have(Fact::Foothold), Requirement::lack(Fact::ReachesDc),
+             Requirement::probe(InstanceProbe::HasForwardPath)]
     }
+    fn detection_surface(&self) -> Vec<Technique> { vec![Technique::Pivot] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let hop = s.next_hops().into_iter().next();
         let dest = hop.clone().unwrap_or_default();
@@ -146,7 +150,12 @@ impl Card for Recon {
     fn side(&self) -> Side { Side::Red }
     fn technique(&self) -> Technique { Technique::Recon }
     fn describe(&self) -> &'static str { "Enumerate the AD estate" }
-    fn precondition(&self, s: &GameState) -> bool { s.attack_ready() && !s.performed_technique(Technique::Recon) }
+    fn category(&self) -> Category { Category::Discovery }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![Requirement::have(Fact::ReachesDc), Requirement::not_yet(Technique::Recon)]
+    }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::Scouted] }
+    fn detection_surface(&self) -> Vec<Technique> { vec![Technique::Recon] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         realize(e, self.id(), p, s, "recon — mapped the domain", vec![Technique::Recon])
     }
@@ -180,7 +189,12 @@ impl Card for BloodHoundCollect {
     fn side(&self) -> Side { Side::Red }
     fn technique(&self) -> Technique { Technique::BloodHound }
     fn describe(&self) -> &'static str { "Collect the AD graph, find the path to DA" }
-    fn precondition(&self, s: &GameState) -> bool { s.has_cracked_cred() && !s.performed_technique(Technique::BloodHound) }
+    fn category(&self) -> Category { Category::Discovery }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![Requirement::have(Fact::HasCred), Requirement::not_yet(Technique::BloodHound)]
+    }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::PathMapped, Fact::Scouted] }
+    fn detection_surface(&self) -> Vec<Technique> { vec![Technique::BloodHound] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         realize(e, self.id(), p, s, "BloodHound — svc_mssql holds DCSync => krbtgt => DA", vec![Technique::BloodHound])
     }
