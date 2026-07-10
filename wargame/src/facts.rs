@@ -46,14 +46,6 @@ pub enum Fact {
     AesEnforced,
     /// Kerberos pre-auth enforced — AS-REP roasting yields nothing.
     PreauthEnforced,
-
-    // ── blue's observations (blue-private: what it has actually detected) ──
-    /// Blue has detected the scouting (recon/bloodhound) — this is what unlocks `remediate_acl`.
-    ScoutDetected,
-    /// Blue has detected roasting activity (kerberoast/as-rep).
-    RoastDetected,
-    /// Blue has detected the intrusion itself (initial access / pivot).
-    IntrusionDetected,
 }
 
 /// One row of a side-appropriate fact table: the fact, the yes/no question it answers, and
@@ -67,7 +59,7 @@ pub struct FactRow {
 
 impl Fact {
     /// Every fact, in reading order (attack chain, then posture, then observations).
-    pub const ALL: [Fact; 14] = [
+    pub const ALL: [Fact; 11] = [
         Fact::Foothold,
         Fact::ReachesDc,
         Fact::Scouted,
@@ -79,9 +71,6 @@ impl Fact {
         Fact::PathSevered,
         Fact::AesEnforced,
         Fact::PreauthEnforced,
-        Fact::ScoutDetected,
-        Fact::RoastDetected,
-        Fact::IntrusionDetected,
     ];
 
     /// Stable slug — the key the prompt / registry / builder refer to a fact by.
@@ -98,9 +87,6 @@ impl Fact {
             Fact::PathSevered => "path_severed",
             Fact::AesEnforced => "aes_enforced",
             Fact::PreauthEnforced => "preauth_enforced",
-            Fact::ScoutDetected => "scout_detected",
-            Fact::RoastDetected => "roast_detected",
-            Fact::IntrusionDetected => "intrusion_detected",
         }
     }
 
@@ -118,9 +104,6 @@ impl Fact {
             Fact::PathSevered => "Has the path to Domain Admin been severed?",
             Fact::AesEnforced => "Is AES enforced (Kerberoast neutralized)?",
             Fact::PreauthEnforced => "Is Kerberos pre-auth enforced (AS-REP neutralized)?",
-            Fact::ScoutDetected => "Have you detected red's scouting yet?",
-            Fact::RoastDetected => "Have you detected roasting activity yet?",
-            Fact::IntrusionDetected => "Have you detected the intrusion (breach/pivot) yet?",
         }
     }
 
@@ -155,15 +138,6 @@ impl Fact {
             Fact::PathSevered => s.acl_path_fixed,
             Fact::AesEnforced => s.rc4_disabled,
             Fact::PreauthEnforced => s.preauth_required,
-            Fact::ScoutDetected => {
-                s.blue_knows(Technique::Recon) || s.blue_knows(Technique::BloodHound)
-            }
-            Fact::RoastDetected => {
-                s.blue_knows(Technique::Kerberoast) || s.blue_knows(Technique::AsRepRoast)
-            }
-            Fact::IntrusionDetected => {
-                s.blue_knows(Technique::InitialAccess) || s.blue_knows(Technique::Pivot)
-            }
         }
     }
 
@@ -176,6 +150,39 @@ impl Fact {
 /// against ground truth. Fog-of-war safe: red never sees blue's posture and vice versa.
 pub fn table_for(side: Side, s: &GameState) -> Vec<FactRow> {
     Fact::ALL.iter().filter(|f| f.audience() == side).map(|f| f.row(s)).collect()
+}
+
+/// Blue's detection surface for the prompt: cheap category-awareness (`SawCategory` over the
+/// attack tactics that carry tooling) plus the exact techniques Blue has a DEPLOYED rule for
+/// (`Identified`). Fog-safe — this is Blue's own knowledge. Parameterized so new tools in a
+/// tactic automatically flow into `saw:<tactic>` instead of needing a new hardcoded fact.
+pub fn blue_detection_rows(s: &GameState) -> Vec<FactRow> {
+    use crate::category::Category;
+    let cats = [
+        (Category::InitialAccess, "Have you seen any initial-access activity?"),
+        (Category::Discovery, "Have you seen any discovery activity?"),
+        (Category::CredentialAccess, "Have you seen any credential-access activity?"),
+        (Category::LateralMovement, "Have you seen any lateral-movement activity?"),
+        (Category::Exfiltration, "Have you seen any exfiltration activity?"),
+    ];
+    let mut rows: Vec<FactRow> = cats.iter().map(|(c, q)| FactRow {
+        fact: format!("saw:{}", c.key()),
+        question: q.to_string(),
+        holds: InstanceProbe::SawCategory(*c).holds(s),
+    }).collect();
+    // Which exact techniques Blue has fingerprinted with a deployed rule (dedup by technique).
+    let mut seen: Vec<Technique> = Vec::new();
+    for d in s.detections.iter().filter(|d| d.technique_based) {
+        if !seen.contains(&d.technique) {
+            seen.push(d.technique);
+            rows.push(FactRow {
+                fact: format!("identified:{}", d.technique.as_key()),
+                question: format!("Have you deployed a detection rule for {}?", d.technique.as_key()),
+                holds: true,
+            });
+        }
+    }
+    rows
 }
 
 /// A ground-truth legality gate that is NEVER surfaced to a model. This is Tier-2: the place
@@ -318,32 +325,16 @@ mod tests {
     }
 
     #[test]
-    fn scout_detected_needs_a_blue_alert_not_just_red_action() {
-        let mut s = base();
-        s.performed.push(Technique::Recon);
-        assert!(Fact::Scouted.holds(&s), "red DID scout");
-        assert!(!Fact::ScoutDetected.holds(&s), "but blue has not seen it yet");
-        s.alerts.push(crate::state::Alert {
-            round: 1,
-            technique: Technique::Recon,
-            source: "hunt".into(),
-            rule_id: "r".into(),
-            level: 8,
-        });
-        assert!(Fact::ScoutDetected.holds(&s), "now blue has an alert for it");
-    }
-
-    #[test]
     fn tables_respect_fog_of_war() {
         let s = base();
         let red = table_for(Side::Red, &s);
         let blue = table_for(Side::Blue, &s);
         // red sees its own progress, never blue posture/observations
         assert!(red.iter().any(|r| r.fact == "foothold"));
-        assert!(red.iter().all(|r| r.fact != "monitoring" && r.fact != "scout_detected"));
+        assert!(red.iter().all(|r| r.fact != "monitoring" && r.fact != "aes_enforced"));
         // blue sees posture + observations, never red's private progress
         assert!(blue.iter().any(|r| r.fact == "monitoring"));
-        assert!(blue.iter().any(|r| r.fact == "scout_detected"));
+        assert!(blue.iter().any(|r| r.fact == "aes_enforced"));
         assert!(blue.iter().all(|r| r.fact != "foothold" && r.fact != "has_cred"));
         // partition is total
         assert_eq!(red.len() + blue.len(), Fact::ALL.len());
@@ -395,6 +386,26 @@ mod tests {
         s.detections.push(crate::state::Detection { id: "d".into(), technique: Technique::Kerberoast,
             deployed_round: 1, technique_based: true, fidelity: "robust".into() });
         assert!(InstanceProbe::Identified(Technique::Kerberoast).holds(&s));
+    }
+
+    #[test]
+    fn hardcoded_detection_facts_are_retired() {
+        assert_eq!(Fact::ALL.len(), 11);
+        assert!(Fact::ALL.iter().all(|f| !matches!(f.key(), "scout_detected" | "roast_detected" | "intrusion_detected")));
+    }
+
+    #[test]
+    fn blue_detection_rows_surface_saw_category_and_identified() {
+        let mut s = base();
+        s.alerts.push(Alert { round: 1, technique: Technique::Kerberoast, source: "x".into(), rule_id: "r".into(), level: 5 });
+        let rows = blue_detection_rows(&s);
+        let saw = rows.iter().find(|r| r.fact == "saw:credential_access").expect("saw:credential_access row present");
+        assert!(saw.holds, "a kerberoast alert makes saw:credential_access true");
+        assert!(rows.iter().find(|r| r.fact == "saw:discovery").map(|r| !r.holds).unwrap_or(false), "no discovery alert → saw:discovery false");
+        assert!(!rows.iter().any(|r| r.fact.starts_with("identified:")), "no deployed rule yet → no identified rows");
+        s.detections.push(crate::state::Detection { id: "d".into(), technique: Technique::Kerberoast, deployed_round: 1, technique_based: true, fidelity: "robust".into() });
+        let rows2 = blue_detection_rows(&s);
+        assert!(rows2.iter().any(|r| r.fact == "identified:kerberoast" && r.holds), "deployed rule → identified:kerberoast row");
     }
 
     #[test]

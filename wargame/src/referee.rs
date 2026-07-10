@@ -235,14 +235,13 @@ impl Referee {
     /// Side-filtered view (fog of war) — the only thing an agent (or a human UI) may see.
     pub fn view_for(&self, side: Side, state: &GameState) -> AgentView {
         let legal = self.registry.legal(side, state);
-        let facts = facts::table_for(side, state);
         match side {
             Side::Red => AgentView {
                 side, round: state.round, legal,
                 holds_valid_cred: state.has_cracked_cred(),
                 my_techniques: state.performed.clone(),
                 alerts: vec![], my_detections: vec![], honeytokens: 0,
-                facts,
+                facts: facts::table_for(side, state),
             },
             Side::Blue => AgentView {
                 side, round: state.round, legal,
@@ -250,7 +249,11 @@ impl Referee {
                 alerts: state.alerts.clone(),
                 my_detections: state.detections.iter().map(|d| d.technique).collect(),
                 honeytokens: state.honeytokens,
-                facts,
+                facts: {
+                    let mut f = facts::table_for(side, state);
+                    f.extend(facts::blue_detection_rows(state));
+                    f
+                },
             },
         }
     }
