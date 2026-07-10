@@ -1,0 +1,10 @@
+ToolDef(
+    id: "recon", side: Red, technique: Recon, category: Discovery,
+    summary: "Enumerate the AD estate",
+    gate: [Category(fact: ReachesDc, want: true), Instance(probe: Performed(Recon), want: false)],
+    produces: [Scouted],
+    nodes: [ Node(
+        id: "recon", effect: Attempt, ok_surface: [Recon],
+        ok_narrative: "recon — mapped the domain",
+    ) ],
+)

@@ -1,0 +1,21 @@
+ToolDef(
+    id: "kerberoast", side: Red, technique: Kerberoast, category: CredentialAccess,
+    summary: "Kerberoast: enum SPNs -> request TGS -> crack (fails vs AES)",
+    gate: [Category(fact: ReachesDc, want: true)],
+    produces: [HasCred],
+    nodes: [
+        Node(id: "enum_spns", produces_keys: ["spn_targets"],
+             effect: Produce(key: "spn_targets", value: ["MSSQLSvc/dc01.range.local"]),
+             ok_surface: [Recon], ok_narrative: "found svc_mssql"),
+        Node(id: "request_tgs", requires: ["spn_targets"], produces_keys: ["tgs_hash"],
+             effect: Produce(key: "tgs_hash", value: "$krb5tgs$"),
+             ok_surface: [Kerberoast], ok_narrative: "got TGS"),
+        Node(id: "crack_hash", requires: ["tgs_hash"],
+             guards: [
+               Guard(req: Instance(probe: Vuln(Kerberoast), want: true), else_narrative: "no roastable SPN in this environment", else_surface: []),
+               Guard(req: Category(fact: AesEnforced, want: false), else_narrative: "AES enforced — ticket uncrackable", else_surface: []),
+             ],
+             effect: GrantCred(principal: "range.local\\svc_mssql", secret: Some("Summer2024!"), via: Kerberoast),
+             ok_surface: [], ok_narrative: "cracked: Summer2024!"),
+    ],
+)

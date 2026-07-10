@@ -1,0 +1,10 @@
+ToolDef(
+    id: "pivot", side: Red, technique: Pivot, category: LateralMovement,
+    summary: "Pivot across internal segmentation toward the domain",
+    gate: [Category(fact: Foothold, want: true), Category(fact: ReachesDc, want: false), Instance(probe: HasForwardPath, want: true)],
+    produces: [],
+    nodes: [ Node(
+        id: "pivot", effect: Advance, ok_surface: [Pivot],
+        ok_narrative: "pivoted into {dest} — one segment closer to the DC",
+    ) ],
+)

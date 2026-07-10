@@ -1,0 +1,10 @@
+ToolDef(
+    id: "initial_access", side: Red, technique: InitialAccess, category: InitialAccess,
+    summary: "Breach the perimeter (edge exploit / phish) for a first foothold",
+    gate: [Category(fact: Foothold, want: false), Instance(probe: HasForwardPath, want: true)],
+    produces: [Foothold],
+    nodes: [ Node(
+        id: "initial_access", effect: Advance, ok_surface: [InitialAccess],
+        ok_narrative: "breached the perimeter — landed an internal foothold",
+    ) ],
+)
