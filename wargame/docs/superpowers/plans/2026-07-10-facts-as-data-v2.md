@@ -304,6 +304,10 @@ git commit -m "test(wargame): update migration oracle + taxonomy invariants for 
 
 ---
 
-## Results (filled in by Task 6)
+## Results (Task 6 — balance re-measure)
 
-_TBD after execution._
+**v2 balance = BLUE 3/10 (seeds 1, 3, 7) — UNCHANGED from v1, as expected for a representation refactor.**
+
+- Measured with the **deterministic heuristic** (heuristic-vs-heuristic, fully seeded, reproducible: seed 1 → BLUE both runs). Blue wins seeds 1/3 (AES-hardened: recon is baseline-detected → Discovery alert → `remediate_acl` legal) and seed 7 (mature SOC: broad baseline). The 7 losses are the blind-shop / fast lines where Discovery goes undetected, so the path-cut never becomes legal — the SAME detection-gate limitation as v1. These are the exact winning seeds v1 had.
+- The single-run-per-seed **model** batch (qwen2.5:7b) is NOT a reliable balance signal: qwen2.5:7b is non-deterministic, so one run per seed is noise. A model batch showed a spurious "BLUE 10/10", but re-running seed 4 flips it to "RED WINS — DA in 7 rounds" — the mechanics are unchanged, the number was variance. Discarded.
+- Interpretation: the categorical substrate changes STRUCTURE (so the arsenal can grow), not WHO wins. Moving the win-rate is the job of the next sub-project (populate the arsenal so Red can route around detection and Blue can detect Discovery more reliably), not this one. The only intended semantic change (`enforce_aes`/`preauth` → deployed-rule) doesn't affect these outcomes because they hinge on the path-cut, not on AES/preauth timing.
