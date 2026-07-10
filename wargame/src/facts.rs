@@ -19,7 +19,7 @@ use crate::state::{GameState, Side, Technique};
 
 /// A named, boolean truth about the engagement. Orthogonal by construction — each answers a
 /// single yes/no question a player would actually ask before choosing a move.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Fact {
     // ── red's attack progress (red-private: its own ground truth) ──
     /// Red holds a foothold beyond the external edge.
@@ -190,12 +190,14 @@ pub fn blue_detection_rows(s: &GameState) -> Vec<FactRow> {
 /// alongside topology/aggregate gates that must not leak into an agent's fact table
 /// (`UndetectedActivity` would tell Blue hidden work exists). Keeping these out of `Fact::ALL`
 /// is why the surfaced fact table is unchanged by this refactor.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum InstanceProbe {
     /// Red has already performed this exact technique (once-only guards).
     Performed(Technique),
     /// Blue has fingerprinted this exact technique (the precise-counter gate).
     Detected(Technique),
+    /// The attack path for this technique is planted in this scenario (`state.vuln(t)`).
+    Vuln(Technique),
     /// Red has a forward hop to pivot/breach into.
     HasForwardPath,
     /// A DCSync-able ACL path exists in this scenario (the escalation misconfig).
@@ -224,6 +226,7 @@ impl InstanceProbe {
             InstanceProbe::UndetectedAlert => s.alerts.iter().any(|a| !s.has_detection(a.technique)),
             InstanceProbe::SawCategory(c) => s.alerts.iter().any(|a| a.technique.category() == *c),
             InstanceProbe::Identified(t) => s.has_detection(*t),
+            InstanceProbe::Vuln(t) => s.vuln(*t),
         }
     }
 }
@@ -231,7 +234,7 @@ impl InstanceProbe {
 /// A card's legality expressed as data. Tier-1 `Category` requirements gate on a surfaced
 /// [`Fact`]; Tier-2 `Instance` requirements gate on a ground-truth [`InstanceProbe`]. A card
 /// is legal when all its requirements are satisfied.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Requirement {
     Category { fact: Fact, want: bool },
     Instance { probe: InstanceProbe, want: bool },
@@ -406,6 +409,31 @@ mod tests {
         s.detections.push(crate::state::Detection { id: "d".into(), technique: Technique::Kerberoast, deployed_round: 1, technique_based: true, fidelity: "robust".into() });
         let rows2 = blue_detection_rows(&s);
         assert!(rows2.iter().any(|r| r.fact == "identified:kerberoast" && r.holds), "deployed rule → identified:kerberoast row");
+    }
+
+    #[test]
+    fn vuln_probe_tracks_misconfigs() {
+        let mut s = base();
+        // base() has the default misconfigs (Kerberoast, AsRepRoast, LateralMove)
+        assert!(InstanceProbe::Vuln(Technique::Kerberoast).holds(&s));
+        s.misconfigs.clear();
+        assert!(!InstanceProbe::Vuln(Technique::Kerberoast).holds(&s));
+    }
+
+    #[test]
+    fn requirement_deserializes_from_ron() {
+        let r: Requirement = ron::from_str("Category(fact: ReachesDc, want: true)").unwrap();
+        assert_eq!(r, Requirement::have(Fact::ReachesDc));
+        let p: Requirement = ron::from_str("Instance(probe: Vuln(Kerberoast), want: true)").unwrap();
+        assert_eq!(p, Requirement::Instance { probe: InstanceProbe::Vuln(Technique::Kerberoast), want: true });
+        // the v2 AnyOf disjunction must round-trip too (it is what segment's gate uses)
+        let a: Requirement = ron::from_str(
+            "AnyOf([Instance(probe: SawCategory(InitialAccess), want: true), Instance(probe: SawCategory(LateralMovement), want: true)])"
+        ).unwrap();
+        assert_eq!(a, Requirement::any_of(vec![
+            Requirement::saw_category(crate::category::Category::InitialAccess),
+            Requirement::saw_category(crate::category::Category::LateralMovement),
+        ]));
     }
 
     #[test]
