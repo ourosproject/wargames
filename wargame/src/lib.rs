@@ -13,6 +13,7 @@
 //!
 //! See `wargame/WARGAME.md` for the full design spec.
 
+pub mod arsenal;
 pub mod card;
 pub mod category;
 pub mod cards;
