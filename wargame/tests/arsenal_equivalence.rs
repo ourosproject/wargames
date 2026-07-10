@@ -99,6 +99,10 @@ fn run(card: &dyn Card, state: &GameState, params: &Value) -> (Value, Value) {
 fn data_moves_match_frozen_goldens() {
     let golden: Value = serde_json::from_str(include_str!("fixtures/arsenal_goldens.json")).unwrap();
     let golden = golden.as_object().unwrap();
+    // Guard against a silently-truncated fixture: 16 moves × 10 states, plus deploy_detection's
+    // two extra param cases × 10 states = 180. If the golden file lost entries, a move could go
+    // untested while the suite stayed green — assert the full count so that can't happen.
+    assert_eq!(golden.len(), 180, "golden fixture is truncated — expected 180 entries");
     let reg = purple_wargame::arsenal::default_registry();
     let param_cases = |id: &str| -> Vec<Value> {
         if id == "deploy_detection" { vec![json!({"technique":"kerberoast"}), json!({"technique":"not_a_technique"}), json!({})] } else { vec![json!({})] }
