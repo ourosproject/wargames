@@ -1094,7 +1094,7 @@ ToolDef(
 //! replaces. We compare the `play()` outcome AND the resulting game state (the referee's
 //! bookkeeping around play is unchanged, so play() is the exact unit under change).
 
-use purple_wargame::card::{Card, Environment};
+use purple_wargame::card::Card;
 use purple_wargame::cards::default_registry;
 use purple_wargame::env::SimEnvironment;
 use purple_wargame::state::{Alert, Cred, Detection, GameState, Host, Technique};
