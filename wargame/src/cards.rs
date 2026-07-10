@@ -278,10 +278,10 @@ impl Card for FixAclPath {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::LateralMove }
     fn describe(&self) -> &'static str { "Remove the GenericAll->DA path / tier admins" }
-    fn category(&self) -> Category { Category::PrivilegeEscalation }
+    fn category(&self) -> Category { Category::Harden }
     fn requires(&self) -> Vec<Requirement> {
-        // Category-gated: any discovery Blue has *seen* (ScoutDetected) unlocks the cut.
-        vec![Requirement::lack(Fact::PathSevered), Requirement::have(Fact::ScoutDetected)]
+        // Category-gated: any discovery Blue has *seen* unlocks the cut.
+        vec![Requirement::lack(Fact::PathSevered), Requirement::saw_category(Category::Discovery)]
     }
     fn produces(&self) -> Vec<Fact> { vec![Fact::PathSevered] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
@@ -300,9 +300,9 @@ impl Card for EnforceAes {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Kerberoast }
     fn describe(&self) -> &'static str { "Disable RC4 / enforce AES — Kerberoast tickets uncrackable" }
-    fn category(&self) -> Category { Category::CredentialAccess }
+    fn category(&self) -> Category { Category::Harden }
     fn requires(&self) -> Vec<Requirement> {
-        vec![Requirement::lack(Fact::AesEnforced), Requirement::fingerprinted(Technique::Kerberoast)]
+        vec![Requirement::lack(Fact::AesEnforced), Requirement::identified(Technique::Kerberoast)]
     }
     fn produces(&self) -> Vec<Fact> { vec![Fact::AesEnforced] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
@@ -321,9 +321,9 @@ impl Card for EnforcePreauth {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::AsRepRoast }
     fn describe(&self) -> &'static str { "Enforce Kerberos pre-auth — AS-REP roasting yields nothing" }
-    fn category(&self) -> Category { Category::CredentialAccess }
+    fn category(&self) -> Category { Category::Harden }
     fn requires(&self) -> Vec<Requirement> {
-        vec![Requirement::lack(Fact::PreauthEnforced), Requirement::fingerprinted(Technique::AsRepRoast)]
+        vec![Requirement::lack(Fact::PreauthEnforced), Requirement::identified(Technique::AsRepRoast)]
     }
     fn produces(&self) -> Vec<Fact> { vec![Fact::PreauthEnforced] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
@@ -342,7 +342,7 @@ impl Card for HardenCreds {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Kerberoast }
     fn describe(&self) -> &'static str { "Rotate credentials known to be compromised" }
-    fn category(&self) -> Category { Category::CredentialAccess }
+    fn category(&self) -> Category { Category::Evict }
     fn requires(&self) -> Vec<Requirement> { vec![Requirement::probe(InstanceProbe::CredCompromiseKnown)] }
     // produces: invalidates a cred (removal), not a fact flip → empty
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
@@ -434,10 +434,13 @@ impl Card for Segment {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Pivot }
     fn describe(&self) -> &'static str { "Re-segment — firewall-drop red's frontier before it reaches the DC" }
-    fn category(&self) -> Category { Category::LateralMovement }
+    fn category(&self) -> Category { Category::Isolate }
     fn requires(&self) -> Vec<Requirement> {
         vec![
-            Requirement::have(Fact::IntrusionDetected),
+            Requirement::any_of(vec![
+                Requirement::saw_category(Category::InitialAccess),
+                Requirement::saw_category(Category::LateralMovement),
+            ]),
             Requirement::lack(Fact::ReachesDc),
             Requirement::lack(Fact::DomainAdmin),
             Requirement::probe(InstanceProbe::HasForwardPath),
@@ -477,4 +480,20 @@ pub fn default_registry() -> CardRegistry {
     r.register(Box::new(Hunt));
     r.register(Box::new(DeployDetection));
     r
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::state::{GameState, Alert, Technique, Detection};
+
+    #[test]
+    fn enforce_aes_requires_a_deployed_rule_not_just_an_alert() {
+        let reg = default_registry();
+        let mut s = GameState::new(vec![]);
+        s.alerts.push(Alert { round: 1, technique: Technique::Kerberoast, source: "x".into(), rule_id: "r".into(), level: 5 });
+        assert!(!reg.get("enforce_aes").unwrap().precondition(&s), "alert alone must NOT unlock enforce_aes");
+        s.detections.push(Detection { id: "d".into(), technique: Technique::Kerberoast, deployed_round: 1, technique_based: true, fidelity: "robust".into() });
+        assert!(reg.get("enforce_aes").unwrap().precondition(&s), "a deployed kerberoast rule unlocks enforce_aes");
+    }
 }
