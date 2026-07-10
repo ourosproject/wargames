@@ -103,8 +103,8 @@ pub trait Card: Send + Sync {
     }
 
     /// Tier-1 kill-chain category this card belongs to / counters.
-    /// TEMP default removed in the final task so every card must declare it.
-    fn category(&self) -> Category { Category::Detection }
+    /// Required — every card declares it (compile error otherwise).
+    fn category(&self) -> Category;
 
     /// Declarative legality — the facts/probes that must hold. Provided `precondition`
     /// evaluates these; cards should override this, not `precondition`.
