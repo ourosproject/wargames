@@ -178,6 +178,69 @@ pub fn table_for(side: Side, s: &GameState) -> Vec<FactRow> {
     Fact::ALL.iter().filter(|f| f.audience() == side).map(|f| f.row(s)).collect()
 }
 
+/// A ground-truth legality gate that is NEVER surfaced to a model. This is Tier-2: the place
+/// instance-specific gates (`Detected(Kerberoast)` — the precise counter fingerprint) live,
+/// alongside topology/aggregate gates that must not leak into an agent's fact table
+/// (`UndetectedActivity` would tell Blue hidden work exists). Keeping these out of `Fact::ALL`
+/// is why the surfaced fact table is unchanged by this refactor.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub enum InstanceProbe {
+    /// Red has already performed this exact technique (once-only guards).
+    Performed(Technique),
+    /// Blue has fingerprinted this exact technique (the precise-counter gate).
+    Detected(Technique),
+    /// Red has a forward hop to pivot/breach into.
+    HasForwardPath,
+    /// A DCSync-able ACL path exists in this scenario (the escalation misconfig).
+    LateralPathPlanted,
+    /// There is a cracked credential whose acquiring technique Blue has detected.
+    CredCompromiseKnown,
+    /// Some technique Red performed is not yet visible to Blue (a coverage gap to hunt).
+    UndetectedActivity,
+    /// Some alert Blue holds has no technique-based detection rule yet.
+    UndetectedAlert,
+}
+
+impl InstanceProbe {
+    pub fn holds(&self, s: &GameState) -> bool {
+        match self {
+            InstanceProbe::Performed(t) => s.performed_technique(*t),
+            InstanceProbe::Detected(t) => s.blue_knows(*t),
+            InstanceProbe::HasForwardPath => !s.next_hops().is_empty(),
+            InstanceProbe::LateralPathPlanted => s.vuln(Technique::LateralMove),
+            InstanceProbe::CredCompromiseKnown => s.creds.iter().any(|c| c.cracked && s.blue_knows(c.via)),
+            InstanceProbe::UndetectedActivity => s.performed.iter().any(|t| !s.blue_knows(*t)),
+            InstanceProbe::UndetectedAlert => s.alerts.iter().any(|a| !s.has_detection(a.technique)),
+        }
+    }
+}
+
+/// A card's legality expressed as data. Tier-1 `Category` requirements gate on a surfaced
+/// [`Fact`]; Tier-2 `Instance` requirements gate on a ground-truth [`InstanceProbe`]. A card
+/// is legal when all its requirements are satisfied.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub enum Requirement {
+    Category { fact: Fact, want: bool },
+    Instance { probe: InstanceProbe, want: bool },
+}
+
+impl Requirement {
+    pub fn have(fact: Fact) -> Self { Requirement::Category { fact, want: true } }
+    pub fn lack(fact: Fact) -> Self { Requirement::Category { fact, want: false } }
+    pub fn did(t: Technique) -> Self { Requirement::Instance { probe: InstanceProbe::Performed(t), want: true } }
+    pub fn not_yet(t: Technique) -> Self { Requirement::Instance { probe: InstanceProbe::Performed(t), want: false } }
+    pub fn fingerprinted(t: Technique) -> Self { Requirement::Instance { probe: InstanceProbe::Detected(t), want: true } }
+    pub fn probe(p: InstanceProbe) -> Self { Requirement::Instance { probe: p, want: true } }
+    pub fn no_probe(p: InstanceProbe) -> Self { Requirement::Instance { probe: p, want: false } }
+
+    pub fn satisfied(&self, s: &GameState) -> bool {
+        match self {
+            Requirement::Category { fact, want } => fact.holds(s) == *want,
+            Requirement::Instance { probe, want } => probe.holds(s) == *want,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -272,5 +335,40 @@ mod tests {
         assert!(blue.iter().all(|r| r.fact != "foothold" && r.fact != "has_cred"));
         // partition is total
         assert_eq!(red.len() + blue.len(), Fact::ALL.len());
+    }
+
+    #[test]
+    fn instance_probe_performed_and_detected() {
+        let mut s = base();
+        assert!(!InstanceProbe::Performed(Technique::Recon).holds(&s));
+        s.performed.push(Technique::Recon);
+        assert!(InstanceProbe::Performed(Technique::Recon).holds(&s));
+        assert!(!InstanceProbe::Detected(Technique::Recon).holds(&s), "performed != detected");
+        s.alerts.push(crate::state::Alert { round: 1, technique: Technique::Recon, source: "m".into(), rule_id: "r".into(), level: 8 });
+        assert!(InstanceProbe::Detected(Technique::Recon).holds(&s));
+    }
+
+    #[test]
+    fn requirement_category_and_instance_respect_want() {
+        let mut s = base();
+        // ReachesDc false at start → have(ReachesDc) unsatisfied, lack(ReachesDc) satisfied
+        assert!(!Requirement::have(Fact::ReachesDc).satisfied(&s));
+        assert!(Requirement::lack(Fact::ReachesDc).satisfied(&s));
+        // instance: not_yet(Recon) satisfied until performed
+        assert!(Requirement::not_yet(Technique::Recon).satisfied(&s));
+        s.performed.push(Technique::Recon);
+        assert!(!Requirement::not_yet(Technique::Recon).satisfied(&s));
+        assert!(Requirement::did(Technique::Recon).satisfied(&s));
+    }
+
+    #[test]
+    fn undetected_probes_track_gaps() {
+        let mut s = base();
+        assert!(!InstanceProbe::UndetectedActivity.holds(&s));
+        s.performed.push(Technique::Kerberoast);
+        assert!(InstanceProbe::UndetectedActivity.holds(&s), "performed but unseen");
+        s.alerts.push(crate::state::Alert { round: 1, technique: Technique::Kerberoast, source: "m".into(), rule_id: "r".into(), level: 8 });
+        assert!(!InstanceProbe::UndetectedActivity.holds(&s), "now seen");
+        assert!(InstanceProbe::UndetectedAlert.holds(&s), "alert has no detection rule yet");
     }
 }
