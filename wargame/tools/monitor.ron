@@ -1,0 +1,10 @@
+ToolDef(
+    id: "monitor", side: Blue, technique: Recon, category: Detection,
+    summary: "Bring continuous monitoring online (Velociraptor + Sysmon live)",
+    gate: [Category(fact: Monitoring, want: false)],
+    produces: [Monitoring],
+    nodes: [ Node(
+        id: "monitor", effect: SetFlag(Monitoring), ok_surface: [],
+        ok_narrative: "continuous monitoring ONLINE — the range is now watched",
+    ) ],
+)
