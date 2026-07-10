@@ -17,7 +17,8 @@ use axum::{
 use serde_json::{json, Value};
 
 use purple_wargame::card::Environment;
-use purple_wargame::arsenal::default_registry;
+use purple_wargame::arsenal::{default_registry, authored_dir, registry_with_authored, vocabulary};
+use purple_wargame::builder::{self, MoveDraft};
 use purple_wargame::env::{LiveEnvironment, SimEnvironment};
 use purple_wargame::referee::{Agent, HeuristicAgent, ModelAgent, Referee};
 use purple_wargame::session::{side_from_key, Match, Seat};
@@ -63,6 +64,13 @@ fn new_game_state() -> GameState {
 
 fn new_referee() -> Referee {
     Referee { rules: RuleSet { max_rounds: 8, ..RuleSet::default() }, registry: default_registry() }
+}
+
+/// Referee for human-playable matches: built-ins PLUS authored moves. Kept separate from
+/// `new_referee` (built-ins only), which stays wired to `run_cli` and the autonomous `game` SSE
+/// so the balance guard and the AI demo never see experimental moves.
+fn play_referee() -> Referee {
+    Referee { rules: RuleSet { max_rounds: 8, ..RuleSet::default() }, registry: registry_with_authored(&authored_dir()) }
 }
 
 /// Build a fresh game state with a seeded scenario applied — this is what makes each match a
@@ -115,7 +123,7 @@ fn make_match(mode: &str, side: &str, live: bool, use_model: bool) -> Match {
         "2p" => (Seat::Human, Seat::Human),
         _ => (agent(Side::Red), agent(Side::Blue)),
     };
-    Match::new(new_id(), red, blue, game_state_for(seed), make_env(live), new_referee())
+    Match::new(new_id(), red, blue, game_state_for(seed), make_env(live), play_referee())
 }
 
 fn err_json(msg: impl Into<String>) -> Json<Value> {
@@ -234,8 +242,45 @@ async fn anime_js() -> impl axum::response::IntoResponse {
     )
 }
 
+async fn vocabulary_api() -> Json<Value> {
+    Json(vocabulary())
+}
+
+async fn list_tools() -> Json<Value> {
+    Json(builder::list(&authored_dir()))
+}
+
+async fn save_tool(Json(draft): Json<MoveDraft>) -> Json<Value> {
+    let dir = authored_dir();
+    let reg = registry_with_authored(&dir);
+    match builder::save(&dir, &draft, &reg) {
+        Ok(def) => Json(json!({ "ok": true, "id": def.id })),
+        Err(errs) => Json(json!({ "ok": false, "errors": errs })),
+    }
+}
+
+/// Non-destructive validation for the "Validate" button — checks the draft but writes nothing.
+async fn validate_tool(Json(draft): Json<MoveDraft>) -> Json<Value> {
+    let reg = registry_with_authored(&authored_dir());
+    match builder::check(&draft, &reg) {
+        Ok(def) => Json(json!({ "ok": true, "id": def.id })),
+        Err(errs) => Json(json!({ "ok": false, "errors": errs })),
+    }
+}
+
+async fn delete_tool(Path(id): Path<String>) -> Json<Value> {
+    match builder::delete(&authored_dir(), &id) {
+        Ok(()) => Json(json!({ "ok": true })),
+        Err(e) => Json(json!({ "ok": false, "error": e })),
+    }
+}
+
+async fn build_page() -> Html<&'static str> {
+    Html(include_str!("../public/build.html"))
+}
+
 async fn catalog() -> Json<serde_json::Value> {
-    let reg = default_registry();
+    let reg = registry_with_authored(&authored_dir());
     let cards: Vec<serde_json::Value> = reg
         .all_specs()
         .iter()
@@ -425,7 +470,12 @@ async fn main() {
     let app = Router::new()
         .route("/", get(index))
         .route("/design", get(design_page))
+        .route("/build", get(build_page))
         .route("/anime.min.js", get(anime_js))
+        .route("/api/vocabulary", get(vocabulary_api))
+        .route("/api/tools", get(list_tools).post(save_tool))
+        .route("/api/tools/validate", post(validate_tool))
+        .route("/api/tools/:id", axum::routing::delete(delete_tool))
         .route("/api/catalog", get(catalog))
         .route("/api/game", get(game))
         .route("/api/history", get(history_api))
