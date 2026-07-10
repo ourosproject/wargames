@@ -927,7 +927,7 @@ pub fn parse_tool(src: &str) -> Result<ToolDef, String> {
 /// derives from recording the move's `technique` (recon -> scouted; bloodhound -> path mapped/scouted).
 pub fn established_facts(def: &ToolDef) -> Vec<Fact> {
     let mut out = Vec::new();
-    let mut add = |f: Fact, out: &mut Vec<Fact>| {
+    let add = |f: Fact, out: &mut Vec<Fact>| {
         if !out.contains(&f) {
             out.push(f);
         }
