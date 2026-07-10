@@ -14,6 +14,7 @@
 //! See `wargame/WARGAME.md` for the full design spec.
 
 pub mod card;
+pub mod category;
 pub mod cards;
 pub mod env;
 pub mod facts;
