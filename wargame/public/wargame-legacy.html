@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Purple Range · Wargame</title>
+<style>
+  :root{
+    --bg:#0a0e17; --panel:#111726; --field:#0b1120; --line:#1e2740; --line2:#2b3757;
+    --t1:#e8edf7; --t2:#9fb0cf; --t3:#5f708f;
+    --red:#ff4d67; --red-dim:#3a1420; --blue:#38b6ff; --blue-dim:#0e2233;
+    --purple:#a855f7; --gold:#ffcf5c;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#131b2e,var(--bg));color:var(--t1);font-family:var(--sans);min-height:100vh}
+  .wrap{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:6px}
+  .brand{font-weight:800;letter-spacing:.14em;font-size:13px;color:var(--t2)}
+  .brand b{color:var(--purple)}
+  button{font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.03em;color:#07101c;
+    background:linear-gradient(180deg,#c9b3ff,var(--purple));border:0;border-radius:9px;padding:9px 16px;cursor:pointer;box-shadow:0 4px 18px rgba(168,85,247,.35)}
+  button:disabled{filter:grayscale(.5) brightness(.8);cursor:default;box-shadow:none}
+  .ctrls{display:flex;align-items:center;gap:10px}
+  .live{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--mono);letter-spacing:.06em;color:var(--t2);
+    border:1px solid var(--line2);border-radius:9px;padding:7px 11px;cursor:pointer;user-select:none}
+  .live input{accent-color:var(--red);cursor:pointer}
+  #reset{background:transparent;color:var(--t2);border:1px solid var(--line2);box-shadow:none}
+  #reset:hover{border-color:var(--blue);color:var(--blue)}
+  .livetag{color:var(--red);font-family:var(--mono);animation:pulse 1.3s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.4}}
+  body.is-live .live{border-color:var(--red);color:var(--red);box-shadow:0 0 14px rgba(255,77,103,.3)}
+  body.is-live .brand b{color:var(--red)}
+  .battle{font-family:var(--mono);font-size:12px;color:var(--t3);margin:2px 0 16px}
+
+  .field{background:var(--field);border:1px solid var(--line);border-radius:14px;padding:6px 10px;margin-bottom:16px}
+  .field svg{display:block;width:100%;height:auto}
+  .edge{stroke:var(--line2);stroke-width:2;fill:none}
+  .edge.tele{stroke:#1b3a52;stroke-dasharray:2 6;stroke-width:1.5}
+  .edge.hot{stroke:var(--red);stroke-width:2.5;stroke-dasharray:7 7;animation:flow 1s linear infinite}
+  @keyframes flow{to{stroke-dashoffset:-28}}
+  .halo{fill:none;stroke:none;opacity:0}
+  .core{fill:#16203a;stroke:var(--line2);stroke-width:2}
+  .lbl{fill:var(--t2);font:700 12px var(--mono);text-anchor:middle}
+  .zone{fill:var(--t3);font:700 10px var(--mono);letter-spacing:.16em;text-anchor:middle}
+  .ring{fill:none;stroke:none}
+  @keyframes pulse{from{opacity:.55;stroke-width:2}to{opacity:0;stroke-width:1}}
+  .bnode.attacker .core{fill:var(--red);stroke:#ff9aab} .bnode.attacker .lbl{fill:var(--red)}
+  .bnode.compromised .core{fill:var(--red);stroke:#ff9aab} .bnode.compromised .lbl{fill:#ffd7de}
+  .bnode.compromised .halo{stroke:var(--red);opacity:.5;animation:ripple 1.7s ease-out infinite}
+  .bnode.siem .core{fill:var(--blue);stroke:#9ad8ff} .bnode.siem .lbl{fill:var(--blue)}
+  .bnode.siem.active .halo{stroke:var(--blue);opacity:.5;animation:ripple 1.7s ease-out infinite}
+  .bnode.detected .ring{stroke:var(--blue);stroke-width:2;opacity:.9}
+  .bnode.objective .core{stroke:var(--gold);stroke-width:2.5}
+  .bnode.objective.attacked .core{fill:#3a2e0e} .bnode.objective.attacked .lbl{fill:var(--gold)}
+  .bnode.objective.attacked .halo{stroke:var(--gold);opacity:.5;animation:ripple 1.7s ease-out infinite}
+  .bnode.objective.owned .core{fill:var(--red);stroke:var(--gold)} .bnode.objective.owned .lbl{fill:var(--gold)}
+  @keyframes ripple{from{r:20px;opacity:.55}to{r:42px;opacity:0}}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;color:var(--t3);padding:4px 8px 8px}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+  .vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:16px}
+  .side{display:flex;flex-direction:column;gap:8px}
+  .side.blue{align-items:flex-end;text-align:right}
+  .tag{font-family:var(--mono);font-size:11px;letter-spacing:.22em;font-weight:700}
+  .red .tag{color:var(--red)} .blue .tag{color:var(--blue)}
+  .sc{font-size:42px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+  .red .sc{color:var(--red)} .blue .sc{color:var(--blue)}
+  .bar{height:6px;border-radius:6px;background:#0c1220;overflow:hidden}
+  .bar > i{display:block;height:100%;transition:width .5s ease}
+  .red .bar > i{background:linear-gradient(90deg,var(--red),#ff9aab);float:right}
+  .blue .bar > i{background:linear-gradient(90deg,#9ad8ff,var(--blue))}
+  .swords{font-size:24px;color:var(--t3)}
+
+  #feed{display:flex;flex-direction:column;gap:10px}
+  .round{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;animation:pop .35s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .rhead{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--t3);margin-bottom:8px}
+  .move{font-family:var(--mono);font-size:13px;line-height:1.5;padding:2px 0 2px 10px;border-left:2px solid var(--line2)}
+  .move.red{border-color:var(--red);color:#ffd7de} .move.blue{border-color:var(--blue);color:#cfeaff}
+  .move.note{border-color:transparent;color:var(--t3);font-size:12px;padding-left:22px}
+  .move .quip{color:var(--t3);font-style:italic}
+  .badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;padding:1px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
+  .b-caught{background:var(--red-dim);color:var(--red)} .b-stealth{background:#14233a;color:var(--blue)} .b-honey{background:#3a2e0e;color:var(--gold)}
+  .banner{margin-top:18px;text-align:center;font-weight:800;font-size:22px;letter-spacing:.02em;padding:20px;border-radius:14px;border:1px solid var(--line2);animation:pop .4s ease}
+  .banner.red{background:linear-gradient(180deg,var(--red-dim),#160a10);color:var(--red);border-color:#57202f}
+  .banner.blue{background:linear-gradient(180deg,var(--blue-dim),#08151f);color:var(--blue);border-color:#1d4b6e}
+  .banner small{display:block;font-weight:600;font-size:13px;color:var(--t2);letter-spacing:0;margin-top:6px}
+  .idle{color:var(--t3);font-family:var(--mono);font-size:13px;text-align:center;padding:34px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">PURPLE RANGE · <b>WARGAME</b></div>
+    <div class="ctrls">
+      <label class="live" title="Fire real actions on the homelab range (mutates dc01)"><input type="checkbox" id="live"> <span id="livelbl">LIVE</span></label>
+      <button id="reset" title="Roll dc01 back to the wargame baseline">⟲ RESET RANGE</button>
+      <button id="play">▶ NEW MATCH</button>
+    </div>
+  </header>
+  <div class="battle" id="battle">red ⚔ blue · press New Match to run an autonomous round-based game</div>
+
+  <div class="field">
+    <svg viewBox="0 0 880 300" role="img" aria-label="Network battlefield — red compromise spreading toward the domain controller">
+      <text class="zone" x="80" y="24">VLAN10 · ATTACKER</text>
+      <text class="zone" x="300" y="24">VLAN20 · TARGETS</text>
+      <text class="zone" x="540" y="24">VLAN30 · DC</text>
+      <text class="zone" x="800" y="24">VLAN40 · SIEM</text>
+
+      <line class="edge tele" x1="800" y1="150" x2="300" y2="100"/>
+      <line class="edge tele" x1="800" y1="150" x2="300" y2="205"/>
+      <line class="edge tele" x1="800" y1="150" x2="540" y2="100"/>
+      <line class="edge tele" x1="800" y1="150" x2="560" y2="210"/>
+      <line class="edge" id="e-kr" x1="80" y1="150" x2="300" y2="205"/>
+      <line class="edge" id="e-uw" x1="300" y1="100" x2="540" y2="100"/>
+      <line class="edge" id="e-rd" x1="300" y1="205" x2="560" y2="210"/>
+      <line class="edge" id="e-ku" x1="80" y1="150" x2="300" y2="100"/>
+      <line class="edge" id="e-ud" x1="300" y1="100" x2="560" y2="210"/>
+
+      <g class="bnode attacker" id="bn-kali"><circle class="halo" cx="80" cy="150" r="20"/><circle class="core" cx="80" cy="150" r="22"/><text class="lbl" x="80" y="192">kali</text></g>
+      <g class="bnode" id="bn-ubuntu"><circle class="ring" cx="300" cy="100" r="27"/><circle class="halo" cx="300" cy="100" r="20"/><circle class="core" cx="300" cy="100" r="22"/><text class="lbl" x="300" y="142">ubuntu</text></g>
+      <g class="bnode" id="bn-rocky"><circle class="ring" cx="300" cy="205" r="27"/><circle class="halo" cx="300" cy="205" r="20"/><circle class="core" cx="300" cy="205" r="22"/><text class="lbl" x="300" y="247">rocky</text></g>
+      <g class="bnode" id="bn-windows"><circle class="ring" cx="540" cy="100" r="27"/><circle class="halo" cx="540" cy="100" r="20"/><circle class="core" cx="540" cy="100" r="22"/><text class="lbl" x="540" y="142">windows</text></g>
+      <g class="bnode objective" id="bn-dc01"><circle class="ring" cx="560" cy="210" r="33"/><circle class="halo" cx="560" cy="210" r="26"/><circle class="core" cx="560" cy="210" r="28"/><text class="lbl" x="560" y="256">dc01 ♛</text></g>
+      <g class="bnode siem" id="bn-wazuh"><circle class="halo" cx="800" cy="150" r="20"/><circle class="core" cx="800" cy="150" r="22"/><text class="lbl" x="800" y="192">wazuh</text></g>
+    </svg>
+    <div class="legend">
+      <span><i style="background:var(--red)"></i>compromised</span>
+      <span><i style="background:var(--gold)"></i>objective (DC)</span>
+      <span><i style="background:var(--blue)"></i>blue / detected</span>
+      <span><i style="background:var(--line2)"></i>clean</span>
+    </div>
+  </div>
+
+  <div class="vs">
+    <div class="side red"><div class="tag">🔴 RED · ATTACKER</div><div class="sc" id="rs">0</div><div class="bar"><i id="rb" style="width:50%"></i></div></div>
+    <div class="swords">⚔</div>
+    <div class="side blue"><div class="tag">BLUE · DEFENDER 🔵</div><div class="sc" id="bs">0</div><div class="bar"><i id="bb" style="width:50%"></i></div></div>
+  </div>
+
+  <div id="feed"><div class="idle" id="idle">no match running — hit ▶ New Match</div></div>
+  <div id="bannerHost"></div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const feed = $('#feed'), bannerHost = $('#bannerHost');
+let es = null;
+
+function setScores(r, b){
+  $('#rs').textContent = r; $('#bs').textContent = b;
+  const t = Math.max(1, r + b);
+  $('#rb').style.width = (100*r/t)+'%'; $('#bb').style.width = (100*b/t)+'%';
+}
+function cls(id, c){ document.getElementById(id).setAttribute('class', c); }
+function resetField(){
+  cls('bn-kali','bnode attacker'); cls('bn-ubuntu','bnode'); cls('bn-rocky','bnode');
+  cls('bn-windows','bnode'); cls('bn-dc01','bnode objective'); cls('bn-wazuh','bnode siem');
+  cls('e-ku','edge'); cls('e-ud','edge');
+}
+function updateField(bf){
+  if(!bf) return;
+  cls('bn-ubuntu', 'bnode' + (bf.red_cred ? ' compromised' : ''));
+  let dc = 'bnode objective';
+  if(bf.dc_owned) dc += ' owned';
+  else if(bf.red_cred && bf.bloodhound) dc += ' attacked';
+  if(bf.blue_watching) dc += ' detected';
+  cls('bn-dc01', dc);
+  cls('bn-wazuh', 'bnode siem' + (bf.alerts > 0 ? ' active' : ''));
+  cls('e-ku', 'edge' + (bf.red_cred ? ' hot' : ''));
+  cls('e-ud', 'edge' + (((bf.red_cred && bf.bloodhound) || bf.dc_owned) ? ' hot' : ''));
+}
+
+function moveLine(raw){
+  const div = document.createElement('div');
+  let c = 'move note';
+  if (raw.includes('🔴')) c = 'move red'; else if (raw.includes('🔵')) c = 'move blue';
+  div.className = c;
+  const text = raw.trim();
+  const q = text.match(/└─\s*"(.*)"/);
+  if (q){ div.innerHTML = '<span class="quip">“'+q[1]+'”</span>'; return div; }
+  let badge = '';
+  if (text.includes('🚨')) badge = '<span class="badge b-caught">DETECTED</span>';
+  else if (text.includes('👻')) badge = '<span class="badge b-stealth">STEALTH</span>';
+  else if (text.includes('🍯')) badge = '<span class="badge b-honey">HONEYPOT</span>';
+  div.innerHTML = esc(text)+badge; return div;
+}
+function esc(s){ return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function renderRound(d){
+  const r = document.createElement('div'); r.className='round';
+  const h = document.createElement('div'); h.className='rhead'; h.textContent='ROUND '+d.round; r.appendChild(h);
+  d.lines.forEach(l => r.appendChild(moveLine(l)));
+  feed.appendChild(r);
+  window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+}
+function showBanner(w, round){
+  const b = document.createElement('div'); b.className='banner '+(w==='red'?'red':'blue');
+  b.innerHTML = w==='red'
+    ? '👑 RED WINS<small>Domain Admin reached in '+round+' rounds — the range has fallen.</small>'
+    : '🛡 BLUE WINS<small>held the line for '+round+' rounds — red never reached DA.</small>';
+  bannerHost.appendChild(b); b.scrollIntoView({behavior:'smooth'});
+}
+
+$('#play').addEventListener('click', () => {
+  if (es) es.close();
+  feed.innerHTML=''; bannerHost.innerHTML=''; setScores(0,0); resetField();
+  $('#play').disabled = true;
+  const live = $('#live').checked;
+  es = new EventSource('/api/game' + (live ? '?live=1' : ''));
+  es.addEventListener('start', e => {
+    const d=JSON.parse(e.data);
+    const liveMode = (d.mode||'').toLowerCase().startsWith('live');
+    document.body.classList.toggle('is-live', liveMode);
+    $('#battle').innerHTML = (liveMode ? '<b class="livetag">● LIVE</b> ' : '')
+      + d.battlefield + '   ·   objective: '+d.objective
+      + (liveMode ? '   ·   firing real actions on the homelab' : '');
+  });
+  es.addEventListener('round', e => { const d=JSON.parse(e.data); renderRound(d); setScores(d.red,d.blue); updateField(d.bf); if(d.finished) showBanner(d.winner,d.round); });
+  es.addEventListener('end', () => { es.close(); $('#play').disabled=false; });
+  es.onerror = () => { es.close(); $('#play').disabled=false; };
+});
+
+// arm indicator — immediate feedback that the next match fires on the real range
+$('#live').addEventListener('change', () => {
+  const on = $('#live').checked;
+  $('#livelbl').textContent = on ? 'LIVE ●' : 'LIVE';
+  document.body.classList.toggle('is-live', on);
+  if (on) $('#battle').textContent = '● LIVE armed — NEW MATCH will fire real attacks/defenses on dc01 (RESET RANGE to revert)';
+});
+
+$('#reset').addEventListener('click', () => {
+  const btn = $('#reset'); const old = btn.textContent;
+  btn.disabled = true; btn.textContent = '⟲ resetting…';
+  fetch('/api/reset', { method:'POST' })
+    .then(r => r.json())
+    .then(d => { $('#battle').textContent = (d.ok ? '⟲ ' : '⚠ ') + d.msg; })
+    .catch(() => { $('#battle').textContent = '⚠ reset request failed'; })
+    .finally(() => { setTimeout(() => { btn.disabled=false; btn.textContent=old; }, 2000); });
+});
+</script>
+</body>
+</html>
