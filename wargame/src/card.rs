@@ -10,6 +10,8 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::category::Category;
+use crate::facts::{Fact, Requirement};
 use crate::state::{Alert, GameState, Side, Technique};
 
 /// A move an agent (model / heuristic / human) submits: pick one card + its params.
@@ -38,6 +40,7 @@ pub struct CardSpec {
     pub id: String,
     pub side: Side,
     pub technique: Technique,
+    pub category: Category,
     pub summary: String,
     /// JSON Schema for this card's params — used to constrain the thin model's output.
     pub params_schema: serde_json::Value,
@@ -99,10 +102,25 @@ pub trait Card: Send + Sync {
         serde_json::json!({})
     }
 
-    /// Is this card legal in the current state? (foothold present, cred known, pivot up…)
-    /// The referee builds each turn's legal-move menu from this — the thin model can only
-    /// ever pick a card that passes here.
-    fn precondition(&self, state: &GameState) -> bool;
+    /// Tier-1 kill-chain category this card belongs to / counters.
+    /// TEMP default removed in the final task so every card must declare it.
+    fn category(&self) -> Category { Category::Detection }
+
+    /// Declarative legality — the facts/probes that must hold. Provided `precondition`
+    /// evaluates these; cards should override this, not `precondition`.
+    fn requires(&self) -> Vec<Requirement> { vec![] }
+
+    /// Facts this card flips true on success (for the forest/builder; not consumed yet).
+    fn produces(&self) -> Vec<Fact> { vec![] }
+
+    /// Declared ATT&CK exposure — the instance signature blue could detect.
+    fn detection_surface(&self) -> Vec<Technique> { vec![] }
+
+    /// Legal in this state? Provided: all requirements satisfied. Overridable for cards not
+    /// yet migrated to `requires()`.
+    fn precondition(&self, state: &GameState) -> bool {
+        self.requires().iter().all(|r| r.satisfied(state))
+    }
 
     /// Execute the card: run it through the environment, mutating game state.
     fn play(
@@ -118,8 +136,44 @@ pub trait Card: Send + Sync {
             id: self.id().to_string(),
             side: self.side(),
             technique: self.technique(),
+            category: self.category(),
             summary: self.describe().to_string(),
             params_schema: self.params_schema(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::category::Category;
+
+    // A card that declares requirements but no precondition override uses the provided path.
+    struct Dummy;
+    impl Card for Dummy {
+        fn id(&self) -> &'static str { "dummy" }
+        fn side(&self) -> Side { Side::Blue }
+        fn technique(&self) -> Technique { Technique::Recon }
+        fn category(&self) -> Category { Category::Detection }
+        fn describe(&self) -> &'static str { "dummy" }
+        fn requires(&self) -> Vec<crate::facts::Requirement> {
+            vec![crate::facts::Requirement::lack(crate::facts::Fact::Monitoring)]
+        }
+        fn play(&self, _s: &mut GameState, _p: &serde_json::Value, _e: &mut dyn Environment) -> Outcome {
+            Outcome { success: true, narrative: String::new(), detection_surface: vec![] }
+        }
+    }
+
+    #[test]
+    fn provided_precondition_evaluates_requires() {
+        let mut s = GameState::new(vec![]);
+        assert!(Dummy.precondition(&s), "monitoring off → lack(Monitoring) satisfied");
+        s.monitoring = true;
+        assert!(!Dummy.precondition(&s), "monitoring on → lack(Monitoring) fails");
+    }
+
+    #[test]
+    fn spec_carries_category() {
+        assert_eq!(Dummy.spec().category, Category::Detection);
     }
 }
