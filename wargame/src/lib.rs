@@ -16,6 +16,7 @@
 pub mod card;
 pub mod category;
 pub mod cards;
+pub mod effects;
 pub mod env;
 pub mod facts;
 pub mod graph;
