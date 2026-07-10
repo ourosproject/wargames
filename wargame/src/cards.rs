@@ -240,7 +240,9 @@ impl Card for ContinuousMonitoring {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Recon }
     fn describe(&self) -> &'static str { "Bring continuous monitoring online (Velociraptor + Sysmon live)" }
-    fn precondition(&self, s: &GameState) -> bool { !s.monitoring }
+    fn category(&self) -> Category { Category::Detection }
+    fn requires(&self) -> Vec<Requirement> { vec![Requirement::lack(Fact::Monitoring)] }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::Monitoring] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let o = realize(e, self.id(), p, s, "continuous monitoring ONLINE — the range is now watched", vec![]);
         if o.success {
@@ -257,7 +259,9 @@ impl Card for ActiveResponse {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Recon }
     fn describe(&self) -> &'static str { "Arm active response — detections auto-contain (the bite)" }
-    fn precondition(&self, s: &GameState) -> bool { !s.auto_response }
+    fn category(&self) -> Category { Category::Detection }
+    fn requires(&self) -> Vec<Requirement> { vec![Requirement::lack(Fact::AutoResponse)] }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::AutoResponse] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let o = realize(e, self.id(), p, s, "active response ARMED — a detected theft is contained instantly", vec![]);
         if o.success {
@@ -367,7 +371,8 @@ impl Card for Hunt {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Recon }
     fn describe(&self) -> &'static str { "Threat-hunt telemetry for an undetected technique (closes a gap)" }
-    fn precondition(&self, s: &GameState) -> bool { s.performed.iter().any(|t| !s.blue_knows(*t)) }
+    fn category(&self) -> Category { Category::Detection }
+    fn requires(&self) -> Vec<Requirement> { vec![Requirement::probe(InstanceProbe::UndetectedActivity)] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let live = realize(e, self.id(), p, s, "", vec![]);
         // hunt the highest-value technique red has performed that blue can't yet see
@@ -390,6 +395,8 @@ impl Card for DeployDetection {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Kerberoast }
     fn describe(&self) -> &'static str { "Write a technique-based detection for observed activity" }
+    fn category(&self) -> Category { Category::Detection }
+    fn requires(&self) -> Vec<Requirement> { vec![Requirement::probe(InstanceProbe::UndetectedAlert)] }
     fn params_schema(&self) -> Value {
         json!({ "type": "object", "properties": { "technique": { "type": "string" } }, "required": ["technique"] })
     }
@@ -397,7 +404,6 @@ impl Card for DeployDetection {
         let t = s.alerts.iter().map(|a| a.technique).filter(|t| !s.has_detection(*t)).max_by_key(|t| t.value());
         match t { Some(t) => json!({ "technique": t.as_key() }), None => json!({}) }
     }
-    fn precondition(&self, s: &GameState) -> bool { s.alerts.iter().any(|a| !s.has_detection(a.technique)) }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let key = p.get("technique").and_then(|v| v.as_str()).unwrap_or("");
         match Technique::from_key(key) {
