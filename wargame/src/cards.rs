@@ -167,7 +167,10 @@ impl Card for AsRepRoast {
     fn side(&self) -> Side { Side::Red }
     fn technique(&self) -> Technique { Technique::AsRepRoast }
     fn describe(&self) -> &'static str { "AS-REP roast a no-preauth user (fails if pre-auth enforced)" }
-    fn precondition(&self, s: &GameState) -> bool { s.attack_ready() }
+    fn category(&self) -> Category { Category::CredentialAccess }
+    fn requires(&self) -> Vec<Requirement> { vec![Requirement::have(Fact::ReachesDc)] }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::HasCred] }
+    fn detection_surface(&self) -> Vec<Technique> { vec![Technique::AsRepRoast] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         if !s.vuln(Technique::AsRepRoast) {
             return Outcome { success: false, narrative: "no AS-REP-roastable user in this environment".into(), detection_surface: vec![] };
@@ -206,9 +209,18 @@ impl Card for EscalateDa {
     fn side(&self) -> Side { Side::Red }
     fn technique(&self) -> Technique { Technique::LateralMove }
     fn describe(&self) -> &'static str { "Abuse the ACL path to Domain Admin (gone if remediated)" }
-    fn precondition(&self, s: &GameState) -> bool {
-        s.vuln(Technique::LateralMove) && s.has_cracked_cred() && s.performed_technique(Technique::BloodHound) && !s.red_reached_da && !s.acl_path_fixed
+    fn category(&self) -> Category { Category::PrivilegeEscalation }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![
+            Requirement::probe(InstanceProbe::LateralPathPlanted),
+            Requirement::have(Fact::HasCred),
+            Requirement::have(Fact::PathMapped),
+            Requirement::lack(Fact::DomainAdmin),
+            Requirement::lack(Fact::PathSevered),
+        ]
     }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::DomainAdmin] }
+    fn detection_surface(&self) -> Vec<Technique> { vec![Technique::LateralMove] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let o = realize(e, self.id(), p, s, "DCSync via svc_mssql -> dumped krbtgt -> DOMAIN ADMIN", vec![Technique::LateralMove]);
         if o.success {
