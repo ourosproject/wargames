@@ -121,15 +121,17 @@ types — chosen so the move files read close to the code; swappable for JSON la
 change to the design):
 
 ```ron
-// tools/remediate_acl.ron — a one-step defense: remove the path to Domain Admin
+// tools/remediate_acl.ron — a one-step defense: remove the path to Domain Admin.
+// Gate + category follow facts-as-data v2: the D3FEND "Harden" lane, unlocked by any
+// SEEN discovery activity (the two-level detection model, not a retired ScoutDetected fact).
 ToolDef(
   id: "remediate_acl", side: Blue, technique: LateralMove,
-  category: PrivilegeEscalation,
+  category: Harden,
   summary: "Remove the GenericAll->DA path / tier admins",
-  gate: [Category(PathSevered, false), Category(ScoutDetected, true)],
+  gate: [Category(fact: PathSevered, want: false), Instance(probe: SawCategory(Discovery), want: true)],
   produces: [PathSevered],
   nodes: [ Node(
-    id: "revoke_dcsync", guards: [], effect: SetFlag(PathSevered),
+    id: "remediate_acl", guards: [], effect: SetFlag(PathSevered),
     ok_surface: [], ok_narrative: "revoked svc_mssql DCSync — path to DA severed",
   )],
 )
@@ -257,11 +259,15 @@ Same approach that worked in sub-project 1:
   without the path already cut), it plays the new data move and the old code move on identical
   states and asserts they produce the **same result and the same resulting game state**
   (compared by turning both states to JSON and checking equality — no new machinery needed).
+- The check also compares **legality** (each move's precondition) across the same states — this
+  is what facts-as-data v2 changed for the blue counters (their gates), so the data move's gate
+  must give the identical legal/illegal verdict.
 - This test is made green **before any old code is deleted**, so it guards every step of the
   conversion. The frozen reference stays in the test as a permanent regression guard.
-- **Balance re-measured** after deletion: the 10-seed run on the local model, expecting blue to
-  win 3 of 10 (seeds 1, 3, 7) — the established baseline. A deviation is investigated, not
-  auto-failed.
+- **Balance re-measured** after deletion with the **deterministic heuristic** (`cli`, no model),
+  expecting blue to win 3 of 10 (seeds 1, 3, 7) — the established baseline. Single-run model
+  batches are non-deterministic noise and are not used to judge balance. Because the heuristic
+  run is deterministic, any deviation is a real behavior change to investigate.
 
 ---
 
@@ -274,11 +280,15 @@ Same approach that worked in sub-project 1:
   program at build time (`include_str!`), so it stays a single static binary — the reason the
   command center was ported to Rust. An optional load-from-folder path is reserved for the
   future author-a-move front-end.
+- **Foundation is facts-as-data v2** (already in the tree): `Category` is the full ATT&CK +
+  D3FEND taxonomy (9 enforced categories), detection is two-level (`SawCategory` / `Identified`),
+  `Requirement` has an `AnyOf` disjunction, and the three hardcoded detection facts are retired
+  (`Fact::ALL` is 11). This spec adopts all of that unchanged and only turns the moves into data.
 - **Modified:** `facts.rs` gains `InstanceProbe::Vuln(Technique)` (so the kerberoast/AS-REP
   runtime checks can be written as data) and the ability to read the alphabet back from text
-  (`Deserialize`). The surfaced fact list (`Fact::ALL`) is untouched, so the model's view is
-  byte-identical and balance can't drift from that. `graph.rs` keeps the blackboard and the
-  step-ordering; its Rust-only step trait and composite type are removed.
+  (`Deserialize`). The surfaced fact list (`Fact::ALL`, 11 facts) and `blue_detection_rows` are
+  untouched, so the model's view is byte-identical and balance can't drift from that. `graph.rs`
+  keeps the blackboard and the step-ordering; its Rust-only step trait and composite type are removed.
 - **Deleted:** the 16 move structs and kerberoast's Rust step pieces in `cards.rs`;
   `default_registry()` becomes the loader. `referee.rs` is unchanged (it keys on the stable
   move names).
