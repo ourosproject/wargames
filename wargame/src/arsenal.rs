@@ -3,6 +3,7 @@
 //! structural checks are the first real consumers of the requires/produces data.
 
 use std::collections::HashSet;
+use std::path::{Path, PathBuf};
 
 use crate::category::Category;
 use crate::effects::{Effect, StateFlag};
@@ -168,6 +169,53 @@ pub fn default_registry() -> CardRegistry {
     }
 }
 
+/// The home folder that holds a player's authored moves: `$HOME/.purple-range/tools`.
+pub fn authored_dir() -> PathBuf {
+    let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
+    PathBuf::from(home).join(".purple-range").join("tools")
+}
+
+/// The built-in arsenal PLUS every valid authored `.ron` in `dir`. A malformed or invalid
+/// authored file is logged to stderr and skipped — never fatal (unlike the built-ins, which
+/// `default_registry` panics on). A missing dir yields just the built-ins.
+pub fn registry_with_authored(dir: &Path) -> CardRegistry {
+    let mut reg = default_registry(); // built-ins (panics if a built-in is bad — intended)
+    let existing: std::collections::HashSet<String> = reg.all_specs().iter().map(|s| s.id.clone()).collect();
+    let mut seen = existing.clone();
+
+    let entries = match std::fs::read_dir(dir) {
+        Ok(e) => e,
+        Err(_) => return reg, // no authored dir yet
+    };
+    let mut paths: Vec<PathBuf> = entries
+        .filter_map(|e| e.ok().map(|e| e.path()))
+        .filter(|p| p.extension().map(|x| x == "ron").unwrap_or(false))
+        .collect();
+    paths.sort(); // deterministic load order
+
+    for path in paths {
+        let src = match std::fs::read_to_string(&path) {
+            Ok(s) => s,
+            Err(e) => { eprintln!("[arsenal] skip {}: {e}", path.display()); continue; }
+        };
+        let def = match parse_tool(&src) {
+            Ok(d) => d,
+            Err(e) => { eprintln!("[arsenal] skip {}: {e}", path.display()); continue; }
+        };
+        if let Err(errs) = validate(&def) {
+            eprintln!("[arsenal] skip {}: {}", path.display(), errs.join("; "));
+            continue;
+        }
+        if seen.contains(&def.id) {
+            eprintln!("[arsenal] skip {}: id '{}' collides with an existing move", path.display(), def.id);
+            continue;
+        }
+        seen.insert(def.id.clone());
+        reg.register(Box::new(DataTool::new(def)));
+    }
+    reg
+}
+
 /// Serialize a move to RON text for writing to an authored file. Emits struct names
 /// (e.g. `ToolDef(...)`) so authored files read like the hand-written built-ins, and
 /// re-parse cleanly via `parse_tool`.
@@ -237,5 +285,35 @@ mod tests {
         let ron = to_ron(&original).expect("serialize");
         let reparsed = parse_tool(&ron).unwrap_or_else(|e| panic!("re-parse failed: {e}\n---\n{ron}"));
         assert_eq!(serde_json::to_value(&original).unwrap(), serde_json::to_value(&reparsed).unwrap());
+    }
+
+    #[test]
+    fn registry_with_authored_includes_valid_and_skips_broken() {
+        use std::io::Write;
+        let dir = std::env::temp_dir().join(format!("pw_authored_test_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        // a valid authored move
+        let good = r#"ToolDef(id: "my_test_move", side: Blue, technique: Recon, category: Detection,
+            summary: "test", gate: [Category(fact: Monitoring, want: false)], produces: [Monitoring],
+            nodes: [ Node(id: "my_test_move", effect: SetFlag(Monitoring), ok_narrative: "on") ])"#;
+        std::fs::File::create(dir.join("my_test_move.ron")).unwrap().write_all(good.as_bytes()).unwrap();
+        // a broken authored move (bad RON)
+        std::fs::File::create(dir.join("broken.ron")).unwrap().write_all(b"ToolDef( this is not ron").unwrap();
+
+        let reg = registry_with_authored(&dir);
+        assert_eq!(reg.len(), 17, "16 built-ins + 1 valid authored (broken one skipped)");
+        assert!(reg.get("my_test_move").is_some());
+        // built-ins-only registry is unchanged
+        assert_eq!(default_registry().len(), 16);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn registry_with_authored_handles_missing_dir() {
+        let dir = std::env::temp_dir().join("pw_authored_does_not_exist_zzz");
+        let _ = std::fs::remove_dir_all(&dir);
+        let reg = registry_with_authored(&dir);
+        assert_eq!(reg.len(), 16, "missing authored dir → just the built-ins");
     }
 }
