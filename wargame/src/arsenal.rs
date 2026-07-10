@@ -168,6 +168,14 @@ pub fn default_registry() -> CardRegistry {
     }
 }
 
+/// Serialize a move to RON text for writing to an authored file. Emits struct names
+/// (e.g. `ToolDef(...)`) so authored files read like the hand-written built-ins, and
+/// re-parse cleanly via `parse_tool`.
+pub fn to_ron(def: &ToolDef) -> Result<String, String> {
+    let cfg = ron::ser::PrettyConfig::default().struct_names(true);
+    ron::ser::to_string_pretty(def, cfg).map_err(|e| format!("RON serialize error: {e}"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -220,5 +228,14 @@ mod tests {
         let def = parse_tool(MONITOR).unwrap(); // only Detection
         let errs = validate_set(&[def]).unwrap_err();
         assert!(errs.iter().any(|e| e.contains("category")), "got {errs:?}");
+    }
+
+    #[test]
+    fn tool_round_trips_through_ron_serialization() {
+        // parse a built-in, serialize it back to RON, re-parse — must be identical.
+        let original = parse_tool(TOOL_FILES[3]).unwrap(); // kerberoast (3-node composite)
+        let ron = to_ron(&original).expect("serialize");
+        let reparsed = parse_tool(&ron).unwrap_or_else(|e| panic!("re-parse failed: {e}\n---\n{ron}"));
+        assert_eq!(serde_json::to_value(&original).unwrap(), serde_json::to_value(&reparsed).unwrap());
     }
 }
