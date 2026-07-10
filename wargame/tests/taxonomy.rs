@@ -1,5 +1,5 @@
 // wargame/tests/taxonomy.rs
-use purple_wargame::cards::default_registry;
+use purple_wargame::arsenal::default_registry;
 use purple_wargame::category::Category;
 use std::collections::BTreeMap;
 

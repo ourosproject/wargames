@@ -138,6 +138,36 @@ pub fn registry_from_sources(sources: &[&str]) -> Result<CardRegistry, Vec<Strin
     Ok(reg)
 }
 
+/// The move files, baked into the binary so it stays a single static executable.
+pub const TOOL_FILES: &[&str] = &[
+    include_str!("../tools/initial_access.ron"),
+    include_str!("../tools/pivot.ron"),
+    include_str!("../tools/recon.ron"),
+    include_str!("../tools/kerberoast.ron"),
+    include_str!("../tools/asrep_roast.ron"),
+    include_str!("../tools/bloodhound.ron"),
+    include_str!("../tools/escalate_da.ron"),
+    include_str!("../tools/monitor.ron"),
+    include_str!("../tools/active_response.ron"),
+    include_str!("../tools/remediate_acl.ron"),
+    include_str!("../tools/enforce_aes.ron"),
+    include_str!("../tools/enforce_preauth.ron"),
+    include_str!("../tools/rotate_creds.ron"),
+    include_str!("../tools/hunt.ron"),
+    include_str!("../tools/deploy_detection.ron"),
+    include_str!("../tools/segment.ron"),
+];
+
+/// Build the game's card library from the embedded move files. Panics with the full list of
+/// problems if any file is malformed — a broken arsenal must fail loudly at startup, not
+/// silently drop a move.
+pub fn default_registry() -> CardRegistry {
+    match registry_from_sources(TOOL_FILES) {
+        Ok(reg) => reg,
+        Err(errs) => panic!("arsenal failed validation:\n  - {}", errs.join("\n  - ")),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

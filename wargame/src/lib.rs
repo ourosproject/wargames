@@ -6,17 +6,17 @@
 //! with no model at all. The engine is the authority; the model is only an advisor.
 //!
 //! Extensibility is first-class:
-//! - cards register in a [`CardRegistry`] (adding an attack/defense is one line);
+//! - moves are authored as `.ron` data files, loaded and validated by [`arsenal`] (adding an
+//!   attack/defense is one data file, no code edit);
 //! - the referee's rules live in a data-driven [`RuleSet`] (retune the game, no code edit);
-//! - exploits/defenses can be built as [`graph::CompositeCard`]s — dependency graphs of
-//!   function-node [`graph::Primitive`]s — the execution model the node-based builder plugs into.
+//! - the dependency-graph execution model ([`graph::resolve_order_keys`]) topologically orders
+//!   each move's steps by their requires/produces blackboard keys.
 //!
 //! See `wargame/WARGAME.md` for the full design spec.
 
 pub mod arsenal;
 pub mod card;
 pub mod category;
-pub mod cards;
 pub mod effects;
 pub mod env;
 pub mod facts;
