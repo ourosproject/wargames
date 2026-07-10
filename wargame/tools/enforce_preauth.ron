@@ -1,0 +1,8 @@
+ToolDef(
+    id: "enforce_preauth", side: Blue, technique: AsRepRoast, category: Harden,
+    summary: "Enforce Kerberos pre-auth — AS-REP roasting yields nothing",
+    gate: [Category(fact: PreauthEnforced, want: false), Instance(probe: Identified(AsRepRoast), want: true)],
+    produces: [PreauthEnforced],
+    nodes: [ Node(id: "enforce_preauth", effect: SetFlag(PreauthEnforced), ok_surface: [],
+        ok_narrative: "pre-auth enforced on jbecker — AS-REP dead") ],
+)

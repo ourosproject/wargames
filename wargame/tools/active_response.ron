@@ -1,0 +1,8 @@
+ToolDef(
+    id: "active_response", side: Blue, technique: Recon, category: Detection,
+    summary: "Arm active response — detections auto-contain (the bite)",
+    gate: [Category(fact: AutoResponse, want: false)],
+    produces: [AutoResponse],
+    nodes: [ Node(id: "active_response", effect: SetFlag(AutoResponse), ok_surface: [],
+        ok_narrative: "active response ARMED — a detected theft is contained instantly") ],
+)

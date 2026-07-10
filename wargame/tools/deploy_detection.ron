@@ -1,0 +1,8 @@
+ToolDef(
+    id: "deploy_detection", side: Blue, technique: Kerberoast, category: Detection,
+    summary: "Write a technique-based detection for observed activity",
+    gate: [Instance(probe: UndetectedAlert, want: true)],
+    produces: [],
+    params_schema: Some({ "type": "object", "properties": { "technique": { "type": "string" } }, "required": ["technique"] }),
+    nodes: [ Node(id: "deploy_detection", effect: DeployDetection, ok_surface: [], ok_narrative: "") ],
+)

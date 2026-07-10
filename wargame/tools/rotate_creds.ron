@@ -1,0 +1,7 @@
+ToolDef(
+    id: "rotate_creds", side: Blue, technique: Kerberoast, category: Evict,
+    summary: "Rotate credentials known to be compromised",
+    gate: [Instance(probe: CredCompromiseKnown, want: true)],
+    produces: [],
+    nodes: [ Node(id: "rotate_creds", effect: RevokeKnownCreds, ok_surface: [], ok_narrative: "") ],
+)

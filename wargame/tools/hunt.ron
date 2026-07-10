@@ -1,0 +1,7 @@
+ToolDef(
+    id: "hunt", side: Blue, technique: Recon, category: Detection,
+    summary: "Threat-hunt telemetry for an undetected technique (closes a gap)",
+    gate: [Instance(probe: UndetectedActivity, want: true)],
+    produces: [],
+    nodes: [ Node(id: "hunt", effect: HuntGap, ok_surface: [], ok_narrative: "") ],
+)

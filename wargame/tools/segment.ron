@@ -1,0 +1,15 @@
+ToolDef(
+    id: "segment", side: Blue, technique: Pivot, category: Isolate,
+    summary: "Re-segment — firewall-drop red's frontier before it reaches the DC",
+    gate: [
+      AnyOf([
+        Instance(probe: SawCategory(InitialAccess), want: true),
+        Instance(probe: SawCategory(LateralMovement), want: true),
+      ]),
+      Category(fact: ReachesDc, want: false),
+      Category(fact: DomainAdmin, want: false),
+      Instance(probe: HasForwardPath, want: true),
+    ],
+    produces: [],
+    nodes: [ Node(id: "segment", effect: SeverForwardEdges, ok_surface: [], ok_narrative: "") ],
+)
