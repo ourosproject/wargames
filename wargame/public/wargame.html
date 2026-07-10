@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Purple Range · Command Center</title>
+<style>
+:root{
+  --bg:#070a12; --bg2:#0b111e; --panel:#0f1626; --panel2:#131c30;
+  --line:#1b2740; --line2:#2b3757;
+  --t1:#e9eef8; --t2:#9db0d0; --t3:#61748f;
+  --red:#ff4d67; --blue:#38b6ff; --purple:#a06bff; --gold:#ffcf5c; --green:#4be29a; --amber:#ffb347;
+  --red-dim:#2a1220; --blue-dim:#0a2233; --green-dim:#0b2a20;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  --r:13px; --r2:9px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(1200px 640px at 80% -12%,#141d33 0,transparent 58%),
+  radial-gradient(900px 560px at 6% 110%,#120e26 0,transparent 55%),var(--bg);
+  color:var(--t1);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px}
+.wrap{max-width:1500px;margin:0 auto;padding:16px 20px 40px}
+
+/* ═══ animation vocabulary (CSS-driven → robust; run compositor-side, no rAF dependency) ═══ */
+@keyframes pr-spin{to{transform:rotate(360deg)}}
+@keyframes pr-flow{to{stroke-dashoffset:-30}}
+@keyframes pr-pulse{50%{opacity:.35}}
+@keyframes pr-bite{0%{transform:scale(1.9);opacity:.15}45%{opacity:1}100%{transform:scale(1);opacity:0}}
+@keyframes pr-compromise{0%{transform:scale(1.7)}100%{transform:scale(1)}}
+@keyframes pr-alert{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes pr-chipin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pr-livepulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes pr-crown{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes pr-crownfall{to{transform:translateY(46px) rotate(210deg);opacity:.15}}
+@keyframes pr-ping{0%{transform:scale(.3);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+@keyframes pr-scan{to{background-position:0 7px}}
+@keyframes pr-deal{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes pr-tick{0%{transform:translateY(0)}40%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+@keyframes pr-flash{0%{opacity:0}28%{opacity:1}100%{opacity:0}}
+@keyframes pr-ripple{0%{stroke-width:2;r:30}100%{stroke-width:0;r:52}}
+
+/* ── top bar ── */
+.top{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:4px 2px 14px}
+.brand{font-weight:900;letter-spacing:.03em;font-size:19px;display:flex;align-items:center;gap:11px}
+.brand .rune{width:22px;height:22px;border-radius:50%;border:2px solid var(--purple);
+  box-shadow:0 0 16px var(--purple);display:inline-block;position:relative}
+.brand .rune::after{content:"";position:absolute;inset:4px;border-radius:50%;border-top:2px solid var(--red);border-right:2px solid var(--blue);animation:pr-spin 3.4s linear infinite}
+.brand b{color:var(--purple)} .brand small{font:700 10px var(--mono);color:var(--t3);letter-spacing:.22em;text-transform:uppercase}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.seg button{font:800 11px var(--sans);letter-spacing:.05em;color:var(--t3);background:transparent;border:0;padding:8px 13px;cursor:pointer;transition:.15s}
+.seg button.on{color:#08101c;background:linear-gradient(180deg,#c9b3ff,var(--purple))}
+.seg.live button.on{background:linear-gradient(180deg,#ff8a9c,var(--red));color:#180509;animation:pr-livepulse 2s ease-in-out infinite}
+.seg.sim button.on{background:linear-gradient(180deg,#87e9bf,var(--green));color:#052015}
+.grow{flex:1}
+.round{display:flex;flex-direction:column;align-items:flex-end;font-family:var(--mono);line-height:1}
+.round .k{font:700 9px var(--mono);color:var(--t3);letter-spacing:.16em}
+.round .v{font:900 20px var(--mono);color:var(--t1)}
+.turn{font:800 12px var(--mono);padding:8px 13px;border-radius:9px;border:1px solid var(--line2);color:var(--t2);letter-spacing:.04em;white-space:nowrap}
+.turn.red{color:var(--red);border-color:color-mix(in srgb,var(--red) 45%,transparent);background:var(--red-dim)}
+.turn.blue{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 45%,transparent);background:var(--blue-dim)}
+.btn{font:800 12px var(--sans);letter-spacing:.03em;border-radius:10px;padding:9px 15px;cursor:pointer;border:1px solid var(--line2);
+  background:var(--panel2);color:var(--t1);transition:.15s}
+.btn:hover{border-color:var(--purple);box-shadow:0 0 16px rgba(160,107,255,.28)}
+.btn.play{background:linear-gradient(180deg,#c9b3ff,var(--purple));color:#08101c;border:0}
+.btn.reset{background:transparent;color:var(--t2)} .btn.reset:hover{border-color:var(--red);color:var(--red);box-shadow:0 0 16px rgba(255,77,103,.25)}
+.btn:disabled{opacity:.45;cursor:default;box-shadow:none}
+
+/* ── control strip ── */
+.controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 14px;margin-bottom:14px;
+  border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--bg2))}
+.cl{display:flex;align-items:center;gap:9px}
+.cl .lab{font:700 9px var(--mono);color:var(--t3);letter-spacing:.14em;text-transform:uppercase}
+.model{display:flex;align-items:center;gap:8px;margin-left:auto;font:600 11px var(--mono);color:var(--t3)}
+.model input{background:#0a1120;border:1px solid var(--line);border-radius:8px;color:var(--t2);font:600 11px var(--mono);padding:7px 10px;width:230px}
+.model .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 9px var(--green);animation:pr-livepulse 2.4s ease-in-out infinite}
+.banner-cls{font:700 10px var(--mono);letter-spacing:.2em;color:#7f8a5a;text-align:center;padding:6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px;background:rgba(120,130,70,.06)}
+
+/* ── main grid ── */
+.grid{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start}
+@media (max-width:1080px){.grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--bg2))}
+.card-h{display:flex;align-items:baseline;gap:11px;padding:13px 16px 0}
+.card-h .t{font:900 13px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--t2)}
+.card-h .s{font:600 11px var(--mono);color:var(--t3)}
+
+/* ── battlefield ── */
+.field{padding:6px 8px 10px}
+.bf{position:relative;overflow:hidden;border-radius:var(--r)}
+.bf::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:repeating-linear-gradient(0deg,transparent 0 6px,rgba(160,107,255,.035) 6px 7px);
+  animation:pr-scan 1s linear infinite}
+.seatbar{display:flex;align-items:center;gap:8px;padding:6px 10px 2px;justify-content:flex-end}
+.seatbar .lab{font:700 9px var(--mono);color:var(--t3);letter-spacing:.14em;margin-right:auto}
+.bf svg{width:100%;height:auto;display:block;position:relative;z-index:1}
+.laneband{fill:color-mix(in srgb,var(--panel2) 45%,transparent);stroke:var(--line);stroke-width:1;opacity:.45}
+.lanelab{fill:var(--t3);font:800 10px var(--mono);letter-spacing:.2em;text-anchor:middle}
+.edge{stroke:var(--line2);stroke-width:2;fill:none}
+.edge.hot{stroke:var(--red);stroke-width:2.6;stroke-dasharray:7 7;animation:pr-flow 1s linear infinite;filter:drop-shadow(0 0 5px var(--red))}
+.tele{stroke:var(--blue);stroke-width:1.4;stroke-dasharray:1 7;fill:none;opacity:0}
+.tele.active{opacity:.4;animation:pr-flow 3s linear infinite}
+.node .core{fill:#16203a;stroke:var(--line2);stroke-width:2.4}
+.node .halo{fill:none;opacity:0}
+.node .lbl{fill:var(--t2);font:800 12px var(--mono);text-anchor:middle}
+.node .ip{fill:var(--t3);font:600 9px var(--mono);text-anchor:middle}
+.node .core,.node .crown,.node .halo{transform-box:fill-box;transform-origin:center}
+.node.attacker .core{fill:var(--red);stroke:#ff9aab} .node.attacker .lbl{fill:var(--red)}
+.node.compromised .core{fill:var(--red);stroke:#ff9aab;animation:pr-compromise .5s ease}
+.node.compromised .halo{stroke:var(--red);opacity:.5;animation:pr-ripple 1.8s ease-out infinite}
+.node.siem .core{fill:#16203a;stroke:var(--blue)} .node.siem .lbl{fill:var(--blue)}
+.node.siem.watching .core{fill:var(--blue);stroke:#9ad8ff;animation:pr-compromise .5s ease}
+.node.siem.watching .halo{stroke:var(--blue);opacity:.5;animation:pr-ripple 1.9s ease-out infinite}
+.node.objective .core{stroke:var(--gold);stroke-width:2.6}
+.node.objective .crown{fill:var(--gold);font-size:16px;text-anchor:middle;opacity:.9;animation:pr-crown 2.4s ease-in-out infinite}
+.node.objective.attacked .core{fill:#3a2e0e}
+.node.objective.attacked .halo{stroke:var(--gold);opacity:.5;animation:pr-ripple 1.7s ease-out infinite}
+.node.objective.owned .core{fill:var(--red);stroke:var(--gold);animation:pr-compromise .6s ease}
+.node.objective.owned .halo{stroke:var(--red);opacity:.6;animation:pr-ripple 1.3s ease-out infinite}
+.node.objective.owned .crown{animation:pr-crownfall 1s ease-in forwards}
+/* transient FX rings injected by JS, self-removing on animationend */
+.pr-ring{transform-box:fill-box;transform-origin:center;animation:pr-ping .95s ease-out forwards;pointer-events:none}
+.pr-biter{transform-box:fill-box;transform-origin:center;animation:pr-bite .55s ease-out forwards;pointer-events:none}
+#fx-flash{position:fixed;inset:0;pointer-events:none;z-index:40;opacity:0}
+
+/* ── external → internal traversal front (deep-#4) ── */
+@keyframes tf-flow{to{background-position:-200% 0}}
+.topofront{margin:2px 10px 0;padding:9px 12px 10px;border:1px solid var(--line);border-radius:var(--r2);background:var(--panel2)}
+.tf-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.tf-lab{font:800 9px var(--mono);letter-spacing:.16em;color:var(--t3)}
+.tf-state{font:800 9px var(--mono);letter-spacing:.06em;padding:2px 8px;border-radius:20px;border:1px solid var(--line2);color:var(--t3)}
+.tf-state.reach{color:var(--red);border-color:color-mix(in srgb,var(--red) 45%,transparent);background:var(--red-dim);animation:pr-alert 1.5s ease-in-out infinite}
+.tf-state.owned{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 50%,transparent)}
+.tf-state.contained{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 45%,transparent);background:color-mix(in srgb,var(--blue) 10%,transparent)}
+.tf-track{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:2px}
+.tf-zone{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px;flex:0 0 auto}
+.tf-dot{width:34px;height:34px;border-radius:10px;border:1.6px solid var(--line2);background:#16203a;display:flex;align-items:center;justify-content:center;font:800 12px var(--mono);color:var(--t2);transition:.2s}
+.tf-zone.held .tf-dot{border-color:var(--red);color:#ffc3cd;background:color-mix(in srgb,var(--red) 16%,transparent)}
+.tf-zone.frontier .tf-dot{box-shadow:0 0 0 3px var(--red-dim);animation:pr-ripple 1.6s ease-out infinite}
+.tf-zone.obj .tf-dot{border-color:var(--gold);color:var(--gold)}
+.tf-zone.obj.held .tf-dot{background:color-mix(in srgb,var(--red) 26%,transparent)}
+.tf-name{font:700 8px var(--mono);letter-spacing:.04em;color:var(--t3);text-transform:uppercase;white-space:nowrap}
+.tf-zone.held .tf-name{color:var(--t2)}
+.tf-link{flex:1 1 auto;min-width:20px;height:22px;position:relative;display:flex;align-items:center}
+.tf-link i{display:block;width:100%;height:2px;border-radius:2px;background:var(--line2)}
+.tf-link.open i{background:linear-gradient(90deg,var(--red) 0%,color-mix(in srgb,var(--red) 25%,transparent) 50%,var(--red) 100%);background-size:200% 100%;animation:tf-flow 1.1s linear infinite}
+.tf-link.cut i{background:transparent;border-top:2px dashed color-mix(in srgb,var(--blue) 60%,transparent);height:0}
+.tf-link.cut::after{content:"✕";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:800 11px var(--mono);color:var(--blue);text-shadow:0 0 8px var(--blue)}
+
+/* ── right rail ── */
+.rail{display:flex;flex-direction:column;gap:16px}
+.score{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px}
+.score .side{display:flex;flex-direction:column;gap:2px}
+.score .side.b{align-items:flex-end}
+.score .k{font:800 10px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.score .n{font:900 46px var(--mono);line-height:.9}
+.score .r .k{color:var(--red)} .score .r .n{color:var(--red);text-shadow:0 0 22px rgba(255,77,103,.4)}
+.score .b .k{color:var(--blue)} .score .b .n{color:var(--blue);text-shadow:0 0 22px rgba(56,182,255,.4)}
+.score .vs{font:800 12px var(--mono);color:var(--t3);padding:0 8px}
+/* ── coverage history (trend across matches) ── */
+.hist-rows{display:flex;flex-direction:column;gap:5px;padding:6px 12px 12px;max-height:220px;overflow-y:auto}
+.hist-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;font:700 10px var(--mono);padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);animation:pr-chipin .3s ease-out}
+.hist-row .w{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.hist-row.red .w{background:var(--red);box-shadow:0 0 7px var(--red)} .hist-row.blue .w{background:var(--blue);box-shadow:0 0 7px var(--blue)}
+.hist-row .meta{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hist-row .sc{color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-row .gp{font-size:9px;color:var(--t3)}
+.hist-row .rb{font:900 13px var(--mono);text-align:right}
+.hist-row .rb.ok{color:var(--green)} .hist-row .rb.warn{color:var(--amber)} .hist-row .rb.bad{color:var(--red)}
+.hist-row .rb small{display:block;font:700 8px var(--mono);color:var(--t3)}
+.hist .card-h .s b{color:var(--t1)}
+/* ── detection coverage (the real deliverable) ── */
+.cov-head{display:flex;align-items:center;gap:16px;padding:12px 16px 8px}
+.cov-pct{font:900 42px var(--mono);line-height:.85;color:var(--green);text-shadow:0 0 22px rgba(75,226,154,.35)}
+.cov-pct.warn{color:var(--amber);text-shadow:0 0 22px rgba(255,179,71,.3)} .cov-pct.bad{color:var(--red);text-shadow:0 0 22px rgba(255,77,103,.3)}
+.cov-meta{font:700 11px var(--mono);color:var(--t3);display:flex;flex-direction:column;gap:4px}
+.cov-meta b{color:var(--t1);font-weight:900}
+.cov-rows{padding:0 12px 12px;display:flex;flex-direction:column;gap:5px}
+.cov-row{display:flex;flex-direction:column;gap:3px;font:700 11px var(--mono);padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);animation:pr-chipin .3s ease-out}
+.cov-top{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:baseline}
+.cov-row .tk{color:var(--t1);letter-spacing:.02em}
+.cov-row .st{font-size:10px;color:var(--t3)}
+.cov-sub{font:600 9px var(--mono);color:var(--t3);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cov-row.ok{border-color:color-mix(in srgb,var(--green) 32%,transparent)} .cov-row.ok .st{color:var(--green)}
+.cov-row.warn{border-color:color-mix(in srgb,var(--amber) 45%,transparent);background:color-mix(in srgb,var(--amber) 8%,transparent)} .cov-row.warn .st{color:var(--amber);font-weight:800} .cov-row.warn .tk{color:#ffe0b0} .cov-row.warn .cov-sub{color:var(--amber)}
+.cov-row.gap{border-color:color-mix(in srgb,var(--red) 42%,transparent);background:var(--red-dim)} .cov-row.gap .tk{color:#ffc3cd} .cov-row.gap .st{color:var(--red);font-weight:800} .cov-row.gap .cov-sub{color:var(--amber)}
+.cov-empty{padding:16px;color:var(--t3);font:600 11px var(--mono);text-align:center}
+.flags{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:14px 16px}
+.flag{border:1px solid var(--line);border-radius:var(--r2);padding:9px 11px;background:var(--panel2)}
+.flag.flip{animation:pr-tick .5s ease}
+.flag .k{font:700 8px var(--mono);color:var(--t3);letter-spacing:.11em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.flag .k .d{width:7px;height:7px;border-radius:50%;background:var(--t3)}
+.flag .v{font:800 15px var(--mono);color:var(--t2);margin-top:3px}
+.flag.on .k .d{background:var(--green);box-shadow:0 0 8px var(--green)} .flag.on .v{color:var(--green)}
+.flag.bad .k .d{background:var(--red);box-shadow:0 0 8px var(--red);animation:pr-alert 1.6s ease-in-out infinite} .flag.bad .v{color:var(--red)}
+.flag.watch .k .d{background:var(--blue);box-shadow:0 0 8px var(--blue)} .flag.watch .v{color:var(--blue)}
+
+/* ── hand ── */
+.hand{padding:12px 14px}
+.hand .hint{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;color:var(--t3)}
+.hand .cards{display:flex;flex-direction:column;gap:8px}
+.pcard{text-align:left;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--panel2);transition:.14s;color:var(--t1);animation:pr-deal .34s ease-out backwards}
+.pcard:hover{transform:translateX(3px)}
+.pcard .nm{font:800 13px var(--sans);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pcard .tech{font:700 8px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--t3);border:1px solid var(--line2);border-radius:20px;padding:2px 7px}
+.pcard .sm{font:600 11px var(--mono);color:var(--t3);margin-top:4px;line-height:1.35}
+.pcard.red{border-color:color-mix(in srgb,var(--red) 40%,transparent)} .pcard.red:hover{box-shadow:0 0 16px rgba(255,77,103,.22)}
+.pcard.blue{border-color:color-mix(in srgb,var(--blue) 40%,transparent)} .pcard.blue:hover{box-shadow:0 0 16px rgba(56,182,255,.22)}
+.pcard.red .nm{color:#ffc3cd} .pcard.blue .nm{color:#bfe6ff}
+.pcard:disabled{opacity:.5;cursor:default}
+
+/* ── feed ── */
+.feed{padding:8px 4px 12px;margin-top:16px}
+.feed .list{max-height:340px;overflow:auto;padding:0 12px;font-family:var(--mono);font-size:12.5px;line-height:1.5}
+.feed .ln{white-space:pre-wrap;color:var(--t2);padding:1px 0;animation:pr-chipin .28s ease-out}
+.feed .ln.rd{color:#ff9aab} .feed .ln.bl{color:#8fd0ff} .feed .ln.rnd{color:var(--purple);font-weight:800;margin-top:8px;letter-spacing:.1em}
+.feed .ln.det{color:var(--blue)} .feed .ln.contain{color:var(--green)} .feed .ln.stealth{color:var(--t3)} .feed .ln.wazuh{color:var(--amber)} .feed .ln.honey{color:var(--gold)}
+.feed .empty{color:var(--t3);text-align:center;padding:30px;font:600 12px var(--mono)}
+
+/* ── winner banner ── */
+.banner{margin:16px 0;border-radius:var(--r);padding:22px;text-align:center;border:1px solid var(--line2);animation:pr-deal .5s ease-out}
+.banner.red{background:linear-gradient(180deg,var(--red-dim),transparent);border-color:var(--red)}
+.banner.blue{background:linear-gradient(180deg,var(--blue-dim),transparent);border-color:var(--blue)}
+.banner .big{font:900 26px var(--sans);letter-spacing:.02em;animation:pr-deal .55s ease-out .1s backwards}
+.banner.red .big{color:var(--red)} .banner.blue .big{color:var(--blue)}
+.banner small{display:block;color:var(--t2);font:600 12px var(--mono);margin-top:6px}
+.hidden{display:none!important}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line2);
+  border-radius:10px;padding:11px 18px;font:700 12px var(--mono);color:var(--t1);box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:20;opacity:0;transition:.3s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><span class="rune"></span> purple range<b>.</b> <small>command center</small></div>
+    <div class="seg sim" id="segLive">
+      <button data-live="0" class="on">◈ SIM</button>
+      <button data-live="1">◉ LIVE</button>
+    </div>
+    <div class="grow"></div>
+    <div class="turn" id="turn">idle</div>
+    <div class="round"><span class="k">ROUND</span><span class="v" id="roundv">—</span></div>
+    <button class="btn play" id="play">▶ NEW MATCH</button>
+    <button class="btn reset" id="reset">⟲ RESET RANGE</button>
+  </div>
+
+  <div class="banner-cls">UNCLASSIFIED // FOUO — AUTHORIZED LAB USE ONLY</div>
+
+  <div class="controls">
+    <div class="cl"><span class="lab">Mode</span>
+      <div class="seg" id="segMode">
+        <button data-mode="spectate" class="on">Spectate</button>
+        <button data-mode="1p">1&#8209;Player</button>
+        <button data-mode="2p">2&#8209;Player</button>
+      </div>
+    </div>
+    <div class="cl" id="sideWrap" style="display:none"><span class="lab">Your side</span>
+      <div class="seg" id="segSide">
+        <button data-side="red" class="on">🔴 Red</button>
+        <button data-side="blue">🔵 Blue</button>
+      </div>
+    </div>
+    <div class="model">
+      <span class="dot"></span><span>MODEL</span>
+      <input id="model" value="http://10.10.20.20:11434/v1" spellcheck="false" />
+      <span id="modelName">qwen2.5:7b</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card field-card">
+        <div class="card-h"><div class="t">Battlefield</div><div class="s" id="bfsub">range.local · topology frozen</div></div>
+        <div class="seatbar">
+          <span class="lab">Seat view</span>
+          <div class="seg" id="segSeat">
+            <button data-seat="referee" class="on">◆ Referee</button>
+            <button data-seat="red">Red</button>
+            <button data-seat="blue">Blue</button>
+          </div>
+        </div>
+        <div class="topofront" id="topoFront" hidden>
+          <div class="tf-head"><span class="tf-lab">EXTERNAL → INTERNAL FRONT</span><span class="tf-state" id="tfState">idle</span></div>
+          <div class="tf-track" id="tfTrack"></div>
+        </div>
+        <div class="field">
+          <div class="bf">
+          <svg viewBox="0 0 900 330" role="img" aria-label="battlefield">
+            <rect class="laneband" x="24" y="52" width="180" height="250" rx="12"/>
+            <rect class="laneband" x="248" y="52" width="200" height="250" rx="12"/>
+            <rect class="laneband" x="492" y="52" width="200" height="250" rx="12"/>
+            <rect class="laneband" x="736" y="52" width="150" height="250" rx="12"/>
+            <text class="lanelab" x="114" y="74">VLAN10 · ATTACK</text>
+            <text class="lanelab" x="348" y="74">VLAN20 · FOOTHOLD</text>
+            <text class="lanelab" x="592" y="74">VLAN30 · DOMAIN</text>
+            <text class="lanelab" x="811" y="74">VLAN40 · SIEM</text>
+            <path id="e-ks" class="edge" d="M150 190 L330 165"/>
+            <path id="e-sd" class="edge" d="M366 165 L560 185"/>
+            <path id="t-s" class="tele" d="M348 175 C520 120, 700 120, 796 165"/>
+            <path id="t-d" class="tele" d="M592 195 C680 170, 740 165, 800 172"/>
+            <g id="n-kali" class="node attacker" transform="translate(114,190)">
+              <circle class="halo" r="30"/><circle class="core" r="26"/>
+              <text class="lbl" y="46">kali</text><text class="ip" y="60">10.10.10.5</text>
+            </g>
+            <g id="n-srv" class="node" transform="translate(348,165)">
+              <circle class="halo" r="30"/><circle class="core" r="24"/>
+              <text class="lbl" y="44">srv01</text><text class="ip" y="58">foothold</text>
+            </g>
+            <g id="n-dc" class="node objective" transform="translate(592,185)">
+              <circle class="halo" r="34"/><circle class="core" r="30"/>
+              <text class="crown" y="-40">♛</text>
+              <text class="lbl" y="50">dc01</text><text class="ip" y="64">10.10.30.10</text>
+            </g>
+            <g id="n-siem" class="node siem" transform="translate(811,172)">
+              <circle class="halo" r="30"/><circle class="core" r="24"/>
+              <text class="lbl" y="44">wazuh</text><text class="ip" y="58" id="siemsub">idle</text>
+            </g>
+          </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card feed">
+        <div class="card-h"><div class="t">Play&#8209;by&#8209;play</div><div class="s" id="feedsub">the referee's stream</div></div>
+        <div class="list" id="feed"><div class="empty">press <b>New Match</b> to begin</div></div>
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="card cov" id="covCard">
+        <div class="card-h"><div class="t">Detection Coverage</div><div class="s">what your SIEM actually caught</div></div>
+        <div class="cov-head">
+          <div class="cov-pct" id="covPct">—</div>
+          <div class="cov-meta"><div id="covDet">— techniques</div><div id="covMttd">MTTD — · 0 gaps</div></div>
+        </div>
+        <div class="cov-rows" id="covRows"><div class="cov-empty">no techniques fired yet</div></div>
+      </div>
+      <div class="card hist" id="histCard">
+        <div class="card-h"><div class="t">Coverage History</div><div class="s" id="histSub">across past matches</div></div>
+        <div class="hist-rows" id="histRows"><div class="cov-empty">no matches recorded yet</div></div>
+      </div>
+      <div class="card score">
+        <div class="side r"><span class="k">● Red · offense</span><span class="n" id="sr">0</span></div>
+        <div class="vs">vs</div>
+        <div class="side b"><span class="k">Blue · defense ●</span><span class="n" id="sb">0</span></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="t">Objective State</div><div class="s">bf{}</div></div>
+        <div class="flags" id="flags"></div>
+      </div>
+      <div class="card hand hidden" id="handCard">
+        <div class="hint" id="handHint">your move</div>
+        <div class="cards" id="hand"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bannerHost"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=(s)=>document.querySelector(s);
+const api={
+  catalog:()=>fetch('/api/catalog').then(r=>r.json()),
+  match:(body)=>fetch('/api/match',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json()),
+  view:(id,side)=>fetch('/api/match/'+id+(side?'?side='+side:'')).then(r=>r.json()),
+  legal:(id,side)=>fetch('/api/legal?match='+id+'&side='+side).then(r=>r.json()),
+  move:(body)=>fetch('/api/move',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json()),
+  reset:()=>fetch('/api/reset',{method:'POST'}).then(r=>r.json()),
+  history:(n)=>fetch('/api/history?n='+(n||20)).then(r=>r.json()),
+};
+const S={mode:'spectate',side:'red',seat:'referee',live:false,matchId:null,es:null,catalog:{},feed:[],prevBf:{},_fl:0,topo:null};
+
+// ── battlefield FX: inject a self-removing SVG ring that runs a CSS keyframe (rAF-independent) ──
+const SVGNS='http://www.w3.org/2000/svg';
+const NODE_XY={'n-kali':[114,190],'n-srv':[348,165],'n-dc':[592,185],'n-siem':[811,172]};
+const bfsvg=()=>document.querySelector('.bf svg');
+function ring(nodeId,color,cls,r,delayMs){const xy=NODE_XY[nodeId],g=bfsvg();if(!xy||!g)return;
+  const c=document.createElementNS(SVGNS,'circle');
+  c.setAttribute('cx',xy[0]);c.setAttribute('cy',xy[1]);c.setAttribute('r',r||22);
+  c.setAttribute('fill','none');c.setAttribute('stroke',color);c.setAttribute('stroke-width','3');
+  c.setAttribute('class',cls);if(delayMs)c.style.animationDelay=delayMs+'ms';
+  g.appendChild(c);
+  // remove on animationend, with a timer backstop so rings never leak if animations are
+  // paused (backgrounded/throttled tab, where animationend never fires).
+  const done=()=>c.remove();c.addEventListener('animationend',done);setTimeout(done,(delayMs||0)+1400);}
+const fx={
+  ping(nodeId,color){ring(nodeId,color,'pr-ring',22,0);},
+  bite(nodeId){ring(nodeId,'#38b6ff','pr-biter',26,0);},           // blue "bite" — containment snap
+  flash(color){let o=document.getElementById('fx-flash');if(!o){o=document.createElement('div');o.id='fx-flash';document.body.appendChild(o);}
+    o.style.background='radial-gradient(circle at 62% 42%,'+color+',transparent 62%)';
+    o.style.animation='none';void o.offsetWidth;o.style.animation='pr-flash 1s ease';},
+  dcFall(){ring('n-dc','#ff4d67','pr-ring',24,0);ring('n-dc','#ff4d67','pr-ring',24,150);ring('n-dc','#ff4d67','pr-ring',24,300);this.flash('rgba(255,77,103,.34)');},
+};
+// retrigger a one-shot CSS animation on an element
+function bump(el,anim){if(!el)return;el.style.animation='none';void el.offsetWidth;el.style.animation=anim;}
+
+// ── catalog for card labels ──
+const pretty=(id)=>id.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+api.catalog().then(d=>{(d.cards||[]).forEach(c=>S.catalog[c.id]=c);}).catch(()=>{});
+renderHistory();
+
+// ── segmented controls ──
+function seg(id,attr,cb){document.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#'+id+' button').forEach(x=>x.classList.remove('on'));b.classList.add('on');cb(b.dataset[attr],b);});}
+seg('segLive','live',v=>{S.live=v==='1';$('#segLive').className='seg '+(S.live?'live':'sim');});
+seg('segMode','mode',v=>{S.mode=v;$('#sideWrap').style.display=v==='1p'?'flex':'none';});
+seg('segSide','side',v=>{S.side=v;});
+seg('segSeat','seat',async v=>{S.seat=v; if(S.matchId){const side=v==='referee'?null:v; applyView(await api.view(S.matchId,side),{peek:true});}});
+
+// ── battlefield state + transition choreography ──
+function setField(bf,animate){
+  bf=bf||{}; const p=S.prevBf||{};
+  // persistent visual state (authoritative CSS classes — always applied)
+  $('#n-srv').classList.toggle('compromised',!!bf.red_cred);
+  $('#e-ks').classList.toggle('hot',!!bf.red_cred);
+  $('#e-sd').classList.toggle('hot',!!bf.bloodhound);
+  const dc=$('#n-dc'); dc.classList.toggle('attacked',!!bf.bloodhound&&!bf.dc_owned); dc.classList.toggle('owned',!!bf.dc_owned);
+  const siem=$('#n-siem'); siem.classList.toggle('watching',!!bf.blue_watching);
+  $('#t-s').classList.toggle('active',!!bf.blue_watching);
+  $('#t-d').classList.toggle('active',!!bf.blue_watching);
+  $('#siemsub').textContent=bf.blue_watching?('watching · '+(bf.alerts||0)+' alerts'):'idle';
+  renderTopo(bf);
+  // one-shot FX only on real transitions (skip on seat-peek)
+  if(!animate)return;
+  if((bf.zones||[]).length>(p.zones||[]).length) fx.ping('n-kali','#ff4d67');   // red advanced a segment
+  if((bf.edges||[]).length<(p.edges||[]).length) fx.bite('n-srv');              // blue cut a segment
+  if(bf.red_cred&&!p.red_cred) fx.ping('n-srv','#ff4d67');       // foothold captured
+  if(!bf.red_cred&&p.red_cred) fx.bite('n-srv');                 // cred contained → blue bite
+  if(bf.bloodhound&&!p.bloodhound) fx.ping('n-dc','#ffcf5c');    // path to DA found
+  if(bf.blue_watching&&!p.blue_watching) fx.ping('n-siem','#38b6ff');
+  if((bf.alerts||0)>(p.alerts||0)) fx.ping('n-siem','#38b6ff');  // new alert lands
+  if(bf.dc_owned&&!p.dc_owned) fx.dcFall();                      // the DC falls
+}
+
+// ── external → internal traversal front: red's position + blue's segmentation cuts ──
+function renderTopo(bf){
+  const host=$('#topoFront');
+  if(!S.topo||!S.topo.path||!S.topo.path.length){host.hidden=true;return;}
+  host.hidden=false; bf=bf||{};
+  const path=S.topo.path, obj=S.topo.objective;
+  const zones=bf.zones||path.slice(0,1);
+  const held=new Set(zones);
+  const edges=bf.edges||S.topo.edges||[];
+  const open=new Set(edges.map(e=>e[0]+'>'+e[1]));
+  let frontier=null; path.forEach(z=>{ if(held.has(z)) frontier=z; });
+  let html='';
+  path.forEach((z,i)=>{
+    const isObj=z===obj, isEntry=i===0;
+    const cls=['tf-zone']; if(held.has(z))cls.push('held');
+    if(z===frontier&&!bf.dc_owned)cls.push('frontier'); if(isObj)cls.push('obj');
+    const glyph=isEntry?'🌐':(isObj?'♛':((z.match(/\d+/)||['▪'])[0]));
+    html+=`<div class="${cls.join(' ')}"><div class="tf-dot">${glyph}</div><div class="tf-name">${z}</div></div>`;
+    if(i<path.length-1){const openLink=open.has(z+'>'+path[i+1]);html+=`<div class="tf-link ${openLink?'open':'cut'}"><i></i></div>`;}
+  });
+  $('#tfTrack').innerHTML=html;
+  const st=$('#tfState'); st.className='tf-state';
+  const hasInternal=zones.some(z=>z!=='internet');
+  const nextOpen=edges.some(e=>held.has(e[0])&&!held.has(e[1]));
+  if(bf.dc_owned){st.textContent='DOMAIN OWNED';st.classList.add('owned');}
+  else if(bf.attack_ready){st.textContent='DC IN REACH';st.classList.add('reach');}
+  else if(hasInternal&&!nextOpen){st.textContent='CONTAINED · no path to DC';st.classList.add('contained');}
+  else if(hasInternal){st.textContent='pivoting…';}
+  else{st.textContent='at the perimeter';}
+}
+const FLAGS=[
+  ['red_cred','Red creds','bad'],['bloodhound','BloodHound','bad'],['dc_owned','DC01 owned','bad'],
+  ['blue_watching','Blue watching','watch'],['alerts','Alerts','watch'],['honeytokens','Honeytokens','on'],
+];
+function setFlags(bf,animate){bf=bf||{}; const p=S.prevBf||{};
+  $('#flags').innerHTML=FLAGS.map(([k,lab,cls])=>{
+    const val=bf[k]; const isBool=typeof val==='boolean'; const active=isBool?val:(val>0);
+    const show=isBool?(val?'YES':'NO'):(val||0);
+    const flip=animate&&JSON.stringify(val)!==JSON.stringify(p[k]);
+    return `<div class="flag ${active?cls:''} ${flip?'flip':''}"><div class="k"><span class="d"></span>${lab}</div><div class="v">${show}</div></div>`;
+  }).join('');
+}
+
+// ── feed (append-only so only NEW lines animate in) ──
+function lineClass(l){const t=l.trimStart();
+  if(t.startsWith('──'))return'rnd'; if(t.startsWith('🔴'))return'rd'; if(t.startsWith('🔵'))return'bl';
+  if(t.startsWith('🚨'))return'det'; if(t.startsWith('🐕'))return'contain'; if(t.startsWith('👻'))return'stealth';
+  if(t.startsWith('🛰'))return'wazuh'; if(t.startsWith('🍯'))return'honey'; return'';}
+function renderFeed(){const f=$('#feed');
+  if(!S.feed.length){f.innerHTML='<div class="empty">no activity yet</div>';S._fl=0;return;}
+  if(f.querySelector('.empty')||S.feed.length<S._fl){f.innerHTML='';S._fl=0;}
+  for(let i=S._fl;i<S.feed.length;i++){const d=document.createElement('div');d.className='ln '+lineClass(S.feed[i]);d.textContent=S.feed[i];f.appendChild(d);}
+  S._fl=S.feed.length; f.scrollTop=f.scrollHeight;}
+
+// ── turn indicator ──
+function setTurn(text,cls){const t=$('#turn');t.textContent=text;t.className='turn'+(cls?' '+cls:'');bump(t,'pr-chipin .28s ease-out');}
+
+// ── score (authoritative value set directly; CSS tick is pure flourish) ──
+function countTo(el,to){to=Number(to)||0;const from=parseInt(el.textContent)||0;el.textContent=to;
+  if(from!==to)bump(el,'pr-tick .42s ease');}
+
+// ── detection coverage report (the real deliverable) ──
+function renderCoverage(cov){
+  const pe=$('#covPct'),det=$('#covDet'),mt=$('#covMttd'),rows=$('#covRows');
+  if(!cov||!cov.rows||!cov.rows.length){
+    pe.textContent='—';pe.className='cov-pct';det.textContent='— techniques';mt.textContent='MTTD — · 0 gaps';
+    rows.innerHTML='<div class="cov-empty">no techniques fired yet</div>';return;}
+  const robust=cov.robust_pct||0;
+  pe.textContent=robust+'%';pe.className='cov-pct '+(robust>=70?'':robust>=40?'warn':'bad');
+  det.innerHTML='<b>'+cov.techniques_detected+'/'+cov.techniques_fired+'</b> caught · '+(cov.coverage_pct||0)+'% raw';
+  const mttd=cov.mttd_rounds==null?'—':(Math.round(cov.mttd_rounds*10)/10)+'r';
+  const refine=((cov.overfit&&cov.overfit.length)||0)+((cov.noisy&&cov.noisy.length)||0);
+  mt.innerHTML='MTTD '+mttd+' · <b>'+((cov.gaps&&cov.gaps.length)||0)+'</b> gaps'+(refine?' · ⚑ <b>'+refine+'</b> to refine':'');
+  rows.innerHTML=cov.rows.map(r=>{
+    const bad=r.fidelity==='overfit'||r.fidelity==='noisy';
+    const cls=r.gap?'gap':(bad?'warn':'ok');
+    const status=r.gap?'⚠ GAP':(bad?'⚑ '+r.fidelity.toUpperCase():'✓ '+r.source+(r.latency!=null?' · '+r.latency+'r':''));
+    const sub=r.gap?`${r.attack_id} · write a rule on ${r.data_source}`
+      :r.fidelity==='overfit'?`${r.attack_id} · rule won't generalize — refine`
+      :r.fidelity==='noisy'?`${r.attack_id} · false positives — refine`
+      :`${r.attack_id} · ${r.attack_name}`;
+    return `<div class="cov-row ${cls}"><div class="cov-top"><span class="tk">${r.technique}${r.fired>1?' ×'+r.fired:''}</span><span class="st">${status}</span></div><div class="cov-sub">${sub}</div></div>`;
+  }).join('');
+}
+
+// ── coverage history (trend across past matches) ──
+async function renderHistory(){
+  let d; try{ d=await api.history(20); }catch(_){ return; }
+  const rows=(d&&d.matches)||[], host=$('#histRows'), sub=$('#histSub');
+  if(!rows.length){ host.innerHTML='<div class="cov-empty">no matches recorded yet</div>'; sub.textContent='across past matches'; return; }
+  const avg=Math.round(rows.reduce((a,m)=>a+(m.robust_pct||0),0)/rows.length);
+  const rw=rows.filter(m=>m.winner==='red').length;
+  sub.innerHTML=`${rows.length} matches · avg <b>${avg}%</b> robust · ${rw}R/${rows.length-rw}B`;
+  host.innerHTML=rows.map(m=>{
+    const rb=m.robust_pct||0, cls=rb>=70?'ok':rb>=40?'warn':'bad';
+    const gaps=(m.gaps&&m.gaps.length)||0;
+    const sc=(m.scenario||'?').replace(/ ·.*/,'')+(m.mode==='live'?' · LIVE':'');
+    return `<div class="hist-row ${m.winner||''}"><span class="w"></span>`+
+      `<span class="meta"><span class="sc">${sc}</span><span class="gp">${(m.winner||'?').toUpperCase()} · ${gaps} gap${gaps===1?'':'s'} · ${m.coverage_pct||0}% raw</span></span>`+
+      `<span class="rb ${cls}">${rb}%<small>robust</small></span></div>`;
+  }).join('');
+}
+
+// ── apply a view (from a match or a synthesized spectate round) ──
+function applyView(v,opts){opts=opts||{};
+  if(!v||v.error){toast(v&&v.error?v.error:'error');return;}
+  if(v.topo) S.topo=v.topo;
+  if(v.scenario) $('#bfsub').textContent=v.scenario+(v.seed?' · seed '+v.seed:'')+' · '+(S.live?'LIVE — real actions':'sim');
+  countTo($('#sr'),v.red??0); countTo($('#sb'),v.blue??0);
+  $('#roundv').textContent=(v.round||0)+' / '+(v.max||8);
+  const bf=v.bf||{}, animate=!opts.peek;
+  setField(bf,animate); setFlags(bf,animate);
+  renderCoverage(v.coverage);
+  S.prevBf=bf;
+  if(v.feed){S.feed=v.feed.slice();renderFeed();}
+  if(v.finished){showBanner(v.winner,v.round);setTurn('match over');hideHand();renderHistory();return;}
+  clearBanner();
+  if(opts.peek)return; // seat-peek shouldn't change turn/hand logic
+  refreshTurn(v);
+}
+async function refreshTurn(v){
+  if(S.mode==='spectate'){hideHand();setTurn('autonomous',null);return;}
+  const acting=v.awaiting; if(!acting){hideHand();return;}
+  const human=(S.mode==='2p')||(S.mode==='1p'&&acting===S.side);
+  if(!human){setTurn('AI ('+acting+') thinking…',acting);hideHand();return;}
+  setTurn((acting==='red'?'🔴 RED':'🔵 BLUE')+' to move'+(S.mode==='2p'?' · pass control':''),acting);
+  let legal=v.legal;
+  if(!legal||!legal.length||(S.mode==='2p')){const r=await api.legal(S.matchId,acting);legal=r.legal||[];}
+  showHand(acting,legal);
+}
+
+// ── hand (CSS pr-deal, staggered via per-card animation-delay) ──
+function showHand(side,legal){
+  const card=$('#handCard'),host=$('#hand');
+  $('#handHint').textContent=(side==='red'?'🔴 Red':'🔵 Blue')+' · choose one';
+  if(!legal||!legal.length){host.innerHTML='<div class="empty" style="padding:14px">no legal moves</div>';card.classList.remove('hidden');return;}
+  host.innerHTML='';
+  legal.forEach((c,i)=>{
+    const meta=S.catalog[c.id]||c;
+    const b=document.createElement('button');b.className='pcard '+side;b.style.animationDelay=(i*50)+'ms';
+    b.innerHTML=`<div class="nm">${pretty(c.id)} <span class="tech">${(meta.technique||c.technique||'')}</span></div>`+
+                `<div class="sm">${meta.summary||''}</div>`;
+    b.onclick=()=>playCard(side,c.id,b);
+    host.appendChild(b);
+  });
+  card.classList.remove('hidden');
+}
+function hideHand(){$('#handCard').classList.add('hidden');}
+async function playCard(side,cardId,btn){
+  document.querySelectorAll('#hand .pcard').forEach(x=>x.disabled=true);
+  setTurn('resolving…',side);
+  const v=await api.move({match:S.matchId,side,card:cardId,params:{}});
+  applyView(v);
+}
+
+// ── new match ──
+async function newMatch(){
+  teardown(); S.feed=[]; S._fl=0; S.prevBf={}; S.topo=null; $('#topoFront').hidden=true; renderFeed(); clearBanner();
+  $('#bfsub').textContent=(S.live?'range.local · LIVE — real actions':'range.local · sim')+' · topology frozen';
+  if(S.mode==='spectate'){startSpectate();return;}
+  const body={mode:S.mode,live:S.live}; if(S.mode==='1p')body.side=S.side;
+  const v=await api.match(body); S.matchId=v.id;
+  S.seat=(S.mode==='1p')?S.side:'referee';
+  syncSeatButtons();
+  applyView(v);
+}
+function startSpectate(){
+  S.seat='referee'; syncSeatButtons();
+  setTurn('autonomous',null);
+  S.es=new EventSource('/api/game'+(S.live?'?live=1':''));
+  S.es.addEventListener('start',e=>{try{const d=JSON.parse(e.data);$('#bfsub').textContent=(d.scenario||'range.local')+(d.seed?' · seed '+d.seed:'')+' · '+(d.mode||'sim');
+    if(d.topo){S.topo=d.topo;renderTopo({zones:[d.topo.entry],edges:d.topo.edges,attack_ready:false,dc_owned:false});}}catch(_){}});
+  S.es.addEventListener('round',e=>{try{const d=JSON.parse(e.data);
+    S.feed.push('── Round '+d.round+' ──'); (d.lines||[]).forEach(l=>S.feed.push(l));
+    applyView({red:d.red,blue:d.blue,round:d.round,bf:d.bf,finished:d.finished,winner:d.winner,feed:S.feed,coverage:d.coverage});
+  }catch(_){}});
+  S.es.addEventListener('end',()=>{teardown();renderHistory();});
+  S.es.onerror=()=>{/* auto-reconnect */};
+}
+function teardown(){if(S.es){S.es.close();S.es=null;} }
+
+function syncSeatButtons(){document.querySelectorAll('#segSeat button').forEach(b=>b.classList.toggle('on',b.dataset.seat===S.seat));}
+
+// ── winner / toast ──
+function showBanner(w,round){const host=$('#bannerHost');const red=w==='red';
+  host.innerHTML=`<div class="banner ${red?'red':'blue'}"><div class="big">${red?'👑 RED WINS':'🛡 BLUE WINS'}</div>`+
+    `<small>${red?'Domain Admin reached in '+round+' rounds — the range has fallen.':'held the line '+round+' rounds — red never reached DA.'}</small></div>`;
+  host.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function clearBanner(){$('#bannerHost').innerHTML='';}
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+
+// ── buttons ──
+$('#play').onclick=()=>newMatch();
+$('#reset').onclick=async()=>{const b=$('#reset');b.disabled=true;b.textContent='⟲ resetting…';
+  try{const r=await api.reset();toast(r.msg||'reset requested');}catch(_){toast('reset failed');}
+  setTimeout(()=>{b.disabled=false;b.textContent='⟲ RESET RANGE';},2200);};
+
+setFlags({}); setField({});
+</script>
+</body>
+</html>

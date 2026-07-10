@@ -1,0 +1,18 @@
+[package]
+name = "purple-wargame"
+version = "0.1.0"
+edition = "2021"
+description = "Purple Range wargame engine — autonomous round-based red-vs-blue (thick engine, thin model)"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+axum = "0.7"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "net"] }
+async-stream = "0.3"
+futures = "0.3"
+
+[profile.release]
+strip = true
+lto = true
+opt-level = "z"
