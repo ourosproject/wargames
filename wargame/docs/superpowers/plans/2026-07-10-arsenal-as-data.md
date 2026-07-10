@@ -11,11 +11,13 @@
 ## Global Constraints
 
 - Crate: `purple-wargame` at `~/Developer/production/purple-range/wargame`. Run tests with `cargo test`.
+- **Foundation = facts-as-data v2 (already in the tree, branch `arsenal-as-data` @ `cf2b838`).** v2 widened `Category` to the full ATT&CK tactics + D3FEND defensive lanes (`ENFORCED` is now 9 categories), added two-level detection probes (`InstanceProbe::SawCategory(Category)`, `InstanceProbe::Identified(Technique)`) and `Requirement::AnyOf(Vec<Requirement>)`, and retired the three hardcoded detection facts. Adopt it — do NOT rebuild it. Read `src/category.rs`, `src/facts.rs`, `src/cards.rs` before starting; the RON gates below are copied from the v2 `cards.rs`.
 - Sim only — no live range / RB3011 in this sub-project. All tests use `SimEnvironment`.
-- The surfaced fact list `Fact::ALL` (14 facts) must stay byte-identical — do not add any variant to `Fact`. New legality atoms go on `InstanceProbe` (never surfaced).
+- The surfaced fact list `Fact::ALL` (**11 facts**) and `blue_detection_rows` must stay byte-identical — do not add any variant to `Fact`. New legality atoms go on `InstanceProbe` (never surfaced).
+- `Requirement` is **not `Copy`** (it now holds `AnyOf(Vec<Requirement>)`) — clone it where needed; the `.ron` gates may nest `AnyOf`.
 - Every move keeps its existing `id` string and `technique()` — the referee keys blue scoring and flavor text on the `id`, and records `performed` from `technique()`.
 - The move engine calls `env.act(node_id, …)` with the STEP's id. Single-step moves MUST name their step the same as the move id (so `SimEnvironment` and the future `LiveEnvironment` dispatch unchanged). Kerberoast's three steps are named `enum_spns`, `request_tgs`, `crack_hash` (the existing live-dispatch ids).
-- Balance baseline to preserve: BLUE wins 3 of 10 on seeds {1,3,7} via localhost `qwen2.5:7b`.
+- Balance baseline to preserve: BLUE wins 3 of 10 on seeds {1,3,7} measured with the **deterministic heuristic** (`cli`, no model). Single-run model batches (`qwen2.5:7b`) are non-deterministic noise — do NOT use them to judge balance.
 - Reviewer note (from sub-project 1): use **Opus** for any review subagent that reads the attack-card code — Sonnet trips a content filter on kerberoast/DCSync.
 - Commit after every task. Work on a branch `arsenal-as-data` cut from `main`.
 
@@ -63,6 +65,14 @@
         assert_eq!(r, Requirement::have(Fact::ReachesDc));
         let p: Requirement = ron::from_str("Instance(probe: Vuln(Kerberoast), want: true)").unwrap();
         assert_eq!(p, Requirement::Instance { probe: InstanceProbe::Vuln(Technique::Kerberoast), want: true });
+        // the v2 AnyOf disjunction must round-trip too (it is what segment's gate uses)
+        let a: Requirement = ron::from_str(
+            "AnyOf([Instance(probe: SawCategory(InitialAccess), want: true), Instance(probe: SawCategory(LateralMovement), want: true)])"
+        ).unwrap();
+        assert_eq!(a, Requirement::any_of(vec![
+            Requirement::saw_category(crate::category::Category::InitialAccess),
+            Requirement::saw_category(crate::category::Category::LateralMovement),
+        ]));
     }
 ```
 
@@ -89,15 +99,15 @@ And add its arm in `InstanceProbe::holds`:
             InstanceProbe::Vuln(t) => s.vuln(*t),
 ```
 
-- [ ] **Step 5: Add `Deserialize` derives.** Change these three derive lines in `src/facts.rs`:
+- [ ] **Step 5: Add `Deserialize` derives.** Add `Deserialize` to these three derive lines in `src/facts.rs`. Note `Requirement` is NOT `Copy` (it holds `AnyOf(Vec<Requirement>)`) — keep its existing derive set and only append `Deserialize`:
 
 ```rust
-// on enum Fact
+// on enum Fact (currently: Debug, Clone, Copy, PartialEq, Eq, Serialize)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-// on enum InstanceProbe
+// on enum InstanceProbe (currently: Debug, Clone, Copy, PartialEq, Eq, Serialize)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-// on enum Requirement
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+// on enum Requirement (currently: Debug, Clone, PartialEq, Eq, Serialize — NO Copy)
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 ```
 
 (`Deserialize` is already imported: `use serde::{Deserialize, Serialize};`.)
@@ -1087,7 +1097,7 @@ ToolDef(
 use purple_wargame::card::{Card, Environment};
 use purple_wargame::cards::default_registry;
 use purple_wargame::env::SimEnvironment;
-use purple_wargame::state::{Alert, Cred, GameState, Host, Technique};
+use purple_wargame::state::{Alert, Cred, Detection, GameState, Host, Technique};
 use purple_wargame::tool::DataTool;
 use serde_json::{json, Value};
 
@@ -1149,6 +1159,22 @@ fn matrix() -> Vec<(String, GameState, Value)> {
     s7.performed.push(Technique::BloodHound);
     out.push(("scout_detected+path".into(), s7, json!({})));
 
+    // s8: reaches DC + DEPLOYED rules for kerberoast & asrep (identified:* true → unlocks
+    // enforce_aes / enforce_preauth in v2's two-level detection model)
+    let mut s8 = GameState::new(vec![host()]);
+    s8.add_zone("vlan30");
+    s8.detections.push(Detection { id: "rk".into(), technique: Technique::Kerberoast, deployed_round: 1, technique_based: true, fidelity: "robust".into() });
+    s8.detections.push(Detection { id: "ra".into(), technique: Technique::AsRepRoast, deployed_round: 1, technique_based: true, fidelity: "robust".into() });
+    out.push(("identified_rules".into(), s8, json!({})));
+
+    // s9: foothold + an initial-access alert + a forward hop (saw:initial_access true, not at DC →
+    // segment's AnyOf branch is legal)
+    let mut s9 = GameState::new(vec![host()]);
+    s9.add_zone("vlan20");
+    s9.edges.push(("vlan20".into(), "vlan30".into()));
+    s9.alerts.push(Alert { round: 1, technique: Technique::InitialAccess, source: "baseline".into(), rule_id: "r".into(), level: 8 });
+    out.push(("saw_initial_access+hop".into(), s9, json!({})));
+
     out
 }
 
@@ -1171,6 +1197,10 @@ pub fn assert_equivalent(id: &str, def_src: &str) {
     let data = DataTool::new(def);
 
     for (label, state, params) in matrix() {
+        // legality equivalence — this is what v2 changed for the blue counters (the gate),
+        // so the data-tool's requires() must produce the identical legal/illegal verdict.
+        assert_eq!(legacy.precondition(&state), data.precondition(&state), "legality mismatch for '{id}' in state '{label}'");
+        // play equivalence — the effect + resulting state must match byte-for-byte.
         let (lo, ls) = run(legacy, &state, &params);
         let (do_, ds) = run(&data, &state, &params);
         assert_eq!(lo, do_, "outcome mismatch for '{id}' in state '{label}'");
@@ -1388,46 +1418,46 @@ ToolDef(
 )
 ```
 
-`tools/remediate_acl.ron`:
+`tools/remediate_acl.ron` (v2: D3FEND `Harden` lane; gated on any *seen* discovery activity):
 ```ron
 ToolDef(
-    id: "remediate_acl", side: Blue, technique: LateralMove, category: PrivilegeEscalation,
+    id: "remediate_acl", side: Blue, technique: LateralMove, category: Harden,
     summary: "Remove the GenericAll->DA path / tier admins",
-    gate: [Category(fact: PathSevered, want: false), Category(fact: ScoutDetected, want: true)],
+    gate: [Category(fact: PathSevered, want: false), Instance(probe: SawCategory(Discovery), want: true)],
     produces: [PathSevered],
     nodes: [ Node(id: "remediate_acl", effect: SetFlag(PathSevered), ok_surface: [],
         ok_narrative: "revoked svc_mssql DCSync on the domain — path to DA severed") ],
 )
 ```
 
-`tools/enforce_aes.ron`:
+`tools/enforce_aes.ron` (v2: `Harden` lane; requires a DEPLOYED rule — `Identified`, not just an alert):
 ```ron
 ToolDef(
-    id: "enforce_aes", side: Blue, technique: Kerberoast, category: CredentialAccess,
+    id: "enforce_aes", side: Blue, technique: Kerberoast, category: Harden,
     summary: "Disable RC4 / enforce AES — Kerberoast tickets uncrackable",
-    gate: [Category(fact: AesEnforced, want: false), Instance(probe: Detected(Kerberoast), want: true)],
+    gate: [Category(fact: AesEnforced, want: false), Instance(probe: Identified(Kerberoast), want: true)],
     produces: [AesEnforced],
     nodes: [ Node(id: "enforce_aes", effect: SetFlag(AesEnforced), ok_surface: [],
         ok_narrative: "RC4 disabled, AES enforced — roast tickets are now junk") ],
 )
 ```
 
-`tools/enforce_preauth.ron`:
+`tools/enforce_preauth.ron` (v2: `Harden` lane; requires a DEPLOYED rule — `Identified`):
 ```ron
 ToolDef(
-    id: "enforce_preauth", side: Blue, technique: AsRepRoast, category: CredentialAccess,
+    id: "enforce_preauth", side: Blue, technique: AsRepRoast, category: Harden,
     summary: "Enforce Kerberos pre-auth — AS-REP roasting yields nothing",
-    gate: [Category(fact: PreauthEnforced, want: false), Instance(probe: Detected(AsRepRoast), want: true)],
+    gate: [Category(fact: PreauthEnforced, want: false), Instance(probe: Identified(AsRepRoast), want: true)],
     produces: [PreauthEnforced],
     nodes: [ Node(id: "enforce_preauth", effect: SetFlag(PreauthEnforced), ok_surface: [],
         ok_narrative: "pre-auth enforced on jbecker — AS-REP dead") ],
 )
 ```
 
-`tools/rotate_creds.ron` (produces nothing — cancelling a cred is a removal, not a fact flip):
+`tools/rotate_creds.ron` (v2: `Evict` lane; produces nothing — cancelling a cred is a removal, not a fact flip):
 ```ron
 ToolDef(
-    id: "rotate_creds", side: Blue, technique: Kerberoast, category: CredentialAccess,
+    id: "rotate_creds", side: Blue, technique: Kerberoast, category: Evict,
     summary: "Rotate credentials known to be compromised",
     gate: [Instance(probe: CredCompromiseKnown, want: true)],
     produces: [],
@@ -1458,13 +1488,16 @@ ToolDef(
 )
 ```
 
-`tools/segment.ron`:
+`tools/segment.ron` (v2: `Isolate` lane; gated on any seen initial-access OR lateral-movement activity):
 ```ron
 ToolDef(
-    id: "segment", side: Blue, technique: Pivot, category: LateralMovement,
+    id: "segment", side: Blue, technique: Pivot, category: Isolate,
     summary: "Re-segment — firewall-drop red's frontier before it reaches the DC",
     gate: [
-      Category(fact: IntrusionDetected, want: true),
+      AnyOf([
+        Instance(probe: SawCategory(InitialAccess), want: true),
+        Instance(probe: SawCategory(LateralMovement), want: true),
+      ]),
       Category(fact: ReachesDc, want: false),
       Category(fact: DomainAdmin, want: false),
       Instance(probe: HasForwardPath, want: true),
@@ -1733,7 +1766,7 @@ git commit -m "test(wargame): structural invariants over the data arsenal"
 
 ## Task 10: Balance verification (documented)
 
-The win rate must still be 3/10 on seeds {1,3,7}. This is a model-in-the-loop sim run, not a unit test.
+The win rate must still be 3/10 on seeds {1,3,7}. Measure with the **deterministic heuristic** (no model) — v2 established this is the reproducible signal; single-run model batches are non-deterministic noise.
 
 **Files:**
 - Create: `tests/balance_note.md` (record of the run)
@@ -1743,12 +1776,12 @@ The win rate must still be 3/10 on seeds {1,3,7}. This is a model-in-the-loop si
 Run: `cargo build`
 Expected: clean build.
 
-- [ ] **Step 2: Run the 10-seed batch on the local model.** For each seed 1..10:
+- [ ] **Step 2: Run the 10-seed batch with the deterministic heuristic.** For each seed 1..10:
 
-Run: `WARGAME_SEED=<n> WARGAME_MODEL_URL=http://localhost:11434/v1/chat/completions ./target/debug/purple-wargame cli model`
-Look at the final line: `BLUE WINS — …` or `RED WINS — Domain Admin in N rounds`.
+Run: `WARGAME_SEED=<n> ./target/debug/purple-wargame cli`
+Look at the final line: `BLUE WINS — …` or `RED WINS — Domain Admin in N rounds`. (No `model` argument and no `WARGAME_MODEL_URL` — this is the deterministic heuristic, so each seed is fully reproducible.)
 
-- [ ] **Step 3: Confirm the baseline.** Expected: BLUE wins on seeds 1, 3, 7 (3/10). Record each seed's winner in `tests/balance_note.md`. If the result deviates from 3/10, STOP and investigate (compare a decision trace with `WARGAME_MODEL_DEBUG=1` against the pre-migration behavior) — do not accept a moved baseline as "fine".
+- [ ] **Step 3: Confirm the baseline.** Expected: BLUE wins on seeds 1, 3, 7 (exactly 3/10). Record each seed's winner in `tests/balance_note.md`. Because the run is deterministic, any deviation is a real behavior change — STOP and investigate (the equivalence + golden tests should have caught it first); do not accept a moved baseline as "fine".
 
 - [ ] **Step 4: Commit**
 
