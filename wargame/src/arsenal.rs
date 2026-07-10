@@ -224,6 +224,64 @@ pub fn to_ron(def: &ToolDef) -> Result<String, String> {
     ron::ser::to_string_pretty(def, cfg).map_err(|e| format!("RON serialize error: {e}"))
 }
 
+/// The full palette the builder form renders from — assembled from the engine so it can never
+/// drift from what the engine actually supports.
+pub fn vocabulary() -> serde_json::Value {
+    use serde_json::json;
+    use crate::category::Category;
+    use crate::effects::StateFlag;
+    use crate::facts::Fact;
+    use crate::state::{Side, Technique};
+
+    let categories: Vec<serde_json::Value> = [
+        Category::InitialAccess, Category::Discovery, Category::CredentialAccess, Category::PrivilegeEscalation,
+        Category::LateralMovement, Category::Exfiltration, Category::Detection, Category::DefenseEvasion,
+        Category::Reconnaissance, Category::ResourceDevelopment, Category::Execution, Category::Persistence,
+        Category::Collection, Category::CommandAndControl, Category::Impact, Category::Harden, Category::Isolate,
+        Category::Evict, Category::Deceive, Category::Model,
+    ].iter().map(|c| json!({ "key": c.key(), "defensive": c.is_defensive(),
+        "enforced": Category::ENFORCED.contains(c) })).collect();
+
+    let techniques: Vec<serde_json::Value> = [
+        Technique::InitialAccess, Technique::Recon, Technique::Pivot, Technique::Kerberoast, Technique::AsRepRoast,
+        Technique::BloodHound, Technique::CredSpray, Technique::LateralMove, Technique::Exfil,
+    ].iter().map(|t| json!({ "key": t.as_key(), "label": t.attack_name() })).collect();
+
+    let facts: Vec<serde_json::Value> = Fact::ALL.iter().map(|f| json!({
+        "key": f.key(), "question": f.question(),
+        "side": if f.audience() == Side::Red { "Red" } else { "Blue" },
+    })).collect();
+
+    let state_flags: Vec<serde_json::Value> = [
+        StateFlag::Monitoring, StateFlag::AutoResponse, StateFlag::PathSevered, StateFlag::AesEnforced,
+        StateFlag::PreauthEnforced, StateFlag::DomainAdmin,
+    ].iter().map(|f| json!({ "key": f.key() })).collect();
+
+    // Probes the form can gate on. `arg` = what the form must collect for this probe.
+    let probes = json!([
+        { "key": "SawCategory", "arg": "category", "label": "Seen any activity in a tactic (cheap)" },
+        { "key": "Identified", "arg": "technique", "label": "Has a deployed detection rule for a technique" },
+        { "key": "Vuln", "arg": "technique", "label": "The attack path for a technique is planted this scenario" },
+        { "key": "Performed", "arg": "technique", "label": "The attacker has performed a technique" },
+        { "key": "Detected", "arg": "technique", "label": "Blue has an alert for a technique" },
+        { "key": "HasForwardPath", "arg": null, "label": "The attacker has a forward hop to take" },
+        { "key": "LateralPathPlanted", "arg": null, "label": "A DCSync-able ACL path exists this scenario" },
+        { "key": "CredCompromiseKnown", "arg": null, "label": "A stolen credential the defender has detected exists" },
+        { "key": "UndetectedActivity", "arg": null, "label": "Some performed technique is not yet detected" },
+        { "key": "UndetectedAlert", "arg": null, "label": "Some alert has no detection rule yet" },
+    ]);
+
+    json!({
+        "sides": ["Red", "Blue"],
+        "categories": categories,
+        "techniques": techniques,
+        "facts": facts,
+        "state_flags": state_flags,
+        "probes": probes,
+        "effects": crate::effects::effect_descriptors(),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -315,5 +373,20 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         let reg = registry_with_authored(&dir);
         assert_eq!(reg.len(), 16, "missing authored dir → just the built-ins");
+    }
+
+    #[test]
+    fn vocabulary_lists_the_palette_without_produce() {
+        let v = vocabulary();
+        let effects: Vec<&str> = v["effects"].as_array().unwrap().iter().map(|e| e["key"].as_str().unwrap()).collect();
+        assert!(effects.contains(&"SetFlag") && effects.contains(&"GrantCred") && effects.contains(&"HuntGap"));
+        assert!(!effects.contains(&"Produce"), "Produce is hidden until the canvas phase");
+        // facts, probes, categories, techniques, sides all present and non-empty
+        assert_eq!(v["facts"].as_array().unwrap().len(), 11);
+        assert!(v["probes"].as_array().unwrap().len() >= 8);
+        assert!(v["categories"].as_array().unwrap().iter().any(|c| c["key"] == "harden"));
+        assert!(v["techniques"].as_array().unwrap().iter().any(|t| t["key"] == "kerberoast"));
+        assert_eq!(v["sides"].as_array().unwrap().len(), 2);
+        assert!(v["state_flags"].as_array().unwrap().iter().any(|f| f["key"] == "aes_enforced"));
     }
 }

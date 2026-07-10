@@ -194,6 +194,33 @@ impl Effect {
     }
 }
 
+/// Palette metadata for the builder: each authorable effect (Produce is excluded — it is only
+/// meaningful inside a multi-step chain, which the guided form does not build). `params` names
+/// the fields the form must collect; `kind` tells the form which input to render.
+pub fn effect_descriptors() -> Vec<serde_json::Value> {
+    use serde_json::json;
+    vec![
+        json!({ "key": "Attempt", "label": "Perform the technique (no state change)",
+                "desc": "Just performs the technique; the referee records it (this is how recon/bloodhound leave 'scouted' behind).", "params": [] }),
+        json!({ "key": "Advance", "label": "Move one zone closer",
+                "desc": "Takes the next forward hop toward the objective. Use {dest} in the narrative for the zone name.", "params": [] }),
+        json!({ "key": "SetFlag", "label": "Flip a defense/progress switch on",
+                "desc": "Turns one on/off switch true (e.g. AES enforced, path severed, monitoring).",
+                "params": [ { "name": "flag", "kind": "state_flag" } ] }),
+        json!({ "key": "GrantCred", "label": "Steal a credential",
+                "desc": "Adds a cracked credential.",
+                "params": [ { "name": "principal", "kind": "text" }, { "name": "secret", "kind": "text", "optional": true }, { "name": "via", "kind": "technique" } ] }),
+        json!({ "key": "RevokeKnownCreds", "label": "Cancel detected stolen credentials",
+                "desc": "Cancels any cracked credential whose technique the defender has already detected. It decides which — no parameters.", "params": [] }),
+        json!({ "key": "HuntGap", "label": "Threat-hunt for the top undetected technique",
+                "desc": "Finds the highest-value technique the attacker performed but you haven't detected, and surfaces it. It picks the target itself — no parameters.", "params": [] }),
+        json!({ "key": "DeployDetection", "label": "Write a detection rule",
+                "desc": "Writes a graded detection rule for a technique (the move takes a 'technique' parameter at play time).", "params": [] }),
+        json!({ "key": "SeverForwardEdges", "label": "Cut the network in front of the attacker",
+                "desc": "Drops the attacker's forward network edges. It computes which — no parameters.", "params": [] }),
+    ]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
