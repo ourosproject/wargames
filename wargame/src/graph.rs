@@ -93,6 +93,38 @@ fn resolve_order(nodes: &[Box<dyn Primitive>], initial: &HashSet<String>) -> Res
     Ok(order)
 }
 
+/// Topologically order items described only by their (requires, produces) blackboard keys.
+/// Returns indices in a legal execution order, or an error on a cycle / missing input.
+pub fn resolve_order_keys(reqs: &[Vec<String>], prods: &[Vec<String>], initial: &HashSet<String>) -> Result<Vec<usize>, String> {
+    let n = reqs.len();
+    let mut scheduled = vec![false; n];
+    let mut available = initial.clone();
+    let mut order = Vec::new();
+    loop {
+        let mut progressed = false;
+        for i in 0..n {
+            if scheduled[i] {
+                continue;
+            }
+            if reqs[i].iter().all(|r| available.contains(r)) {
+                scheduled[i] = true;
+                for p in &prods[i] {
+                    available.insert(p.clone());
+                }
+                order.push(i);
+                progressed = true;
+            }
+        }
+        if order.len() == n {
+            break;
+        }
+        if !progressed {
+            return Err("unsatisfiable dependency graph (cycle or missing input)".into());
+        }
+    }
+    Ok(order)
+}
+
 /// A card composed from primitive function-nodes wired by dependency. Implements `Card`,
 /// so it registers and plays exactly like a hand-written code card.
 pub struct CompositeCard {

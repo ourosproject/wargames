@@ -87,10 +87,10 @@ pub fn realize(
 /// A card in the library. Object-safe so cards live in `Vec<Box<dyn Card>>`.
 /// `Send + Sync` so the registry can cross `.await` points (SSE, async server).
 pub trait Card: Send + Sync {
-    fn id(&self) -> &'static str;
+    fn id(&self) -> &str;
     fn side(&self) -> Side;
     fn technique(&self) -> Technique;
-    fn describe(&self) -> &'static str;
+    fn describe(&self) -> &str;
 
     /// JSON Schema for params (default: no params). Cards with parameters override this.
     fn params_schema(&self) -> serde_json::Value {
