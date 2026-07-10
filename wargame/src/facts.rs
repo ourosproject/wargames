@@ -199,6 +199,10 @@ pub enum InstanceProbe {
     UndetectedActivity,
     /// Some alert Blue holds has no technique-based detection rule yet.
     UndetectedAlert,
+    /// Blue has seen ANY alert whose technique belongs to this tactic (cheap, category-level).
+    SawCategory(crate::category::Category),
+    /// Blue has a DEPLOYED technique-based rule for this exact technique (expensive, instance-level).
+    Identified(Technique),
 }
 
 impl InstanceProbe {
@@ -211,6 +215,8 @@ impl InstanceProbe {
             InstanceProbe::CredCompromiseKnown => s.creds.iter().any(|c| c.cracked && s.blue_knows(c.via)),
             InstanceProbe::UndetectedActivity => s.performed.iter().any(|t| !s.blue_knows(*t)),
             InstanceProbe::UndetectedAlert => s.alerts.iter().any(|a| !s.has_detection(a.technique)),
+            InstanceProbe::SawCategory(c) => s.alerts.iter().any(|a| a.technique.category() == *c),
+            InstanceProbe::Identified(t) => s.has_detection(*t),
         }
     }
 }
@@ -218,10 +224,12 @@ impl InstanceProbe {
 /// A card's legality expressed as data. Tier-1 `Category` requirements gate on a surfaced
 /// [`Fact`]; Tier-2 `Instance` requirements gate on a ground-truth [`InstanceProbe`]. A card
 /// is legal when all its requirements are satisfied.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub enum Requirement {
     Category { fact: Fact, want: bool },
     Instance { probe: InstanceProbe, want: bool },
+    /// Disjunction — legal when at least one branch is satisfied.
+    AnyOf(Vec<Requirement>),
 }
 
 impl Requirement {
@@ -232,11 +240,15 @@ impl Requirement {
     pub fn fingerprinted(t: Technique) -> Self { Requirement::Instance { probe: InstanceProbe::Detected(t), want: true } }
     pub fn probe(p: InstanceProbe) -> Self { Requirement::Instance { probe: p, want: true } }
     pub fn no_probe(p: InstanceProbe) -> Self { Requirement::Instance { probe: p, want: false } }
+    pub fn saw_category(c: crate::category::Category) -> Self { Requirement::Instance { probe: InstanceProbe::SawCategory(c), want: true } }
+    pub fn identified(t: Technique) -> Self { Requirement::Instance { probe: InstanceProbe::Identified(t), want: true } }
+    pub fn any_of(rs: Vec<Requirement>) -> Self { Requirement::AnyOf(rs) }
 
     pub fn satisfied(&self, s: &GameState) -> bool {
         match self {
             Requirement::Category { fact, want } => fact.holds(s) == *want,
             Requirement::Instance { probe, want } => probe.holds(s) == *want,
+            Requirement::AnyOf(rs) => rs.iter().any(|r| r.satisfied(s)),
         }
     }
 }
@@ -244,7 +256,7 @@ impl Requirement {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::state::{Cred, GameState, Host};
+    use crate::state::{Alert, Cred, GameState, Host};
 
     fn base() -> GameState {
         GameState::new(vec![Host {
@@ -370,5 +382,31 @@ mod tests {
         s.alerts.push(crate::state::Alert { round: 1, technique: Technique::Kerberoast, source: "m".into(), rule_id: "r".into(), level: 8 });
         assert!(!InstanceProbe::UndetectedActivity.holds(&s), "now seen");
         assert!(InstanceProbe::UndetectedAlert.holds(&s), "alert has no detection rule yet");
+    }
+
+    #[test]
+    fn saw_category_fires_on_any_in_category_alert_identified_needs_a_rule() {
+        use crate::category::Category;
+        let mut s = base();
+        s.alerts.push(Alert { round: 1, technique: Technique::Kerberoast, source: "x".into(), rule_id: "r".into(), level: 5 });
+        assert!(InstanceProbe::SawCategory(Category::CredentialAccess).holds(&s));
+        assert!(!InstanceProbe::SawCategory(Category::Discovery).holds(&s));
+        assert!(!InstanceProbe::Identified(Technique::Kerberoast).holds(&s), "alert alone is not identification");
+        s.detections.push(crate::state::Detection { id: "d".into(), technique: Technique::Kerberoast,
+            deployed_round: 1, technique_based: true, fidelity: "robust".into() });
+        assert!(InstanceProbe::Identified(Technique::Kerberoast).holds(&s));
+    }
+
+    #[test]
+    fn any_of_is_a_disjunction() {
+        use crate::category::Category;
+        let mut s = base();
+        let r = Requirement::any_of(vec![
+            Requirement::saw_category(Category::InitialAccess),
+            Requirement::saw_category(Category::LateralMovement),
+        ]);
+        assert!(!r.satisfied(&s));
+        s.alerts.push(Alert { round: 1, technique: Technique::Pivot, source: "x".into(), rule_id: "r".into(), level: 5 });
+        assert!(r.satisfied(&s), "one branch (LateralMovement via Pivot) satisfies AnyOf");
     }
 }
