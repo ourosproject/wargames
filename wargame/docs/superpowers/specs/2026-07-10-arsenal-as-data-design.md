@@ -172,6 +172,9 @@ enum StateFlag {  // the six on/off switches the game already has
   Monitoring, AutoResponse, PathSevered, AesEnforced, PreauthEnforced, DomainAdmin
 }
 enum Effect {
+  Attempt,            // just perform the technique; change no state (recon, bloodhound —
+                      // the "scouted"/"path mapped" fact is left behind by the referee
+                      // recording that the technique happened)
   Advance,            // move one zone closer (take the next available hop)
   GrantCred { principal, secret: Option<String>, via: Technique },  // steal a credential
   SetFlag(StateFlag), // flip one defense/progress switch on
