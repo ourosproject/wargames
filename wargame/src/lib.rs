@@ -28,6 +28,7 @@ pub mod rules;
 pub mod scenario;
 pub mod session;
 pub mod state;
+pub mod tool;
 
 pub use card::{Card, CardSpec, Environment, Move, Outcome};
 pub use referee::{Agent, AgentView, HeuristicAgent, Referee, RoundReport};
