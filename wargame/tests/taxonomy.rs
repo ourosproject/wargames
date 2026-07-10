@@ -31,11 +31,11 @@ fn each_card_has_the_expected_category() {
         ("active_response", Category::Detection),
         ("hunt", Category::Detection),
         ("deploy_detection", Category::Detection),
-        ("remediate_acl", Category::PrivilegeEscalation),
-        ("enforce_aes", Category::CredentialAccess),
-        ("enforce_preauth", Category::CredentialAccess),
-        ("rotate_creds", Category::CredentialAccess),
-        ("segment", Category::LateralMovement),
+        ("remediate_acl", Category::Harden),
+        ("enforce_aes", Category::Harden),
+        ("enforce_preauth", Category::Harden),
+        ("rotate_creds", Category::Evict),
+        ("segment", Category::Isolate),
     ];
     for (id, cat) in expect {
         let spec = reg.get(id).unwrap().spec();

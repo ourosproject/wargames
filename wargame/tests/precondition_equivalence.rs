@@ -74,8 +74,9 @@ fn legacy(id: &str, s: &GameState) -> bool {
         "active_response" => !s.auto_response,
         "remediate_acl" => !s.acl_path_fixed
             && s.alerts.iter().any(|a| matches!(a.technique, Technique::Recon | Technique::BloodHound)),
-        "enforce_aes" => !s.rc4_disabled && s.blue_knows(Technique::Kerberoast),
-        "enforce_preauth" => !s.preauth_required && s.blue_knows(Technique::AsRepRoast),
+        // v2: enforce_aes/enforce_preauth require a DEPLOYED rule (Identified/has_detection), not a bare alert.
+        "enforce_aes" => !s.rc4_disabled && s.has_detection(Technique::Kerberoast),
+        "enforce_preauth" => !s.preauth_required && s.has_detection(Technique::AsRepRoast),
         "rotate_creds" => s.creds.iter().any(|c| c.cracked && s.blue_knows(c.via)),
         "hunt" => s.performed.iter().any(|t| !s.blue_knows(*t)),
         "deploy_detection" => s.alerts.iter().any(|a| !s.has_detection(a.technique)),
