@@ -278,15 +278,12 @@ impl Card for FixAclPath {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::LateralMove }
     fn describe(&self) -> &'static str { "Remove the GenericAll->DA path / tier admins" }
-    fn precondition(&self, s: &GameState) -> bool {
-        // Sever the DCSync/escalation path only once blue has seen the path being *discovered* —
-        // domain recon or BloodHound graph collection. A roast or a perimeter breach reveals that
-        // someone's inside, but not that svc_mssql → DA exists; a blind shop that never detects the
-        // enumeration never learns to tier admins, and red keeps the path.
-        let path_discovered = s.alerts.iter().any(|a| matches!(a.technique,
-            Technique::Recon | Technique::BloodHound));
-        !s.acl_path_fixed && path_discovered
+    fn category(&self) -> Category { Category::PrivilegeEscalation }
+    fn requires(&self) -> Vec<Requirement> {
+        // Category-gated: any discovery Blue has *seen* (ScoutDetected) unlocks the cut.
+        vec![Requirement::lack(Fact::PathSevered), Requirement::have(Fact::ScoutDetected)]
     }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::PathSevered] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let o = realize(e, self.id(), p, s, "revoked svc_mssql DCSync on the domain — path to DA severed", vec![]);
         if o.success {
@@ -303,7 +300,11 @@ impl Card for EnforceAes {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Kerberoast }
     fn describe(&self) -> &'static str { "Disable RC4 / enforce AES — Kerberoast tickets uncrackable" }
-    fn precondition(&self, s: &GameState) -> bool { !s.rc4_disabled && s.blue_knows(Technique::Kerberoast) }
+    fn category(&self) -> Category { Category::CredentialAccess }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![Requirement::lack(Fact::AesEnforced), Requirement::fingerprinted(Technique::Kerberoast)]
+    }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::AesEnforced] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let o = realize(e, self.id(), p, s, "RC4 disabled, AES enforced — roast tickets are now junk", vec![]);
         if o.success {
@@ -320,7 +321,11 @@ impl Card for EnforcePreauth {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::AsRepRoast }
     fn describe(&self) -> &'static str { "Enforce Kerberos pre-auth — AS-REP roasting yields nothing" }
-    fn precondition(&self, s: &GameState) -> bool { !s.preauth_required && s.blue_knows(Technique::AsRepRoast) }
+    fn category(&self) -> Category { Category::CredentialAccess }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![Requirement::lack(Fact::PreauthEnforced), Requirement::fingerprinted(Technique::AsRepRoast)]
+    }
+    fn produces(&self) -> Vec<Fact> { vec![Fact::PreauthEnforced] }
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let o = realize(e, self.id(), p, s, "pre-auth enforced on jbecker — AS-REP dead", vec![]);
         if o.success {
@@ -337,9 +342,9 @@ impl Card for HardenCreds {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Kerberoast }
     fn describe(&self) -> &'static str { "Rotate credentials known to be compromised" }
-    fn precondition(&self, s: &GameState) -> bool {
-        s.creds.iter().any(|c| c.cracked && s.blue_knows(c.via))
-    }
+    fn category(&self) -> Category { Category::CredentialAccess }
+    fn requires(&self) -> Vec<Requirement> { vec![Requirement::probe(InstanceProbe::CredCompromiseKnown)] }
+    // produces: invalidates a cred (removal), not a fact flip → empty
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         // Fire the real password reset on the DC (sim: no-op success), then record it.
         let live = realize(e, self.id(), p, s, "", vec![]);
@@ -429,10 +434,16 @@ impl Card for Segment {
     fn side(&self) -> Side { Side::Blue }
     fn technique(&self) -> Technique { Technique::Pivot }
     fn describe(&self) -> &'static str { "Re-segment — firewall-drop red's frontier before it reaches the DC" }
-    fn precondition(&self, s: &GameState) -> bool {
-        (s.blue_knows(Technique::Pivot) || s.blue_knows(Technique::InitialAccess))
-            && !s.attack_ready() && !s.red_reached_da && !s.next_hops().is_empty()
+    fn category(&self) -> Category { Category::LateralMovement }
+    fn requires(&self) -> Vec<Requirement> {
+        vec![
+            Requirement::have(Fact::IntrusionDetected),
+            Requirement::lack(Fact::ReachesDc),
+            Requirement::lack(Fact::DomainAdmin),
+            Requirement::probe(InstanceProbe::HasForwardPath),
+        ]
     }
+    // produces: removes forward edges (may flip HasForwardPath false) → empty
     fn play(&self, s: &mut GameState, p: &Value, e: &mut dyn Environment) -> Outcome {
         let cut: Vec<String> = s.next_hops();
         let o = realize(e, self.id(), p, s, &format!("re-segmented — dropped red's path into {}", cut.join(", ")), vec![]);
