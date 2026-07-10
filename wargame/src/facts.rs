@@ -90,6 +90,11 @@ impl Fact {
         }
     }
 
+    /// Inverse of `key()`.
+    pub fn from_key(k: &str) -> Option<Fact> {
+        Fact::ALL.into_iter().find(|f| f.key() == k)
+    }
+
     /// The yes/no question this fact answers — the human phrasing the model reads.
     pub fn question(&self) -> &'static str {
         match self {
@@ -418,6 +423,14 @@ mod tests {
         assert!(InstanceProbe::Vuln(Technique::Kerberoast).holds(&s));
         s.misconfigs.clear();
         assert!(!InstanceProbe::Vuln(Technique::Kerberoast).holds(&s));
+    }
+
+    #[test]
+    fn fact_from_key_round_trips() {
+        for f in Fact::ALL {
+            assert_eq!(Fact::from_key(f.key()), Some(f));
+        }
+        assert_eq!(Fact::from_key("nope"), None);
     }
 
     #[test]

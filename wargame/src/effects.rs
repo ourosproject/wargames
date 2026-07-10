@@ -20,6 +20,31 @@ pub enum StateFlag {
 }
 
 impl StateFlag {
+    /// Stable slug for this flag (matches the surfaced fact key it flips).
+    pub fn key(&self) -> &'static str {
+        match self {
+            StateFlag::Monitoring => "monitoring",
+            StateFlag::AutoResponse => "auto_response",
+            StateFlag::PathSevered => "path_severed",
+            StateFlag::AesEnforced => "aes_enforced",
+            StateFlag::PreauthEnforced => "preauth_enforced",
+            StateFlag::DomainAdmin => "domain_admin",
+        }
+    }
+
+    /// Inverse of `key()`.
+    pub fn from_key(k: &str) -> Option<StateFlag> {
+        Some(match k {
+            "monitoring" => StateFlag::Monitoring,
+            "auto_response" => StateFlag::AutoResponse,
+            "path_severed" => StateFlag::PathSevered,
+            "aes_enforced" => StateFlag::AesEnforced,
+            "preauth_enforced" => StateFlag::PreauthEnforced,
+            "domain_admin" => StateFlag::DomainAdmin,
+            _ => return None,
+        })
+    }
+
     fn set(&self, s: &mut GameState) {
         match self {
             StateFlag::Monitoring => s.monitoring = true,
@@ -277,6 +302,14 @@ mod tests {
         let e = Effect::Produce { key: "tgs_hash".into(), value: serde_json::json!("$krb5tgs$") };
         e.apply(&mut s, &mut c, &Value::Null, true, "", "");
         assert_eq!(c.get("tgs_hash"), Some(&serde_json::json!("$krb5tgs$")));
+    }
+
+    #[test]
+    fn state_flag_from_key_round_trips() {
+        for (k, want) in [("monitoring", StateFlag::Monitoring), ("path_severed", StateFlag::PathSevered), ("domain_admin", StateFlag::DomainAdmin)] {
+            assert_eq!(StateFlag::from_key(k), Some(want));
+        }
+        assert_eq!(StateFlag::from_key("nope"), None);
     }
 
     #[test]
