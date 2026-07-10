@@ -1,0 +1,8 @@
+ToolDef(
+    id: "remediate_acl", side: Blue, technique: LateralMove, category: Harden,
+    summary: "Remove the GenericAll->DA path / tier admins",
+    gate: [Category(fact: PathSevered, want: false), Instance(probe: SawCategory(Discovery), want: true)],
+    produces: [PathSevered],
+    nodes: [ Node(id: "remediate_acl", effect: SetFlag(PathSevered), ok_surface: [],
+        ok_narrative: "revoked svc_mssql DCSync on the domain — path to DA severed") ],
+)

@@ -135,3 +135,41 @@ fn asrep_roast_is_equivalent() { assert_equivalent("asrep_roast", include_str!("
 fn bloodhound_is_equivalent() { assert_equivalent("bloodhound", include_str!("../tools/bloodhound.ron")); }
 #[test]
 fn escalate_da_is_equivalent() { assert_equivalent("escalate_da", include_str!("../tools/escalate_da.ron")); }
+
+#[test]
+fn active_response_is_equivalent() { assert_equivalent("active_response", include_str!("../tools/active_response.ron")); }
+#[test]
+fn remediate_acl_is_equivalent() { assert_equivalent("remediate_acl", include_str!("../tools/remediate_acl.ron")); }
+#[test]
+fn enforce_aes_is_equivalent() { assert_equivalent("enforce_aes", include_str!("../tools/enforce_aes.ron")); }
+#[test]
+fn enforce_preauth_is_equivalent() { assert_equivalent("enforce_preauth", include_str!("../tools/enforce_preauth.ron")); }
+#[test]
+fn rotate_creds_is_equivalent() { assert_equivalent("rotate_creds", include_str!("../tools/rotate_creds.ron")); }
+#[test]
+fn hunt_is_equivalent() { assert_equivalent("hunt", include_str!("../tools/hunt.ron")); }
+#[test]
+fn segment_is_equivalent() { assert_equivalent("segment", include_str!("../tools/segment.ron")); }
+
+// deploy_detection: prove equivalence with explicit params (valid, invalid) as well as defaults.
+#[test]
+fn deploy_detection_is_equivalent() {
+    assert_equivalent("deploy_detection", include_str!("../tools/deploy_detection.ron"));
+}
+#[test]
+fn deploy_detection_param_cases_match_legacy() {
+    use purple_wargame::cards::default_registry;
+    let src = include_str!("../tools/deploy_detection.ron");
+    let def = purple_wargame::arsenal::parse_tool(src).unwrap();
+    let data = DataTool::new(def);
+    let legacy_reg = default_registry();
+    let legacy = legacy_reg.get("deploy_detection").unwrap();
+    for p in [json!({"technique": "kerberoast"}), json!({"technique": "not_a_technique"}), json!({})] {
+        for (label, state, _) in matrix() {
+            let (lo, ls) = run(legacy, &state, &p);
+            let (do_, ds) = run(&data, &state, &p);
+            assert_eq!(lo, do_, "deploy_detection outcome mismatch, params {p}, state '{label}'");
+            assert_eq!(ls, ds, "deploy_detection state mismatch, params {p}, state '{label}'");
+        }
+    }
+}

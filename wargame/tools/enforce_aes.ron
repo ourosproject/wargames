@@ -1,0 +1,8 @@
+ToolDef(
+    id: "enforce_aes", side: Blue, technique: Kerberoast, category: Harden,
+    summary: "Disable RC4 / enforce AES — Kerberoast tickets uncrackable",
+    gate: [Category(fact: AesEnforced, want: false), Instance(probe: Identified(Kerberoast), want: true)],
+    produces: [AesEnforced],
+    nodes: [ Node(id: "enforce_aes", effect: SetFlag(AesEnforced), ok_surface: [],
+        ok_narrative: "RC4 disabled, AES enforced — roast tickets are now junk") ],
+)
