@@ -269,6 +269,9 @@ pub fn effect_descriptors() -> Vec<serde_json::Value> {
                 "desc": "Drops the attacker's forward network edges. It computes which — no parameters.", "params": [] }),
         json!({ "key": "Evict", "label": "Evict the attacker from a host",
                 "desc": "Kicks the attacker off its deepest foothold — but a persistent implant absorbs the first eviction (burns the implant instead). It decides what to remove — no parameters.", "params": [] }),
+        json!({ "key": "Produce", "label": "Produce a value for a later step",
+                "desc": "Writes a value onto the move's blackboard under a key, so a later node can require it. This is how a multi-step move chains (enum → request → crack). Canvas moves only.",
+                "params": [ { "name": "key", "kind": "text" }, { "name": "value", "kind": "text" } ] }),
     ]
 }
 

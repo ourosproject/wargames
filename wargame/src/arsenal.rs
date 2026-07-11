@@ -458,11 +458,12 @@ mod tests {
     }
 
     #[test]
-    fn vocabulary_lists_the_palette_without_produce() {
+    fn vocabulary_lists_the_full_palette_including_produce_for_the_canvas() {
         let v = vocabulary();
         let effects: Vec<&str> = v["effects"].as_array().unwrap().iter().map(|e| e["key"].as_str().unwrap()).collect();
         assert!(effects.contains(&"SetFlag") && effects.contains(&"GrantCred") && effects.contains(&"HuntGap"));
-        assert!(!effects.contains(&"Produce"), "Produce is hidden until the canvas phase");
+        assert!(effects.contains(&"Evict"), "the expansion's Evict effect is authorable");
+        assert!(effects.contains(&"Produce"), "Produce is the multi-node wire — offered now the canvas exists");
         // facts, probes, categories, techniques, sides all present and non-empty
         assert_eq!(v["facts"].as_array().unwrap().len(), 19);
         assert!(v["probes"].as_array().unwrap().len() >= 8);

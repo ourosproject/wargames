@@ -279,6 +279,10 @@ async fn build_page() -> Html<&'static str> {
     Html(include_str!("../public/build.html"))
 }
 
+async fn canvas_page() -> Html<&'static str> {
+    Html(include_str!("../public/canvas.html"))
+}
+
 async fn catalog() -> Json<serde_json::Value> {
     let reg = registry_with_authored(&authored_dir());
     let cards: Vec<serde_json::Value> = reg
@@ -475,6 +479,7 @@ async fn main() {
         .route("/", get(index))
         .route("/design", get(design_page))
         .route("/build", get(build_page))
+        .route("/canvas", get(canvas_page))
         .route("/anime.min.js", get(anime_js))
         .route("/api/vocabulary", get(vocabulary_api))
         .route("/api/tools", get(list_tools).post(save_tool))
