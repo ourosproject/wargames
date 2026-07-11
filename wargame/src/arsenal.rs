@@ -35,6 +35,14 @@ pub fn established_facts(def: &ToolDef) -> Vec<Fact> {
             Effect::SetFlag(StateFlag::AesEnforced) => add(Fact::AesEnforced, &mut out),
             Effect::SetFlag(StateFlag::PreauthEnforced) => add(Fact::PreauthEnforced, &mut out),
             Effect::SetFlag(StateFlag::DomainAdmin) => add(Fact::DomainAdmin, &mut out),
+            // ── arsenal primitives expansion: new objective / posture bits ──
+            Effect::SetFlag(StateFlag::Persisted) => add(Fact::Persisted, &mut out),
+            Effect::SetFlag(StateFlag::C2Established) => add(Fact::C2Active, &mut out),
+            Effect::SetFlag(StateFlag::DataExfiltrated) => add(Fact::DataExfiltrated, &mut out),
+            Effect::SetFlag(StateFlag::ImpactDone) => add(Fact::ImpactDone, &mut out),
+            Effect::SetFlag(StateFlag::EgressBlocked) => add(Fact::EgressBlocked, &mut out),
+            Effect::SetFlag(StateFlag::BackupsReady) => add(Fact::BackupsReady, &mut out),
+            Effect::SetFlag(StateFlag::C2Blocked) => add(Fact::C2Blocked, &mut out),
             _ => {}
         }
     }
@@ -156,6 +164,16 @@ pub const TOOL_FILES: &[&str] = &[
     include_str!("../tools/hunt.ron"),
     include_str!("../tools/deploy_detection.ron"),
     include_str!("../tools/segment.ron"),
+    // ── arsenal primitives expansion: new red families + their blue counters ──
+    include_str!("../tools/phish.ron"),
+    include_str!("../tools/deploy_implant.ron"),
+    include_str!("../tools/establish_c2.ron"),
+    include_str!("../tools/exfil_data.ron"),
+    include_str!("../tools/ransomware.ron"),
+    include_str!("../tools/evict.ron"),
+    include_str!("../tools/block_egress.ron"),
+    include_str!("../tools/backups.ron"),
+    include_str!("../tools/block_c2.ron"),
 ];
 
 /// Build the game's card library from the embedded move files. Panics with the full list of
@@ -220,5 +238,63 @@ mod tests {
         let def = parse_tool(MONITOR).unwrap(); // only Detection
         let errs = validate_set(&[def]).unwrap_err();
         assert!(errs.iter().any(|e| e.contains("category")), "got {errs:?}");
+    }
+
+    #[test]
+    fn full_arsenal_loads_with_new_families() {
+        let reg = default_registry();
+        assert_eq!(reg.len(), 25);
+        for id in ["phish", "deploy_implant", "establish_c2", "exfil_data", "ransomware",
+                   "evict", "block_egress", "backups", "block_c2"] {
+            assert!(reg.get(id).is_some(), "missing {id}");
+        }
+    }
+
+    #[test]
+    fn exfil_fails_when_egress_blocked_succeeds_otherwise() {
+        use crate::env::SimEnvironment;
+        use crate::state::{Cred, GameState, Host, Technique};
+        let reg = default_registry();
+        let tool = reg.get("exfil_data").unwrap();
+        let base = GameState::new(vec![Host {
+            id: "e".into(), zone: "internet".into(), label: "e".into(),
+            foothold: false, reachable_by_red: true,
+        }]);
+        let mut s = base.clone();
+        s.creds.push(Cred { principal: "svc".into(), secret: None, cracked: true, via: Technique::Kerberoast });
+        // egress open → exfil succeeds and sets the objective
+        let mut ok = s.clone();
+        let o = tool.play(&mut ok, &serde_json::json!({}), &mut SimEnvironment::new());
+        assert!(o.success && ok.data_exfiltrated, "open egress: exfil succeeds and objective set");
+        // egress blocked → guard fails, no objective
+        let mut blocked = s.clone();
+        blocked.egress_blocked = true;
+        let o2 = tool.play(&mut blocked, &serde_json::json!({}), &mut SimEnvironment::new());
+        assert!(!o2.success && !blocked.data_exfiltrated, "blocked egress: exfil fails, objective untouched");
+    }
+
+    #[test]
+    fn evict_burns_persistence_then_kicks_red_out() {
+        use crate::env::SimEnvironment;
+        use crate::state::{GameState, Host};
+        let reg = default_registry();
+        let tool = reg.get("evict").unwrap();
+        let mut s = GameState::new(vec![Host {
+            id: "e".into(), zone: "internet".into(), label: "e".into(),
+            foothold: false, reachable_by_red: true,
+        }]);
+        s.add_zone("vlan20");
+        s.red_persisted = true;
+        // gate needs a blue observation that red is inside — an initial-access alert
+        s.alerts.push(crate::state::Alert {
+            round: 1, technique: crate::state::Technique::InitialAccess,
+            source: "edr".into(), rule_id: "r".into(), level: 8,
+        });
+        // first evict burns the implant, red keeps its ground
+        let o1 = tool.play(&mut s, &serde_json::json!({}), &mut SimEnvironment::new());
+        assert!(o1.success && !s.red_persisted && s.holds("vlan20"), "first evict burns persistence, ground held");
+        // second evict removes red's deepest zone
+        let o2 = tool.play(&mut s, &serde_json::json!({}), &mut SimEnvironment::new());
+        assert!(o2.success && !s.holds("vlan20"), "second evict kicks red back to the perimeter");
     }
 }

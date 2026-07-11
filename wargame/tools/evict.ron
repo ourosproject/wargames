@@ -1,0 +1,15 @@
+ToolDef(
+    id: "evict", side: Blue, technique: Pivot, category: Evict,
+    summary: "Evict red from a host — kicks it back to the perimeter, or burns an implant first",
+    gate: [
+      AnyOf([
+        Instance(probe: SawCategory(InitialAccess), want: true),
+        Instance(probe: SawCategory(LateralMovement), want: true),
+        Instance(probe: SawCategory(CredentialAccess), want: true),
+      ]),
+      Category(fact: Foothold, want: true),
+    ],
+    produces: [],
+    nodes: [ Node(id: "evict", effect: Evict, ok_surface: [],
+        ok_narrative: "isolated and reimaged the host — red's back on the wrong side of the wire") ],
+)

@@ -86,12 +86,24 @@ fn legacy(id: &str, s: &GameState) -> bool {
     }
 }
 
+/// The 16 cards this one-time migration proof covers. Tools added *after* the migration
+/// (the arsenal-primitives expansion) have no legacy closure to match and are skipped by
+/// design — see the module docstring.
+const LEGACY_IDS: [&str; 16] = [
+    "initial_access", "pivot", "recon", "kerberoast", "asrep_roast", "bloodhound",
+    "escalate_da", "monitor", "active_response", "remediate_acl", "enforce_aes",
+    "enforce_preauth", "rotate_creds", "hunt", "deploy_detection", "segment",
+];
+
 #[test]
 fn every_card_precondition_matches_legacy_over_the_reachable_space() {
     let reg = default_registry();
     for seed in 0..800u64 {
         let s = gen_state(seed);
         for spec in reg.all_specs() {
+            if !LEGACY_IDS.contains(&spec.id.as_str()) {
+                continue; // post-migration sibling tool — no legacy oracle to compare against
+            }
             let card = reg.get(&spec.id).unwrap();
             assert_eq!(
                 card.precondition(&s),
