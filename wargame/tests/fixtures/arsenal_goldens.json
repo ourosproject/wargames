@@ -18,9 +18,12 @@
       ],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -29,6 +32,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -36,6 +40,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -46,6 +51,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -58,6 +64,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -89,10 +96,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -104,6 +115,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -114,6 +126,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -124,6 +137,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -155,10 +169,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -166,6 +184,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -176,6 +195,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -186,6 +206,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -216,10 +237,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -242,6 +267,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -252,6 +278,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -262,6 +289,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -293,10 +321,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -304,6 +336,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -314,6 +347,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -324,6 +358,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -355,10 +390,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -366,6 +405,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -376,12 +416,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -413,10 +455,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -424,6 +470,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -434,6 +481,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -444,6 +492,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -483,10 +532,14 @@
       ],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -498,6 +551,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -508,6 +562,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -518,6 +573,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -557,9 +613,12 @@
       ],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -568,6 +627,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -575,6 +635,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -585,6 +646,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -597,6 +659,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -636,10 +699,14 @@
       ],
       "attacks": [],
       "auto_response": true,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -651,6 +718,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -661,6 +729,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -674,6 +743,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -715,9 +785,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -732,6 +805,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -739,6 +813,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -749,6 +824,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -761,6 +837,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -794,9 +871,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -805,6 +885,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -816,6 +897,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -826,6 +908,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -836,6 +919,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -869,9 +953,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -880,6 +967,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -887,6 +975,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -897,6 +986,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -907,6 +997,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -939,9 +1030,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -950,6 +1044,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -972,6 +1067,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -982,6 +1078,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -992,6 +1089,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1025,10 +1123,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1036,6 +1138,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1046,6 +1149,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1056,6 +1160,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1087,10 +1192,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1098,6 +1207,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1108,12 +1218,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1147,9 +1259,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -1158,6 +1273,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1165,6 +1281,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1175,6 +1292,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1185,6 +1303,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1226,9 +1345,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -1237,6 +1359,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1248,6 +1371,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1258,6 +1382,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1268,6 +1393,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1309,9 +1435,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -1326,6 +1455,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1333,6 +1463,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1343,6 +1474,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1355,6 +1487,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1396,9 +1529,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -1407,6 +1543,7 @@
           "via": "AsRepRoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1418,6 +1555,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1428,6 +1566,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1441,6 +1580,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1482,9 +1622,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -1493,6 +1636,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1500,6 +1644,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1510,6 +1655,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1522,6 +1668,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1555,10 +1702,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1570,6 +1721,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1580,6 +1732,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1590,6 +1743,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1623,10 +1777,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1634,6 +1792,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1644,6 +1803,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1654,6 +1814,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -1686,10 +1847,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -1712,6 +1877,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1722,6 +1888,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1732,6 +1899,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1765,10 +1933,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1776,6 +1948,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1786,6 +1959,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1796,6 +1970,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1829,10 +2004,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1840,6 +2019,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1850,12 +2030,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1889,10 +2071,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1900,6 +2086,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1910,6 +2097,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1920,6 +2108,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -1961,10 +2150,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -1976,6 +2169,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -1986,6 +2180,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -1996,6 +2191,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2037,9 +2233,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -2048,6 +2247,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2055,6 +2255,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2065,6 +2266,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2077,6 +2279,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2118,10 +2321,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2133,6 +2340,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2143,6 +2351,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2156,6 +2365,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2195,9 +2405,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -2206,6 +2419,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -2221,6 +2435,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2231,6 +2446,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2243,6 +2459,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2282,9 +2499,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -2293,6 +2513,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2300,6 +2521,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2310,6 +2532,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2322,6 +2545,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2361,9 +2585,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -2372,6 +2599,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2379,6 +2607,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2389,6 +2618,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2401,6 +2631,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2432,10 +2663,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -2455,6 +2690,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2465,6 +2701,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2475,6 +2712,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2506,10 +2744,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2521,6 +2763,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2531,6 +2774,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2541,6 +2785,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2572,10 +2817,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2587,6 +2836,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2597,6 +2847,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2607,6 +2858,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2638,10 +2890,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -2657,6 +2913,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2667,6 +2924,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2677,6 +2935,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -2707,10 +2966,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2718,6 +2981,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2728,6 +2992,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2738,6 +3003,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -2768,10 +3034,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -2779,6 +3049,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2789,6 +3060,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2799,6 +3071,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -2829,10 +3102,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -2862,6 +3139,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2872,6 +3150,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2882,6 +3161,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2913,10 +3193,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -2939,6 +3223,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -2949,6 +3234,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -2959,6 +3245,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -2990,10 +3277,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -3016,6 +3307,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3026,6 +3318,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3036,6 +3329,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3067,10 +3361,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -3086,6 +3384,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3096,6 +3395,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3106,6 +3406,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3137,10 +3438,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3148,6 +3453,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3158,6 +3464,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3168,6 +3475,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3199,10 +3507,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3210,6 +3522,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3220,6 +3533,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3230,6 +3544,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3261,10 +3576,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -3280,6 +3599,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3290,12 +3610,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3327,10 +3649,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3338,6 +3664,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3348,12 +3675,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3385,10 +3714,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3396,6 +3729,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3406,12 +3740,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3443,10 +3779,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -3462,6 +3802,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3472,6 +3813,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3482,6 +3824,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3513,10 +3856,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3524,6 +3871,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3534,6 +3882,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3544,6 +3893,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3575,10 +3925,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3586,6 +3940,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3596,6 +3951,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3606,6 +3962,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3645,10 +4002,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -3668,6 +4029,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3678,6 +4040,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3688,6 +4051,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3727,10 +4091,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3742,6 +4110,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3752,6 +4121,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3762,6 +4132,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3801,10 +4172,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3816,6 +4191,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3826,6 +4202,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3836,6 +4213,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3875,9 +4253,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -3886,6 +4267,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -3901,6 +4283,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3911,6 +4294,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -3923,6 +4307,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -3962,9 +4347,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -3973,6 +4361,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -3980,6 +4369,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -3990,6 +4380,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4002,6 +4393,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4041,9 +4433,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -4052,6 +4447,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4059,6 +4455,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4069,6 +4466,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4081,6 +4479,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4120,10 +4519,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 0,
@@ -4143,6 +4546,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4153,6 +4557,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4166,6 +4571,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4205,10 +4611,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4220,6 +4630,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4230,6 +4641,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4243,6 +4655,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4282,10 +4695,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4297,6 +4714,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4307,6 +4725,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4320,6 +4739,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4359,9 +4779,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -4370,6 +4793,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4377,6 +4801,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4387,6 +4812,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4399,6 +4825,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4430,10 +4857,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4445,6 +4876,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4455,6 +4887,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4465,6 +4898,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4496,10 +4930,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4507,6 +4945,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4517,6 +4956,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4527,6 +4967,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -4557,10 +4998,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -4583,6 +5028,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4593,6 +5039,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4603,6 +5050,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4634,10 +5082,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4645,6 +5097,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4655,6 +5108,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4665,6 +5119,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4696,10 +5151,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4707,6 +5166,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4717,12 +5177,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4754,10 +5216,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4765,6 +5231,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4775,6 +5242,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4785,6 +5253,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4824,10 +5293,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4839,6 +5312,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4849,6 +5323,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4859,6 +5334,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4898,9 +5374,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -4909,6 +5388,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4916,6 +5396,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -4926,6 +5407,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -4938,6 +5420,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -4977,10 +5460,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -4992,6 +5479,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5002,6 +5490,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5015,6 +5504,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5054,9 +5544,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -5065,6 +5558,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5072,6 +5566,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5082,6 +5577,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5094,6 +5590,7 @@
       ],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5125,10 +5622,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5140,6 +5641,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5150,6 +5652,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5160,6 +5663,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5191,10 +5695,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5202,6 +5710,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5212,6 +5721,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5222,6 +5732,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -5252,10 +5763,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -5278,6 +5793,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5288,6 +5804,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5298,6 +5815,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5329,10 +5847,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5340,6 +5862,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5350,6 +5873,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5360,6 +5884,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5391,10 +5916,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5402,6 +5931,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5412,12 +5942,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5449,10 +5981,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5460,6 +5996,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5470,6 +6007,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5480,6 +6018,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5519,10 +6058,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5534,6 +6077,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5544,6 +6088,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5554,6 +6099,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5593,9 +6139,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -5604,6 +6153,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5611,6 +6161,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5621,6 +6172,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5633,6 +6185,7 @@
       ],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5672,10 +6225,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5687,6 +6244,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5697,6 +6255,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5710,6 +6269,7 @@
       ],
       "preauth_required": true,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -5751,9 +6311,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -5762,6 +6325,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5769,6 +6333,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5779,6 +6344,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5791,6 +6357,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -5824,10 +6391,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5839,6 +6410,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5849,6 +6421,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5859,6 +6432,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -5892,10 +6466,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -5903,6 +6481,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5913,6 +6492,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -5923,6 +6503,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet"
@@ -5955,10 +6536,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -5981,6 +6566,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -5991,6 +6577,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6001,6 +6588,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -6034,10 +6622,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6045,6 +6637,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6055,6 +6648,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6065,6 +6659,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -6098,10 +6693,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6109,6 +6708,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6119,12 +6719,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -6158,10 +6760,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6169,6 +6775,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6179,6 +6786,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6189,6 +6797,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -6230,10 +6839,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6245,6 +6858,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6255,6 +6869,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6265,6 +6880,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -6306,9 +6922,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -6317,6 +6936,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6324,6 +6944,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6334,6 +6955,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6346,6 +6968,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -6387,10 +7010,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6402,6 +7029,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6412,6 +7040,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6425,6 +7054,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": true,
       "red_zones": [
         "internet",
@@ -6471,9 +7101,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -6482,6 +7115,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6489,6 +7123,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6499,6 +7134,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6511,6 +7147,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -6542,10 +7179,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6557,6 +7198,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6567,6 +7209,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6577,6 +7220,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -6608,10 +7252,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6619,6 +7267,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6629,6 +7278,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6639,6 +7289,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -6669,10 +7320,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -6695,6 +7350,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6705,6 +7361,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6715,6 +7372,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -6746,10 +7404,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6757,6 +7419,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6767,6 +7430,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6777,6 +7441,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -6808,10 +7473,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6819,6 +7488,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6829,12 +7499,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -6866,10 +7538,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6877,6 +7553,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6887,6 +7564,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6897,6 +7575,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -6936,10 +7615,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -6951,6 +7634,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -6961,6 +7645,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -6971,6 +7656,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7017,9 +7703,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -7028,6 +7717,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7035,6 +7725,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7045,6 +7736,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7057,6 +7749,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7103,10 +7796,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7118,6 +7815,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7128,6 +7826,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7141,6 +7840,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7182,9 +7882,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -7193,6 +7896,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7200,6 +7904,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7210,6 +7915,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7222,6 +7928,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7255,10 +7962,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7270,6 +7981,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7280,6 +7992,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7290,6 +8003,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7324,10 +8038,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7335,6 +8053,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7345,6 +8064,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7355,6 +8075,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7388,10 +8109,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -7414,6 +8139,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7424,6 +8150,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7434,6 +8161,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7467,10 +8195,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7478,6 +8210,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7488,6 +8221,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7498,6 +8232,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7531,10 +8266,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7542,6 +8281,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7552,12 +8292,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7591,10 +8333,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7602,6 +8348,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7612,6 +8359,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7622,6 +8370,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7663,10 +8412,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7678,6 +8431,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7688,6 +8442,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7698,6 +8453,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7740,9 +8496,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -7751,6 +8510,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7758,6 +8518,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7768,6 +8529,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7780,6 +8542,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7821,10 +8584,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7836,6 +8603,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7846,6 +8614,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7859,6 +8628,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7902,9 +8672,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -7919,6 +8692,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -7926,6 +8700,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -7936,6 +8711,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -7948,6 +8724,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -7982,9 +8759,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -7993,6 +8773,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8004,6 +8785,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8014,6 +8796,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8024,6 +8807,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8058,9 +8842,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -8069,6 +8856,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8076,6 +8864,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8086,6 +8875,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8096,6 +8886,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -8129,9 +8920,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -8140,6 +8934,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -8162,6 +8957,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8172,6 +8968,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8182,6 +8979,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8216,10 +9014,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8227,6 +9029,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8237,6 +9040,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8247,6 +9051,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8281,10 +9086,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8292,6 +9101,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8302,12 +9112,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8342,9 +9154,12 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -8353,6 +9168,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8360,6 +9176,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8370,6 +9187,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8380,6 +9198,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8422,9 +9241,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -8433,6 +9255,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8444,6 +9267,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8454,6 +9278,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8464,6 +9289,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8506,9 +9332,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -8523,6 +9352,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8530,6 +9360,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8540,6 +9371,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8552,6 +9384,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8594,9 +9427,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -8605,6 +9441,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8616,6 +9453,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8626,6 +9464,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8639,6 +9478,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8678,9 +9518,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -8689,6 +9532,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8696,6 +9540,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8706,6 +9551,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8718,6 +9564,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8749,10 +9596,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8764,6 +9615,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8774,6 +9626,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8784,6 +9637,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8815,10 +9669,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8826,6 +9684,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8836,6 +9695,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8846,6 +9706,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -8876,10 +9737,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -8902,6 +9767,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8912,6 +9778,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8922,6 +9789,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -8953,10 +9821,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -8964,6 +9836,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -8974,6 +9847,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -8984,6 +9858,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9015,10 +9890,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9026,6 +9905,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9036,12 +9916,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": true,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9073,10 +9955,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9084,6 +9970,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9094,6 +9981,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9104,6 +9992,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9143,10 +10032,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9158,6 +10051,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9168,6 +10062,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9178,6 +10073,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9217,9 +10113,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -9228,6 +10127,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9235,6 +10135,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9245,6 +10146,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9257,6 +10159,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9296,10 +10199,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9311,6 +10218,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9321,6 +10229,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9334,6 +10243,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9375,9 +10285,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -9386,6 +10299,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9393,6 +10307,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9403,6 +10318,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9415,6 +10331,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9448,10 +10365,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9463,6 +10384,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9473,6 +10395,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9483,6 +10406,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9517,10 +10441,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9528,6 +10456,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9538,6 +10467,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9548,6 +10478,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9581,10 +10512,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -9607,6 +10542,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9617,6 +10553,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9627,6 +10564,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9660,10 +10598,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9671,6 +10613,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9681,6 +10624,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9691,6 +10635,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9724,10 +10669,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9735,6 +10684,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9745,12 +10695,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9784,10 +10736,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9795,6 +10751,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9805,6 +10762,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9815,6 +10773,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9856,10 +10815,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9871,6 +10834,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9881,6 +10845,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9891,6 +10856,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -9933,9 +10899,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -9944,6 +10913,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -9951,6 +10921,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -9961,6 +10932,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -9973,6 +10945,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10014,10 +10987,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10029,6 +11006,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10039,6 +11017,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10052,6 +11031,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10094,9 +11074,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -10105,6 +11088,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10112,6 +11096,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10122,6 +11107,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10134,6 +11120,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10167,10 +11154,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10182,6 +11173,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10192,6 +11184,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10202,6 +11195,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10235,10 +11229,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10246,6 +11244,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10256,6 +11255,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10266,6 +11266,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -10298,10 +11299,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -10324,6 +11329,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10334,6 +11340,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10344,6 +11351,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10377,10 +11385,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10388,6 +11400,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10398,6 +11411,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10408,6 +11422,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10441,10 +11456,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10452,6 +11471,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10462,12 +11482,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10501,10 +11523,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10512,6 +11538,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10522,6 +11549,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10532,6 +11560,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10573,10 +11602,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10588,6 +11621,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10598,6 +11632,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10608,6 +11643,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10649,9 +11685,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -10660,6 +11699,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10667,6 +11707,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10677,6 +11718,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10689,6 +11731,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10730,10 +11773,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10745,6 +11792,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10755,6 +11803,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10768,6 +11817,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10807,9 +11857,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -10818,6 +11871,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10825,6 +11879,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10835,6 +11890,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10847,6 +11903,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10878,10 +11935,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10893,6 +11954,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10903,6 +11965,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10913,6 +11976,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -10944,10 +12008,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -10955,6 +12023,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -10965,6 +12034,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -10975,6 +12045,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -11005,10 +12076,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -11031,6 +12106,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11041,6 +12117,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11051,6 +12128,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11082,10 +12160,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11093,6 +12175,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11103,6 +12186,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11113,6 +12197,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11144,10 +12229,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11155,6 +12244,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11165,12 +12255,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11202,10 +12294,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11213,6 +12309,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11223,6 +12320,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11233,6 +12331,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11272,10 +12371,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11287,6 +12390,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11297,6 +12401,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11307,6 +12412,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11346,9 +12452,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -11357,6 +12466,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11364,6 +12474,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11374,6 +12485,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11386,6 +12498,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11425,10 +12538,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11440,6 +12557,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11450,6 +12568,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11463,6 +12582,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11502,9 +12622,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": false,
@@ -11513,6 +12636,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11520,6 +12644,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11530,6 +12655,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11542,6 +12668,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11573,10 +12700,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11588,6 +12719,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11598,6 +12730,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11608,6 +12741,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11639,10 +12773,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11650,6 +12788,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11660,6 +12799,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11670,6 +12810,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -11700,10 +12841,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -11726,6 +12871,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11736,6 +12882,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11746,6 +12893,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11777,10 +12925,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11788,6 +12940,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11798,6 +12951,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11808,6 +12962,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11839,10 +12994,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11850,6 +13009,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11860,12 +13020,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11897,10 +13059,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11908,6 +13074,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11918,6 +13085,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -11928,6 +13096,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -11967,10 +13136,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -11982,6 +13155,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -11992,6 +13166,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12002,6 +13177,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12041,9 +13217,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -12052,6 +13231,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -12059,6 +13239,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12069,6 +13250,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12081,6 +13263,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12120,10 +13303,14 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -12135,6 +13322,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12145,6 +13333,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12158,6 +13347,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12197,9 +13387,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -12208,6 +13401,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -12215,6 +13409,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12225,6 +13420,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12237,6 +13433,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12268,12 +13465,17 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12284,6 +13486,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12294,6 +13497,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12325,12 +13529,17 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12341,6 +13550,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12351,6 +13561,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet"
@@ -12381,10 +13592,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [
         {
           "deployed_round": 1,
@@ -12407,6 +13622,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12417,6 +13633,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12427,6 +13644,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12458,10 +13676,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -12469,6 +13691,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12479,6 +13702,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12489,6 +13713,7 @@
       "performed": [],
       "preauth_required": true,
       "rc4_disabled": true,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12520,10 +13745,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -12531,6 +13760,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12541,12 +13771,14 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [],
       "monitoring": false,
       "objective_zone": "vlan30",
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12578,10 +13810,14 @@
       "alerts": [],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -12589,6 +13825,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12599,6 +13836,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12609,6 +13847,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12648,12 +13887,17 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12664,6 +13908,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12674,6 +13919,7 @@
       "performed": [],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12713,9 +13959,12 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [
         {
           "cracked": true,
@@ -12724,6 +13973,7 @@
           "via": "Kerberoast"
         }
       ],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [
         [
@@ -12731,6 +13981,7 @@
           "vlan30"
         ]
       ],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12741,6 +13992,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12753,6 +14005,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
@@ -12792,12 +14045,17 @@
       ],
       "attacks": [],
       "auto_response": false,
+      "backups_ready": false,
       "baseline": [
         "LateralMove"
       ],
+      "c2_blocked": false,
+      "c2_established": false,
       "creds": [],
+      "data_exfiltrated": false,
       "detections": [],
       "edges": [],
+      "egress_blocked": false,
       "honeytokens": 0,
       "hosts": [
         {
@@ -12808,6 +14066,7 @@
           "zone": "internet"
         }
       ],
+      "impact_done": false,
       "misconfigs": [
         "Kerberoast",
         "AsRepRoast",
@@ -12821,6 +14080,7 @@
       ],
       "preauth_required": false,
       "rc4_disabled": false,
+      "red_persisted": false,
       "red_reached_da": false,
       "red_zones": [
         "internet",
