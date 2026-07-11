@@ -29,6 +29,46 @@ pub enum StateFlag {
 }
 
 impl StateFlag {
+    /// Stable slug for this flag (matches the surfaced fact key it flips).
+    pub fn key(&self) -> &'static str {
+        match self {
+            StateFlag::Monitoring => "monitoring",
+            StateFlag::AutoResponse => "auto_response",
+            StateFlag::PathSevered => "path_severed",
+            StateFlag::AesEnforced => "aes_enforced",
+            StateFlag::PreauthEnforced => "preauth_enforced",
+            StateFlag::DomainAdmin => "domain_admin",
+            // ── arsenal primitives expansion: objective / posture flags (key = the fact each flips) ──
+            StateFlag::Persisted => "persisted",
+            StateFlag::C2Established => "c2_active",
+            StateFlag::DataExfiltrated => "data_exfiltrated",
+            StateFlag::ImpactDone => "impact_done",
+            StateFlag::EgressBlocked => "egress_blocked",
+            StateFlag::BackupsReady => "backups_ready",
+            StateFlag::C2Blocked => "c2_blocked",
+        }
+    }
+
+    /// Inverse of `key()`.
+    pub fn from_key(k: &str) -> Option<StateFlag> {
+        Some(match k {
+            "monitoring" => StateFlag::Monitoring,
+            "auto_response" => StateFlag::AutoResponse,
+            "path_severed" => StateFlag::PathSevered,
+            "aes_enforced" => StateFlag::AesEnforced,
+            "preauth_enforced" => StateFlag::PreauthEnforced,
+            "domain_admin" => StateFlag::DomainAdmin,
+            "persisted" => StateFlag::Persisted,
+            "c2_active" => StateFlag::C2Established,
+            "data_exfiltrated" => StateFlag::DataExfiltrated,
+            "impact_done" => StateFlag::ImpactDone,
+            "egress_blocked" => StateFlag::EgressBlocked,
+            "backups_ready" => StateFlag::BackupsReady,
+            "c2_blocked" => StateFlag::C2Blocked,
+            _ => return None,
+        })
+    }
+
     fn set(&self, s: &mut GameState) {
         match self {
             StateFlag::Monitoring => s.monitoring = true,
@@ -203,6 +243,35 @@ impl Effect {
     }
 }
 
+/// Palette metadata for the builder: each authorable effect (Produce is excluded — it is only
+/// meaningful inside a multi-step chain, which the guided form does not build). `params` names
+/// the fields the form must collect; `kind` tells the form which input to render.
+pub fn effect_descriptors() -> Vec<serde_json::Value> {
+    use serde_json::json;
+    vec![
+        json!({ "key": "Attempt", "label": "Perform the technique (no state change)",
+                "desc": "Just performs the technique; the referee records it (this is how recon/bloodhound leave 'scouted' behind).", "params": [] }),
+        json!({ "key": "Advance", "label": "Move one zone closer",
+                "desc": "Takes the next forward hop toward the objective. Use {dest} in the narrative for the zone name.", "params": [] }),
+        json!({ "key": "SetFlag", "label": "Flip a defense/progress switch on",
+                "desc": "Turns one on/off switch true (e.g. AES enforced, path severed, monitoring).",
+                "params": [ { "name": "flag", "kind": "state_flag" } ] }),
+        json!({ "key": "GrantCred", "label": "Steal a credential",
+                "desc": "Adds a cracked credential.",
+                "params": [ { "name": "principal", "kind": "text" }, { "name": "secret", "kind": "text", "optional": true }, { "name": "via", "kind": "technique" } ] }),
+        json!({ "key": "RevokeKnownCreds", "label": "Cancel detected stolen credentials",
+                "desc": "Cancels any cracked credential whose technique the defender has already detected. It decides which — no parameters.", "params": [] }),
+        json!({ "key": "HuntGap", "label": "Threat-hunt for the top undetected technique",
+                "desc": "Finds the highest-value technique the attacker performed but you haven't detected, and surfaces it. It picks the target itself — no parameters.", "params": [] }),
+        json!({ "key": "DeployDetection", "label": "Write a detection rule",
+                "desc": "Writes a graded detection rule for a technique (the move takes a 'technique' parameter at play time).", "params": [] }),
+        json!({ "key": "SeverForwardEdges", "label": "Cut the network in front of the attacker",
+                "desc": "Drops the attacker's forward network edges. It computes which — no parameters.", "params": [] }),
+        json!({ "key": "Evict", "label": "Evict the attacker from a host",
+                "desc": "Kicks the attacker off its deepest foothold — but a persistent implant absorbs the first eviction (burns the implant instead). It decides what to remove — no parameters.", "params": [] }),
+    ]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -311,6 +380,14 @@ mod tests {
         let e = Effect::Produce { key: "tgs_hash".into(), value: serde_json::json!("$krb5tgs$") };
         e.apply(&mut s, &mut c, &Value::Null, true, "", "");
         assert_eq!(c.get("tgs_hash"), Some(&serde_json::json!("$krb5tgs$")));
+    }
+
+    #[test]
+    fn state_flag_from_key_round_trips() {
+        for (k, want) in [("monitoring", StateFlag::Monitoring), ("path_severed", StateFlag::PathSevered), ("domain_admin", StateFlag::DomainAdmin)] {
+            assert_eq!(StateFlag::from_key(k), Some(want));
+        }
+        assert_eq!(StateFlag::from_key("nope"), None);
     }
 
     #[test]

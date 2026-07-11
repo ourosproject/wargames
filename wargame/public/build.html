@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Purple Range · Move Builder</title>
+<style>
+:root{
+  --bg:#070a12; --bg2:#0b111e; --panel:#0f1626; --panel2:#131c30;
+  --line:#1b2740; --line2:#2b3757;
+  --t1:#e9eef8; --t2:#9db0d0; --t3:#61748f;
+  --red:#ff4d67; --blue:#38b6ff; --purple:#a06bff; --gold:#ffcf5c; --green:#4be29a; --amber:#ffb347;
+  --red-dim:#2a1220; --blue-dim:#0a2233; --green-dim:#0b2a20;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  --r:13px; --r2:9px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(1200px 640px at 80% -12%,#141d33 0,transparent 58%),
+  radial-gradient(900px 560px at 6% 110%,#120e26 0,transparent 55%),var(--bg);
+  color:var(--t1);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px}
+.wrap{max-width:1500px;margin:0 auto;padding:16px 20px 60px}
+@keyframes pr-spin{to{transform:rotate(360deg)}}
+@keyframes pr-chipin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── top bar (mirrors the command center) ── */
+.top{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:4px 2px 14px}
+.brand{font-weight:900;letter-spacing:.03em;font-size:19px;display:flex;align-items:center;gap:11px}
+.brand .rune{width:22px;height:22px;border-radius:50%;border:2px solid var(--purple);
+  box-shadow:0 0 16px var(--purple);display:inline-block;position:relative}
+.brand .rune::after{content:"";position:absolute;inset:4px;border-radius:50%;border-top:2px solid var(--red);border-right:2px solid var(--blue);animation:pr-spin 3.4s linear infinite}
+.brand b{color:var(--purple)} .brand small{font:700 10px var(--mono);color:var(--t3);letter-spacing:.22em;text-transform:uppercase}
+.grow{flex:1}
+.navlink{font:800 12px var(--sans);letter-spacing:.03em;border-radius:10px;padding:9px 15px;cursor:pointer;border:1px solid var(--line2);
+  background:var(--panel2);color:var(--t1);transition:.15s;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.navlink:hover{border-color:var(--purple);box-shadow:0 0 16px rgba(160,107,255,.28)}
+.navlink.on{background:linear-gradient(180deg,#c9b3ff,var(--purple));color:#08101c;border:0}
+.banner-cls{font:700 10px var(--mono);letter-spacing:.2em;color:#7f8a5a;text-align:center;padding:6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px;background:rgba(120,130,70,.06)}
+
+/* ── layout ── */
+.grid{display:grid;grid-template-columns:1fr 420px;gap:16px;align-items:start}
+@media (max-width:1080px){.grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--panel),var(--bg2));margin-bottom:16px}
+.card-h{display:flex;align-items:baseline;gap:11px;padding:13px 16px 0}
+.card-h .t{font:900 13px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--t2)}
+.card-h .s{font:600 11px var(--mono);color:var(--t3)}
+.card-b{padding:14px 16px 18px}
+
+/* ── form fields ── */
+.field{margin-bottom:15px}
+.field:last-child{margin-bottom:0}
+.field > label{display:block;font:700 9px var(--mono);color:var(--t3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px}
+.field .hint{font:600 10px var(--mono);color:var(--t3);margin-top:6px;line-height:1.4}
+input[type=text],textarea,select{width:100%;background:#0a1120;border:1px solid var(--line);border-radius:var(--r2);
+  color:var(--t1);font:600 13px var(--sans);padding:9px 11px;transition:.15s}
+textarea{font-family:var(--mono);font-size:12px;resize:vertical;min-height:58px}
+select{font-family:var(--sans);cursor:pointer}
+input[type=text]:focus,textarea:focus,select:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(160,107,255,.15)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.derived{font:700 11px var(--mono);color:var(--green);margin-top:7px}
+.derived b{color:var(--t1)}
+.derived.warn{color:var(--amber)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.seg button{font:800 11px var(--sans);letter-spacing:.05em;color:var(--t3);background:transparent;border:0;padding:9px 16px;cursor:pointer;transition:.15s}
+.seg button.on[data-side=Red]{color:#180509;background:linear-gradient(180deg,#ff8a9c,var(--red))}
+.seg button.on[data-side=Blue]{color:#052033;background:linear-gradient(180deg,#8fd0ff,var(--blue))}
+
+.btn{font:800 12px var(--sans);letter-spacing:.03em;border-radius:10px;padding:9px 15px;cursor:pointer;border:1px solid var(--line2);
+  background:var(--panel2);color:var(--t1);transition:.15s}
+.btn:hover{border-color:var(--purple);box-shadow:0 0 16px rgba(160,107,255,.28)}
+.btn.sm{padding:6px 11px;font-size:11px}
+.btn.primary{background:linear-gradient(180deg,#c9b3ff,var(--purple));color:#08101c;border:0}
+.btn.ghost{background:transparent;color:var(--t2)}
+.btn.danger{background:transparent;color:var(--red);border-color:color-mix(in srgb,var(--red) 40%,transparent)}
+.btn.danger:hover{box-shadow:0 0 16px rgba(255,77,103,.25);border-color:var(--red)}
+.btn:disabled{opacity:.45;cursor:default;box-shadow:none}
+
+/* ── gate rows ── */
+.gaterow{border:1px solid var(--line);border-radius:var(--r2);padding:10px;margin-bottom:9px;background:var(--panel2)}
+.gaterow.nested{background:#0c1322;margin-bottom:7px}
+.gaterow .gr-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gaterow select{width:auto;flex:1;min-width:120px;padding:7px 9px;font-size:12px}
+.gaterow .kindsel{flex:0 0 auto;width:auto;min-width:96px}
+.gaterow .x{flex:0 0 auto;border:1px solid var(--line2);background:transparent;color:var(--t3);border-radius:8px;cursor:pointer;font:800 13px var(--mono);width:30px;height:30px;line-height:1}
+.gaterow .x:hover{color:var(--red);border-color:var(--red)}
+.anyof-body{margin-top:9px;padding-left:12px;border-left:2px solid var(--line2)}
+.warn-inline{font:700 10px var(--mono);color:var(--amber);margin-top:7px;display:flex;gap:6px;align-items:flex-start}
+.warn-inline::before{content:"⚠"}
+
+/* ── multi-select chips ── */
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:20px;padding:6px 11px;cursor:pointer;
+  font:700 11px var(--mono);color:var(--t3);background:var(--panel2);transition:.14s;user-select:none}
+.chip:hover{border-color:var(--purple)}
+.chip.on{color:#08101c;background:linear-gradient(180deg,#c9b3ff,var(--purple));border-color:transparent}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--t3)}
+.chip.on .dot{background:#08101c}
+
+/* ── effect params ── */
+.effect-desc{font:600 11px var(--mono);color:var(--t3);margin:8px 0 4px;line-height:1.45;padding:9px 11px;border-radius:var(--r2);background:#0c1322;border:1px solid var(--line)}
+.effect-param{margin-top:10px}
+.effect-param label{display:block;font:700 9px var(--mono);color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+
+/* ── preview ── */
+.preview{font-family:var(--mono);font-size:11.5px;line-height:1.5;white-space:pre;overflow:auto;max-height:420px;
+  padding:12px;border-radius:var(--r2);background:#0a1018;border:1px solid var(--line);color:#a9c6e6}
+.result{margin-top:12px;border-radius:var(--r2);padding:11px 13px;font:700 12px var(--mono);line-height:1.5}
+.result.ok{background:var(--green-dim);border:1px solid color-mix(in srgb,var(--green) 45%,transparent);color:var(--green)}
+.result.err{background:var(--red-dim);border:1px solid color-mix(in srgb,var(--red) 45%,transparent);color:#ffc3cd}
+.result ul{margin:6px 0 0;padding-left:18px}
+.result li{margin:3px 0}
+.result a{color:var(--gold);font-weight:800}
+.actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+
+/* ── moves list ── */
+.mlist-group{margin-bottom:16px}
+.mlist-group h4{font:700 9px var(--mono);color:var(--t3);letter-spacing:.14em;text-transform:uppercase;margin:0 0 9px}
+.mchips{display:flex;flex-direction:column;gap:8px}
+.mchip{border:1px solid var(--line2);border-radius:10px;padding:9px 11px;background:var(--panel2);animation:pr-chipin .28s ease-out;transition:.14s}
+.mchip.builtin{cursor:pointer}
+.mchip.builtin:hover{transform:translateX(3px);border-color:var(--purple)}
+.mchip .mc-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mchip .nm{font:800 13px var(--sans)}
+.mchip.red .nm{color:#ffc3cd} .mchip.blue .nm{color:#bfe6ff}
+.mchip .tech{font:700 8px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--t3);border:1px solid var(--line2);border-radius:20px;padding:2px 7px;white-space:nowrap}
+.mchip .sm{font:600 11px var(--mono);color:var(--t3);margin-top:5px;line-height:1.35}
+.mchip .mc-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.mchip .cat{font:600 9px var(--mono);color:var(--t3);letter-spacing:.04em}
+.empty{color:var(--t3);text-align:center;padding:16px;font:600 11px var(--mono)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line2);
+  border-radius:10px;padding:11px 18px;font:700 12px var(--mono);color:var(--t1);box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:20;opacity:0;transition:.3s}
+.toast.show{opacity:1}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><span class="rune"></span> purple range<b>.</b> <small>move builder</small></div>
+    <div class="grow"></div>
+    <a class="navlink" href="/">◀ Command Center</a>
+    <a class="navlink on" href="/build">✚ Build</a>
+  </div>
+
+  <div class="banner-cls">UNCLASSIFIED // FOUO — AUTHORIZED LAB USE ONLY · AUTHORED MOVES ARE EXPERIMENTAL</div>
+
+  <div class="grid">
+    <!-- ═══ LEFT: the form ═══ -->
+    <div>
+      <div class="card">
+        <div class="card-h"><div class="t">Identity</div><div class="s">what the move is</div></div>
+        <div class="card-b">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" id="name" placeholder="e.g. Watch Kerberos TGS requests" autocomplete="off" spellcheck="false" />
+            <div class="derived" id="derivedId">id: <b>—</b></div>
+          </div>
+          <div class="field">
+            <label>Side</label>
+            <div class="seg" id="segSide">
+              <button data-side="Red">🔴 Red · offense</button>
+              <button data-side="Blue" class="on">🔵 Blue · defense</button>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Category</label>
+              <select id="category"></select>
+            </div>
+            <div class="field">
+              <label>Technique</label>
+              <select id="technique"></select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Summary <span style="color:var(--t3);font-weight:600">(card blurb)</span></label>
+            <input type="text" id="summary" placeholder="one line shown on the play card" autocomplete="off" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">Gate</div><div class="s">preconditions — all must hold to play</div></div>
+        <div class="card-b">
+          <div id="gateList"></div>
+          <button class="btn sm" id="addGate">＋ Add condition</button>
+          <div class="hint">A move with no conditions is always playable. Facts read game state; probes ask sharper questions. "Any of" passes if one child passes.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">Effect</div><div class="s">what happens on success</div></div>
+        <div class="card-b">
+          <div class="field">
+            <label>Effect</label>
+            <select id="effect"></select>
+            <div class="effect-desc" id="effectDesc"></div>
+            <div id="effectParams"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">Telemetry &amp; Story</div><div class="s">detection surface, narrative, what it leaves behind</div></div>
+        <div class="card-b">
+          <div class="field">
+            <label>Detection surface <span style="color:var(--t3);font-weight:600">(techniques the SIEM could catch)</span></label>
+            <div class="chips" id="detChips"></div>
+          </div>
+          <div class="field">
+            <label>Narrative <span style="color:var(--t3);font-weight:600">(referee line; {dest} allowed for Advance)</span></label>
+            <textarea id="narrative" placeholder="what the play-by-play prints on success"></textarea>
+          </div>
+          <div class="field">
+            <label>Leaves behind / produces <span style="color:var(--t3);font-weight:600">(facts this move establishes)</span></label>
+            <div class="chips" id="prodChips"></div>
+            <div class="hint">Auto-filled from the effect + technique. Every produced fact must actually be set by the effect, or validation fails.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RIGHT: preview + validate/save + moves ═══ -->
+    <div>
+      <div class="card">
+        <div class="card-h"><div class="t">Draft</div><div class="s">exactly what will be saved</div></div>
+        <div class="card-b">
+          <div class="preview" id="preview">{}</div>
+          <div class="actions">
+            <button class="btn ghost" id="validateBtn">✓ Validate</button>
+            <button class="btn primary" id="saveBtn">▶ Save move</button>
+          </div>
+          <div id="result"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">Moves</div><div class="s" id="movesSub">built-ins + authored</div></div>
+        <div class="card-b" id="movesHost">
+          <div class="empty">loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=(s)=>document.querySelector(s);
+const api={
+  vocabulary:()=>fetch('/api/vocabulary').then(r=>r.json()),
+  tools:()=>fetch('/api/tools').then(r=>r.json()),
+  validate:(d)=>fetch('/api/tools/validate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(r=>r.json()),
+  save:(d)=>fetch('/api/tools',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(r=>r.json()),
+  del:(id)=>fetch('/api/tools/'+encodeURIComponent(id),{method:'DELETE'}).then(r=>r.json()),
+};
+
+// ── state ──
+const V={sides:[],categories:[],techniques:[],facts:[],state_flags:[],probes:[],effects:[]};
+let TOOLS=[];               // moves list from /api/tools
+let SIDE='Blue';
+let GATE=[];                // gate model rows
+const factByKey={}, probeByKey={}, effectByKey={};
+
+// ── id derivation: mirrors builder::slug (lowercase, [a-z0-9] kept, runs→_, trim, cap 64) ──
+function slug(name){
+  let out='',prevUs=false;
+  for(const ch of (name||'')){
+    if(/[a-z0-9]/i.test(ch)){out+=ch.toLowerCase();prevUs=false;}
+    else if(!prevUs&&out.length){out+='_';prevUs=true;}
+  }
+  while(out.endsWith('_'))out=out.slice(0,-1);
+  out=out.slice(0,64);
+  while(out.endsWith('_'))out=out.slice(0,-1);
+  return out;
+}
+const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+
+// ── boot ──
+(async function boot(){
+  try{ const v=await api.vocabulary(); Object.assign(V,v); }
+  catch(_){ $('#result').innerHTML='<div class="result err">could not load /api/vocabulary — is the server running?</div>'; return; }
+  V.facts.forEach(f=>factByKey[f.key]=f);
+  V.probes.forEach(p=>probeByKey[p.key]=p);
+  V.effects.forEach(e=>effectByKey[e.key]=e);
+  buildIdentity();
+  buildChips();
+  buildEffectSelect();
+  renderGate();
+  renderEffectParams();
+  autofillProduces();
+  update();
+  $('#addGate').onclick=()=>{ GATE.push(newRow('Fact')); renderGate(); update(); };
+  await loadTools();
+})();
+
+// ── identity selects ──
+function opts(arr,val,label){return arr.map(x=>`<option value="${esc(val(x))}">${esc(label(x))}</option>`).join('');}
+function buildIdentity(){
+  // side segmented
+  document.querySelectorAll('#segSide button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#segSide button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');SIDE=b.dataset.side;renderGate();update();
+  });
+  // category grouped defensive / attack, reserved flagged but available
+  const def=V.categories.filter(c=>c.defensive), atk=V.categories.filter(c=>!c.defensive);
+  const grp=(list)=>list.map(c=>`<option value="${esc(c.key)}">${esc(c.key)}${c.enforced?' · reserved':''}</option>`).join('');
+  $('#category').innerHTML=`<optgroup label="Defensive">${grp(def)}</optgroup><optgroup label="Attack">${grp(atk)}</optgroup>`;
+  // sensible defaults for a Blue move
+  $('#category').value=(V.categories.find(c=>c.key==='detection')?'detection':(def[0]||V.categories[0]||{}).key)||'';
+  $('#technique').innerHTML=opts(V.techniques,t=>t.key,t=>t.key+' — '+t.label);
+  $('#technique').value=(V.techniques.find(t=>t.key==='recon')||V.techniques[0]||{}).key||'';
+  $('#category').onchange=update;
+  $('#technique').onchange=()=>{ renderDetChipsDefault(); autofillProduces(); update(); };
+  $('#name').oninput=()=>{ updateDerivedId(); update(); };
+  $('#summary').oninput=update;
+  $('#narrative').oninput=update;
+}
+function updateDerivedId(){
+  const id=slug($('#name').value);
+  const el=$('#derivedId');
+  const clash=id&&TOOLS.some(m=>m.id===id);
+  el.className='derived'+(clash?' warn':'');
+  el.innerHTML= id? ('id: <b>'+esc(id)+'</b>'+(clash?' — already exists, pick another name':'')) : 'id: <b>—</b>';
+}
+
+// ── detection surface + produces chips ──
+function buildChips(){ renderDetChips(); renderProdChips(); }
+function renderDetChips(){
+  const host=$('#detChips'), sel=selectedDet();
+  host.innerHTML=V.techniques.map(t=>chip(t.key,t.key,sel.has(t.key))).join('');
+  host.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{c.classList.toggle('on');update();});
+}
+function renderProdChips(){
+  const host=$('#prodChips'), sel=selectedProd();
+  host.innerHTML=V.facts.map(f=>chip(f.key,f.key,sel.has(f.key))).join('');
+  host.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{c.classList.toggle('on');update();});
+}
+function chip(val,label,on){return `<span class="chip${on?' on':''}" data-v="${esc(val)}"><span class="dot"></span>${esc(label)}</span>`;}
+function selectedDet(){return new Set([...$('#detChips').querySelectorAll('.chip.on')].map(c=>c.dataset.v));}
+function selectedProd(){return new Set([...$('#prodChips').querySelectorAll('.chip.on')].map(c=>c.dataset.v));}
+function setChips(host,keys){host.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',keys.has(c.dataset.v)));}
+
+// default the detection surface to the chosen technique (only while nothing is selected)
+function renderDetChipsDefault(){ const sel=selectedDet(); if(!sel.size){ setChips($('#detChips'),new Set([$('#technique').value])); } }
+
+// ── effect ──
+function buildEffectSelect(){
+  $('#effect').innerHTML=opts(V.effects,e=>e.key,e=>e.key+' — '+e.label);
+  // default to SetFlag (the common authored Blue move)
+  $('#effect').value=(V.effects.find(e=>e.key==='SetFlag')||V.effects[0]||{}).key||'';
+  $('#effect').onchange=()=>{ renderEffectParams(); autofillProduces(); update(); };
+}
+function renderEffectParams(){
+  const e=effectByKey[$('#effect').value]||{};
+  $('#effectDesc').textContent=e.desc||'';
+  const host=$('#effectParams'); host.innerHTML='';
+  (e.params||[]).forEach(p=>{
+    const wrap=document.createElement('div'); wrap.className='effect-param';
+    const lab=document.createElement('label'); lab.textContent=p.name+(p.optional?' (optional)':'');
+    let input;
+    if(p.kind==='state_flag'){ input=document.createElement('select'); input.innerHTML=opts(V.state_flags,f=>f.key,f=>f.key); }
+    else if(p.kind==='technique'){ input=document.createElement('select'); input.innerHTML=opts(V.techniques,t=>t.key,t=>t.key+' — '+t.label); }
+    else { input=document.createElement('input'); input.type='text'; input.placeholder=p.name; input.autocomplete='off'; }
+    input.dataset.pname=p.name; input.dataset.optional=p.optional?'1':'0';
+    input.className='effect-input';
+    input.oninput=()=>{ if(p.kind==='state_flag') autofillProduces(); update(); };
+    input.onchange=()=>{ if(p.kind==='state_flag') autofillProduces(); update(); };
+    wrap.appendChild(lab); wrap.appendChild(input); host.appendChild(wrap);
+  });
+}
+function effectParams(){
+  const params={};
+  $('#effectParams').querySelectorAll('.effect-input').forEach(inp=>{
+    const v=inp.value; if(v==='' && inp.dataset.optional==='1') return; // omit empty optionals
+    params[inp.dataset.pname]=v;
+  });
+  return params;
+}
+
+// auto-fill the "produces" chips from effect + technique (editable afterwards)
+function autofillProduces(){
+  const eff=$('#effect').value, tech=$('#technique').value, out=new Set();
+  if(eff==='SetFlag'){ const f=$('#effectParams .effect-input'); if(f&&f.value) out.add(f.value); }
+  if(eff==='GrantCred') out.add('has_cred');
+  if(eff==='Advance') out.add('foothold');
+  if(tech==='recon') out.add('scouted');
+  if(tech==='bloodhound'){ out.add('path_mapped'); out.add('scouted'); }
+  const valid=new Set([...out].filter(k=>factByKey[k]));  // only palette facts
+  setChips($('#prodChips'),valid);
+  renderDetChipsDefault();
+}
+
+// ── gate rows ──
+function newRow(kind){
+  if(kind==='Probe') return {kind:'Probe',probe:(V.probes[0]||{}).key||'',arg:'',want:true};
+  if(kind==='AnyOf') return {kind:'AnyOf',of:[{kind:'Fact',fact:(V.facts[0]||{}).key||'',want:true}]};
+  return {kind:'Fact',fact:(V.facts[0]||{}).key||'',want:true};
+}
+function renderGate(){
+  const host=$('#gateList'); host.innerHTML='';
+  GATE.forEach((row,i)=>host.appendChild(gateRowEl(row,[i],false)));
+}
+function gateRowEl(row,path,nested){
+  const el=document.createElement('div'); el.className='gaterow'+(nested?' nested':'');
+  const top=document.createElement('div'); top.className='gr-top';
+  // kind selector (nested rows cannot themselves be AnyOf — one level only)
+  const kinds=nested?['Fact','Probe']:['Fact','Probe','AnyOf'];
+  const ksel=document.createElement('select'); ksel.className='kindsel';
+  ksel.innerHTML=kinds.map(k=>`<option value="${k}"${row.kind===k?' selected':''}>${k==='AnyOf'?'Any of':k}</option>`).join('');
+  ksel.onchange=()=>{ const nr=newRow(ksel.value); Object.keys(row).forEach(k=>delete row[k]); Object.assign(row,nr); renderGate(); update(); };
+  top.appendChild(ksel);
+
+  if(row.kind==='Fact'){
+    const want=document.createElement('select');
+    want.innerHTML=`<option value="true"${row.want?' selected':''}>have</option><option value="false"${!row.want?' selected':''}>lack</option>`;
+    want.style.flex='0 0 auto'; want.style.minWidth='84px';
+    want.onchange=()=>{ row.want=want.value==='true'; update(); };
+    const fsel=document.createElement('select');
+    fsel.innerHTML=V.facts.map(f=>`<option value="${esc(f.key)}"${row.fact===f.key?' selected':''}>${esc(f.key)} (${esc(f.side)})</option>`).join('');
+    fsel.onchange=()=>{ row.fact=fsel.value; renderGate(); update(); };
+    top.appendChild(want); top.appendChild(fsel);
+  } else if(row.kind==='Probe'){
+    const want=document.createElement('select');
+    want.innerHTML=`<option value="true"${row.want?' selected':''}>true</option><option value="false"${!row.want?' selected':''}>false</option>`;
+    want.style.flex='0 0 auto'; want.style.minWidth='84px';
+    want.onchange=()=>{ row.want=want.value==='true'; update(); };
+    const psel=document.createElement('select');
+    psel.innerHTML=V.probes.map(p=>`<option value="${esc(p.key)}"${row.probe===p.key?' selected':''}>${esc(p.label||p.key)}</option>`).join('');
+    psel.onchange=()=>{ row.probe=psel.value; row.arg=''; renderGate(); update(); };
+    top.appendChild(want); top.appendChild(psel);
+    // arg select when the probe needs one
+    const pd=probeByKey[row.probe]||{};
+    if(pd.arg==='technique'||pd.arg==='category'){
+      const asel=document.createElement('select');
+      const list=pd.arg==='technique'?V.techniques.map(t=>t.key):V.categories.map(c=>c.key);
+      asel.innerHTML=`<option value="">— ${pd.arg} —</option>`+list.map(k=>`<option value="${esc(k)}"${row.arg===k?' selected':''}>${esc(k)}</option>`).join('');
+      asel.onchange=()=>{ row.arg=asel.value; update(); };
+      top.appendChild(asel);
+    }
+  }
+
+  const x=document.createElement('button'); x.className='x'; x.textContent='×'; x.title='remove';
+  x.onclick=()=>{ removeAt(path); renderGate(); update(); };
+  top.appendChild(x);
+  el.appendChild(top);
+
+  if(row.kind==='Fact'){
+    const warn=factWarn(row.fact);
+    if(warn){ const w=document.createElement('div'); w.className='warn-inline'; w.textContent=warn; el.appendChild(w); }
+  }
+  if(row.kind==='AnyOf'){
+    const body=document.createElement('div'); body.className='anyof-body';
+    (row.of||[]).forEach((sub,j)=>body.appendChild(gateRowEl(sub,path.concat(j),true)));
+    const add=document.createElement('button'); add.className='btn sm'; add.textContent='＋ Add to group';
+    add.onclick=()=>{ row.of.push(newRow('Fact')); renderGate(); update(); };
+    body.appendChild(add);
+    el.appendChild(body);
+  }
+  return el;
+}
+function removeAt(path){
+  if(path.length===1){ GATE.splice(path[0],1); return; }
+  GATE[path[0]].of.splice(path[1],1);
+}
+function factWarn(factKey){
+  const f=factByKey[factKey]; if(!f) return '';
+  if(f.side!==SIDE) return `${SIDE} move gating on a ${f.side}-audience fact — usually a mistake`;
+  return '';
+}
+
+// ── build the MoveDraft JSON (exact DTO shape) ──
+function rowJson(row){
+  if(row.kind==='Fact') return {kind:'Fact',fact:row.fact,want:!!row.want};
+  if(row.kind==='Probe'){
+    const o={kind:'Probe',probe:row.probe,want:!!row.want};
+    const pd=probeByKey[row.probe]||{};
+    if((pd.arg==='technique'||pd.arg==='category')&&row.arg) o.arg=row.arg;
+    return o;
+  }
+  if(row.kind==='AnyOf') return {kind:'AnyOf',of:(row.of||[]).map(rowJson)};
+  return null;
+}
+function draft(){
+  return {
+    name:$('#name').value,
+    side:SIDE,
+    category:$('#category').value,
+    technique:$('#technique').value,
+    summary:$('#summary').value,
+    narrative:$('#narrative').value,
+    gate:GATE.map(rowJson).filter(Boolean),
+    effect:{kind:$('#effect').value,params:effectParams()},
+    detection_surface:[...selectedDet()],
+    produces:[...selectedProd()],
+  };
+}
+function update(){
+  updateDerivedId();
+  $('#preview').textContent=JSON.stringify(draft(),null,2);
+}
+
+// ── validate / save ──
+function showErrors(errs){
+  $('#result').innerHTML='<div class="result err">Not saved — fix these:<ul>'+
+    (errs||['unknown error']).map(e=>`<li>${esc(e)}</li>`).join('')+'</ul></div>';
+}
+$('#validateBtn').onclick=async()=>{
+  const b=$('#validateBtn'); b.disabled=true;
+  try{
+    const r=await api.validate(draft());
+    if(r.ok) $('#result').innerHTML=`<div class="result ok">✓ Valid — would save as <b>${esc(r.id)}</b>. Nothing was written.</div>`;
+    else showErrors(r.errors);
+  }catch(_){ $('#result').innerHTML='<div class="result err">request failed</div>'; }
+  b.disabled=false;
+};
+$('#saveBtn').onclick=async()=>{
+  const b=$('#saveBtn'); b.disabled=true; b.textContent='saving…';
+  try{
+    const r=await api.save(draft());
+    if(r.ok){
+      $('#result').innerHTML=`<div class="result ok">✓ Saved as <b>${esc(r.id)}</b>.`+
+        ` <a href="/">▶ Test in a match →</a><br><span style="color:var(--t3)">Start a NEW match on the command center to see it in play.</span></div>`;
+      await loadTools();
+    } else showErrors(r.errors);
+  }catch(_){ $('#result').innerHTML='<div class="result err">request failed</div>'; }
+  b.disabled=false; b.textContent='▶ Save move';
+};
+
+// ── moves list ──
+async function loadTools(){
+  let d; try{ d=await api.tools(); }catch(_){ $('#movesHost').innerHTML='<div class="empty">could not load moves</div>'; return; }
+  TOOLS=(d&&d.moves)||[];
+  updateDerivedId();
+  const builtins=TOOLS.filter(m=>!m.authored), authored=TOOLS.filter(m=>m.authored);
+  $('#movesSub').textContent=`${builtins.length} built-in · ${authored.length} authored`;
+  const host=$('#movesHost'); host.innerHTML='';
+  // authored first (actionable)
+  const ag=document.createElement('div'); ag.className='mlist-group';
+  ag.innerHTML='<h4>Authored · yours</h4>';
+  const abox=document.createElement('div'); abox.className='mchips';
+  if(!authored.length) abox.innerHTML='<div class="empty">none yet — build one above</div>';
+  else authored.forEach(m=>abox.appendChild(moveChip(m,true)));
+  ag.appendChild(abox); host.appendChild(ag);
+  // built-ins (read-only, click to start from)
+  const bg=document.createElement('div'); bg.className='mlist-group';
+  bg.innerHTML='<h4>Built-in · read-only · click to start from</h4>';
+  const bbox=document.createElement('div'); bbox.className='mchips';
+  builtins.forEach(m=>bbox.appendChild(moveChip(m,false)));
+  bg.appendChild(bbox); host.appendChild(bg);
+}
+function moveChip(m,authored){
+  const el=document.createElement('div');
+  el.className='mchip '+(m.side==='Red'?'red':'blue')+(authored?'':' builtin');
+  el.innerHTML=`<div class="mc-top"><span class="nm">${esc(m.id)}</span><span class="tech">${esc(m.technique)}</span></div>`+
+    `<div class="sm">${esc(m.summary||'')}</div>`+
+    `<div class="mc-foot"><span class="cat">${esc(m.side)} · ${esc(m.category)}</span>`+
+    (authored?'<button class="btn danger sm" data-del="'+esc(m.id)+'">Delete</button>':'<span class="cat">start from →</span>')+`</div>`;
+  if(authored){
+    el.querySelector('[data-del]').onclick=async(ev)=>{
+      ev.stopPropagation();
+      if(!confirm('Delete authored move "'+m.id+'"? This removes its .ron file.')) return;
+      const r=await api.del(m.id);
+      if(r.ok){ toast('deleted '+m.id); await loadTools(); }
+      else toast(r.error||'delete failed');
+    };
+  } else {
+    el.onclick=()=>startFrom(m);
+  }
+  return el;
+}
+// load a built-in's side/category/technique/summary into the form as a starting reference
+function startFrom(m){
+  SIDE=m.side;
+  document.querySelectorAll('#segSide button').forEach(b=>b.classList.toggle('on',b.dataset.side===SIDE));
+  if([...$('#category').options].some(o=>o.value===m.category)) $('#category').value=m.category;
+  if([...$('#technique').options].some(o=>o.value===m.technique)) $('#technique').value=m.technique;
+  $('#summary').value=m.summary||'';
+  renderGate(); autofillProduces(); update();
+  toast('loaded '+m.id+' as a starting point');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

@@ -3,6 +3,7 @@
 //! structural checks are the first real consumers of the requires/produces data.
 
 use std::collections::HashSet;
+use std::path::{Path, PathBuf};
 
 use crate::category::Category;
 use crate::effects::{Effect, StateFlag};
@@ -186,6 +187,125 @@ pub fn default_registry() -> CardRegistry {
     }
 }
 
+/// The home folder that holds a player's authored moves: `$HOME/.purple-range/tools`.
+pub fn authored_dir() -> PathBuf {
+    let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
+    PathBuf::from(home).join(".purple-range").join("tools")
+}
+
+/// The built-in arsenal PLUS every valid authored `.ron` in `dir`. A malformed or invalid
+/// authored file is logged to stderr and skipped — never fatal (unlike the built-ins, which
+/// `default_registry` panics on). A missing dir yields just the built-ins.
+pub fn registry_with_authored(dir: &Path) -> CardRegistry {
+    let mut reg = default_registry(); // built-ins (panics if a built-in is bad — intended)
+    let existing: std::collections::HashSet<String> = reg.all_specs().iter().map(|s| s.id.clone()).collect();
+    let mut seen = existing.clone();
+
+    let entries = match std::fs::read_dir(dir) {
+        Ok(e) => e,
+        Err(_) => return reg, // no authored dir yet
+    };
+    let mut paths: Vec<PathBuf> = entries
+        .filter_map(|e| e.ok().map(|e| e.path()))
+        .filter(|p| p.extension().map(|x| x == "ron").unwrap_or(false))
+        .collect();
+    paths.sort(); // deterministic load order
+
+    for path in paths {
+        let src = match std::fs::read_to_string(&path) {
+            Ok(s) => s,
+            Err(e) => { eprintln!("[arsenal] skip {}: {e}", path.display()); continue; }
+        };
+        let def = match parse_tool(&src) {
+            Ok(d) => d,
+            Err(e) => { eprintln!("[arsenal] skip {}: {e}", path.display()); continue; }
+        };
+        if let Err(errs) = validate(&def) {
+            eprintln!("[arsenal] skip {}: {}", path.display(), errs.join("; "));
+            continue;
+        }
+        if seen.contains(&def.id) {
+            eprintln!("[arsenal] skip {}: id '{}' collides with an existing move", path.display(), def.id);
+            continue;
+        }
+        seen.insert(def.id.clone());
+        reg.register(Box::new(DataTool::new(def)));
+    }
+    reg
+}
+
+/// Serialize a move to RON text for writing to an authored file. Emits struct names
+/// (e.g. `ToolDef(...)`) so authored files read like the hand-written built-ins, and
+/// re-parse cleanly via `parse_tool`.
+pub fn to_ron(def: &ToolDef) -> Result<String, String> {
+    let cfg = ron::ser::PrettyConfig::default().struct_names(true);
+    ron::ser::to_string_pretty(def, cfg).map_err(|e| format!("RON serialize error: {e}"))
+}
+
+/// The full palette the builder form renders from — assembled from the engine so it can never
+/// drift from what the engine actually supports.
+pub fn vocabulary() -> serde_json::Value {
+    use serde_json::json;
+    use crate::category::Category;
+    use crate::effects::StateFlag;
+    use crate::facts::Fact;
+    use crate::state::{Side, Technique};
+
+    let categories: Vec<serde_json::Value> = [
+        Category::InitialAccess, Category::Discovery, Category::CredentialAccess, Category::PrivilegeEscalation,
+        Category::LateralMovement, Category::Exfiltration, Category::Detection, Category::DefenseEvasion,
+        Category::Reconnaissance, Category::ResourceDevelopment, Category::Execution, Category::Persistence,
+        Category::Collection, Category::CommandAndControl, Category::Impact, Category::Harden, Category::Isolate,
+        Category::Evict, Category::Deceive, Category::Model,
+    ].iter().map(|c| json!({ "key": c.key(), "defensive": c.is_defensive(),
+        "enforced": Category::ENFORCED.contains(c) })).collect();
+
+    let techniques: Vec<serde_json::Value> = [
+        Technique::InitialAccess, Technique::Recon, Technique::Pivot, Technique::Kerberoast, Technique::AsRepRoast,
+        Technique::BloodHound, Technique::CredSpray, Technique::LateralMove, Technique::Exfil,
+        // ── arsenal primitives expansion techniques ──
+        Technique::Phishing, Technique::ExploitPublicApp, Technique::ValidAccounts, Technique::LsassDump,
+        Technique::Malware, Technique::C2, Technique::Persistence, Technique::Ransomware,
+    ].iter().map(|t| json!({ "key": t.as_key(), "label": t.attack_name() })).collect();
+
+    let facts: Vec<serde_json::Value> = Fact::ALL.iter().map(|f| json!({
+        "key": f.key(), "question": f.question(),
+        "side": if f.audience() == Side::Red { "Red" } else { "Blue" },
+    })).collect();
+
+    let state_flags: Vec<serde_json::Value> = [
+        StateFlag::Monitoring, StateFlag::AutoResponse, StateFlag::PathSevered, StateFlag::AesEnforced,
+        StateFlag::PreauthEnforced, StateFlag::DomainAdmin,
+        // ── arsenal primitives expansion: objective / posture flags ──
+        StateFlag::Persisted, StateFlag::C2Established, StateFlag::DataExfiltrated, StateFlag::ImpactDone,
+        StateFlag::EgressBlocked, StateFlag::BackupsReady, StateFlag::C2Blocked,
+    ].iter().map(|f| json!({ "key": f.key() })).collect();
+
+    // Probes the form can gate on. `arg` = what the form must collect for this probe.
+    let probes = json!([
+        { "key": "SawCategory", "arg": "category", "label": "Seen any activity in a tactic (cheap)" },
+        { "key": "Identified", "arg": "technique", "label": "Has a deployed detection rule for a technique" },
+        { "key": "Vuln", "arg": "technique", "label": "The attack path for a technique is planted this scenario" },
+        { "key": "Performed", "arg": "technique", "label": "The attacker has performed a technique" },
+        { "key": "Detected", "arg": "technique", "label": "Blue has an alert for a technique" },
+        { "key": "HasForwardPath", "arg": null, "label": "The attacker has a forward hop to take" },
+        { "key": "LateralPathPlanted", "arg": null, "label": "A DCSync-able ACL path exists this scenario" },
+        { "key": "CredCompromiseKnown", "arg": null, "label": "A stolen credential the defender has detected exists" },
+        { "key": "UndetectedActivity", "arg": null, "label": "Some performed technique is not yet detected" },
+        { "key": "UndetectedAlert", "arg": null, "label": "Some alert has no detection rule yet" },
+    ]);
+
+    json!({
+        "sides": ["Red", "Blue"],
+        "categories": categories,
+        "techniques": techniques,
+        "facts": facts,
+        "state_flags": state_flags,
+        "probes": probes,
+        "effects": crate::effects::effect_descriptors(),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -296,5 +416,59 @@ mod tests {
         // second evict removes red's deepest zone
         let o2 = tool.play(&mut s, &serde_json::json!({}), &mut SimEnvironment::new());
         assert!(o2.success && !s.holds("vlan20"), "second evict kicks red back to the perimeter");
+    }
+
+    #[test]
+    fn tool_round_trips_through_ron_serialization() {
+        // parse a built-in, serialize it back to RON, re-parse — must be identical.
+        let original = parse_tool(TOOL_FILES[3]).unwrap(); // kerberoast (3-node composite)
+        let ron = to_ron(&original).expect("serialize");
+        let reparsed = parse_tool(&ron).unwrap_or_else(|e| panic!("re-parse failed: {e}\n---\n{ron}"));
+        assert_eq!(serde_json::to_value(&original).unwrap(), serde_json::to_value(&reparsed).unwrap());
+    }
+
+    #[test]
+    fn registry_with_authored_includes_valid_and_skips_broken() {
+        use std::io::Write;
+        let dir = std::env::temp_dir().join(format!("pw_authored_test_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        // a valid authored move
+        let good = r#"ToolDef(id: "my_test_move", side: Blue, technique: Recon, category: Detection,
+            summary: "test", gate: [Category(fact: Monitoring, want: false)], produces: [Monitoring],
+            nodes: [ Node(id: "my_test_move", effect: SetFlag(Monitoring), ok_narrative: "on") ])"#;
+        std::fs::File::create(dir.join("my_test_move.ron")).unwrap().write_all(good.as_bytes()).unwrap();
+        // a broken authored move (bad RON)
+        std::fs::File::create(dir.join("broken.ron")).unwrap().write_all(b"ToolDef( this is not ron").unwrap();
+
+        let reg = registry_with_authored(&dir);
+        assert_eq!(reg.len(), 26, "25 built-ins + 1 valid authored (broken one skipped)");
+        assert!(reg.get("my_test_move").is_some());
+        // built-ins-only registry is unchanged
+        assert_eq!(default_registry().len(), 25);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn registry_with_authored_handles_missing_dir() {
+        let dir = std::env::temp_dir().join("pw_authored_does_not_exist_zzz");
+        let _ = std::fs::remove_dir_all(&dir);
+        let reg = registry_with_authored(&dir);
+        assert_eq!(reg.len(), 25, "missing authored dir → just the built-ins");
+    }
+
+    #[test]
+    fn vocabulary_lists_the_palette_without_produce() {
+        let v = vocabulary();
+        let effects: Vec<&str> = v["effects"].as_array().unwrap().iter().map(|e| e["key"].as_str().unwrap()).collect();
+        assert!(effects.contains(&"SetFlag") && effects.contains(&"GrantCred") && effects.contains(&"HuntGap"));
+        assert!(!effects.contains(&"Produce"), "Produce is hidden until the canvas phase");
+        // facts, probes, categories, techniques, sides all present and non-empty
+        assert_eq!(v["facts"].as_array().unwrap().len(), 19);
+        assert!(v["probes"].as_array().unwrap().len() >= 8);
+        assert!(v["categories"].as_array().unwrap().iter().any(|c| c["key"] == "harden"));
+        assert!(v["techniques"].as_array().unwrap().iter().any(|t| t["key"] == "kerberoast"));
+        assert_eq!(v["sides"].as_array().unwrap().len(), 2);
+        assert!(v["state_flags"].as_array().unwrap().iter().any(|f| f["key"] == "aes_enforced"));
     }
 }
