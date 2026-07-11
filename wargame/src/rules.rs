@@ -4,6 +4,16 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::facts::{Fact, Requirement};
+
+/// A way for red to win: red wins the moment EVERY requirement here holds at once. Reuses the
+/// same condition alphabet that gates moves — victory and legality speak one language.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WinCondition {
+    pub name: String,
+    pub all_of: Vec<Requirement>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RuleSet {
     // ── scoring weights ──
@@ -20,7 +30,7 @@ pub struct RuleSet {
 
     // ── win conditions ──
     pub max_rounds: u32,
-    pub red_wins_on_da: bool, // red reaching Domain Admin ends the game as a red win
+    pub red_win_conditions: Vec<WinCondition>, // red wins if ANY condition is fully satisfied
 }
 
 impl Default for RuleSet {
@@ -35,7 +45,33 @@ impl Default for RuleSet {
             detect_before_respond: true,
             battlefield_frozen: true,
             max_rounds: 20,
-            red_wins_on_da: true,
+            red_win_conditions: vec![WinCondition {
+                name: "domain_admin".into(),
+                all_of: vec![Requirement::have(Fact::DomainAdmin)],
+            }],
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::facts::{Fact, Requirement};
+
+    #[test]
+    fn default_ruleset_wins_on_domain_admin_only() {
+        let rs = RuleSet::default();
+        assert_eq!(rs.red_win_conditions.len(), 1);
+        assert_eq!(rs.red_win_conditions[0].name, "domain_admin");
+        assert_eq!(rs.red_win_conditions[0].all_of, vec![Requirement::have(Fact::DomainAdmin)]);
+    }
+
+    #[test]
+    fn win_condition_is_a_conjunction_of_facts() {
+        let wc = WinCondition {
+            name: "silent_heist".into(),
+            all_of: vec![Requirement::have(Fact::HasCred), Requirement::have(Fact::DomainAdmin)],
+        };
+        assert_eq!(wc.all_of.len(), 2);
     }
 }

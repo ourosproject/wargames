@@ -384,7 +384,11 @@ fn run_cli(live: bool, use_model: bool) {
             }
             println!();
             let winner = match rep.winner {
-                Some(Side::Red) => { println!("RED WINS — Domain Admin in {} rounds.", rep.round); "red" }
+                Some(Side::Red) => {
+                    let why = if state.win_reason.is_empty() { "Domain Admin".to_string() } else { state.win_reason.replace('_', " ") };
+                    println!("RED WINS — {why} in {} rounds.", rep.round);
+                    "red"
+                }
                 Some(Side::Blue) => { println!("BLUE WINS — held the line {} rounds.", rep.round); "blue" }
                 None => "",
             };

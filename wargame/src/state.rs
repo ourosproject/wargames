@@ -250,6 +250,8 @@ pub struct GameState {
     pub alerts: Vec<Alert>,
     pub scoreboard: Scoreboard,
     pub red_reached_da: bool,
+    /// The name of the win condition red satisfied (feed/report flavor).
+    pub win_reason: String,
     pub performed: Vec<Technique>,
     pub honeytokens: u32,
     /// Every red technique firing + whether/when blue detected it — drives the coverage report.
@@ -298,6 +300,7 @@ impl GameState {
             alerts: vec![],
             scoreboard: Scoreboard::default(),
             red_reached_da: false,
+            win_reason: String::new(),
             performed: vec![],
             honeytokens: 0,
             attacks: vec![],

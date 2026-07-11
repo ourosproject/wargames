@@ -71,6 +71,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -136,6 +137,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -196,6 +198,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -272,6 +275,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -333,6 +337,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -390,6 +395,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -451,6 +457,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -524,6 +531,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -602,6 +610,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -678,6 +687,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -764,6 +774,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -838,6 +849,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -907,6 +919,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -992,6 +1005,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1055,6 +1069,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1112,6 +1127,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1182,6 +1198,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1264,6 +1281,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1350,6 +1368,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1435,6 +1454,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1515,6 +1535,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1582,6 +1603,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1644,6 +1666,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1722,6 +1745,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1785,6 +1809,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1844,6 +1869,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1907,6 +1933,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -1982,6 +2009,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2062,6 +2090,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2140,6 +2169,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2226,6 +2256,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2304,6 +2335,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2382,6 +2414,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2455,6 +2488,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2520,6 +2554,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2585,6 +2620,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2653,6 +2689,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2713,6 +2750,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2773,6 +2811,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2856,6 +2895,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -2932,6 +2972,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3008,6 +3049,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3077,6 +3119,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3138,6 +3181,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3199,6 +3243,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3264,6 +3309,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3321,6 +3367,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3378,6 +3425,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3447,6 +3495,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3508,6 +3557,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3569,6 +3619,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3650,6 +3701,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3723,6 +3775,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3796,6 +3849,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3882,6 +3936,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -3960,6 +4015,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4038,6 +4094,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4122,6 +4179,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4198,6 +4256,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4274,6 +4333,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4352,6 +4412,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4417,6 +4478,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4477,6 +4539,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4553,6 +4616,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4614,6 +4678,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4671,6 +4736,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4732,6 +4798,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4805,6 +4872,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4883,6 +4951,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -4959,6 +5028,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5037,6 +5107,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5102,6 +5173,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5162,6 +5234,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5238,6 +5311,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5299,6 +5373,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5356,6 +5431,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5417,6 +5493,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5490,6 +5567,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5568,6 +5646,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5644,6 +5723,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5724,6 +5804,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5791,6 +5872,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5853,6 +5935,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5931,6 +6014,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -5994,6 +6078,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6053,6 +6138,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6116,6 +6202,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6191,6 +6278,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6271,6 +6359,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6349,6 +6438,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6434,6 +6524,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6499,6 +6590,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6559,6 +6651,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6635,6 +6728,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6696,6 +6790,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6753,6 +6848,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6814,6 +6910,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6887,6 +6984,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -6972,6 +7070,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7055,6 +7154,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7135,6 +7235,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7203,6 +7304,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7266,6 +7368,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7344,6 +7447,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7407,6 +7511,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7466,6 +7571,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7529,6 +7635,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7605,6 +7712,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7685,6 +7793,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7764,6 +7873,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7851,6 +7961,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7926,6 +8037,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -7996,6 +8108,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8082,6 +8195,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8146,6 +8260,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8206,6 +8321,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8277,6 +8393,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8360,6 +8477,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8447,6 +8565,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8533,6 +8652,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8611,6 +8731,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8676,6 +8797,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8736,6 +8858,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8812,6 +8935,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8873,6 +8997,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8930,6 +9055,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -8991,6 +9117,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9064,6 +9191,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9142,6 +9270,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9218,6 +9347,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9298,6 +9428,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9366,6 +9497,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9429,6 +9561,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9507,6 +9640,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9570,6 +9704,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9629,6 +9764,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9692,6 +9828,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9768,6 +9905,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9848,6 +9986,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -9927,6 +10066,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10007,6 +10147,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10074,6 +10215,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10136,6 +10278,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10214,6 +10357,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10277,6 +10421,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10336,6 +10481,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10399,6 +10545,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10474,6 +10621,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10554,6 +10702,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10632,6 +10781,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10710,6 +10860,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10775,6 +10926,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10835,6 +10987,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10911,6 +11064,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -10972,6 +11126,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11029,6 +11184,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11090,6 +11246,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11163,6 +11320,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11241,6 +11399,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11317,6 +11476,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11395,6 +11555,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11460,6 +11621,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11520,6 +11682,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11596,6 +11759,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11657,6 +11821,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11714,6 +11879,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11775,6 +11941,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11848,6 +12015,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -11926,6 +12094,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12002,6 +12171,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12080,6 +12250,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12136,6 +12307,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12191,6 +12363,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12267,6 +12440,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12328,6 +12502,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12385,6 +12560,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12446,6 +12622,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12510,6 +12687,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12588,6 +12766,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"
@@ -12655,6 +12834,7 @@
         "rounds": []
       },
       "seed": 0,
+      "win_reason": "",
       "zone_path": [
         "internet",
         "vlan30"

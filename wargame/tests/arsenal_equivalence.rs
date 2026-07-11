@@ -117,3 +117,32 @@ fn data_moves_match_frozen_goldens() {
         assert_eq!(&json!({ "outcome": o, "state": s }), expected, "move '{id}' drifted from golden in state '{label}' (params #{pi})");
     }
 }
+
+// Regenerate the frozen goldens from the CURRENT data registry. Run ONLY when a GameState-shape
+// change is known-benign (e.g. adding an inert field like `win_reason`): confirm the 16 built-ins'
+// play BEHAVIOR is unchanged first (a golden failure that is ONLY new/inert fields). Run with:
+//   cargo test --test arsenal_equivalence bless_goldens -- --ignored
+#[test]
+#[ignore]
+fn bless_goldens() {
+    let reg = purple_wargame::arsenal::default_registry();
+    let ids = ["initial_access", "pivot", "recon", "kerberoast", "asrep_roast", "bloodhound", "escalate_da",
+               "monitor", "active_response", "remediate_acl", "enforce_aes", "enforce_preauth", "rotate_creds", "hunt", "deploy_detection", "segment"];
+    let param_cases = |id: &str| -> Vec<Value> {
+        if id == "deploy_detection" { vec![json!({"technique":"kerberoast"}), json!({"technique":"not_a_technique"}), json!({})] } else { vec![json!({})] }
+    };
+    let mut golden = serde_json::Map::new();
+    for id in ids {
+        let card = reg.get(id).unwrap_or_else(|| panic!("no move '{id}'"));
+        for (label, state, _) in matrix() {
+            for (pi, p) in param_cases(id).into_iter().enumerate() {
+                let (o, s) = run(card, &state, &p);
+                golden.insert(format!("{id}|{label}|{pi}"), json!({ "outcome": o, "state": s }));
+            }
+        }
+    }
+    let n = golden.len();
+    std::fs::create_dir_all("tests/fixtures").unwrap();
+    std::fs::write("tests/fixtures/arsenal_goldens.json", serde_json::to_string_pretty(&Value::Object(golden)).unwrap()).unwrap();
+    eprintln!("blessed {n} golden entries");
+}
