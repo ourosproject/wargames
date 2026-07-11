@@ -34,6 +34,16 @@ pub enum Fact {
     HasCred,
     /// Red controls the DC (Domain Admin reached).
     DomainAdmin,
+    /// Red exfiltrated the crown-jewel data.
+    DataExfiltrated,
+    /// Red detonated impact (ransomware / destruction).
+    ImpactDone,
+    /// Red has a persistent implant (survives a single eviction).
+    Persisted,
+    /// Red has a live command-and-control channel.
+    C2Active,
+    /// Red has acted and blue holds NO alert for any of it — under the radar.
+    Undetected,
 
     // ── blue's defensive posture (blue-private) ──
     /// Continuous monitoring is online.
@@ -46,6 +56,12 @@ pub enum Fact {
     AesEnforced,
     /// Kerberos pre-auth enforced — AS-REP roasting yields nothing.
     PreauthEnforced,
+    /// Egress locked down / DLP — exfil can't leave.
+    EgressBlocked,
+    /// Tested offline backups ready — ransomware is a non-event.
+    BackupsReady,
+    /// The C2 destination is sinkholed / denied.
+    C2Blocked,
 }
 
 /// One row of a side-appropriate fact table: the fact, the yes/no question it answers, and
@@ -59,18 +75,26 @@ pub struct FactRow {
 
 impl Fact {
     /// Every fact, in reading order (attack chain, then posture, then observations).
-    pub const ALL: [Fact; 11] = [
+    pub const ALL: [Fact; 19] = [
         Fact::Foothold,
         Fact::ReachesDc,
         Fact::Scouted,
         Fact::PathMapped,
         Fact::HasCred,
         Fact::DomainAdmin,
+        Fact::DataExfiltrated,
+        Fact::ImpactDone,
+        Fact::Persisted,
+        Fact::C2Active,
+        Fact::Undetected,
         Fact::Monitoring,
         Fact::AutoResponse,
         Fact::PathSevered,
         Fact::AesEnforced,
         Fact::PreauthEnforced,
+        Fact::EgressBlocked,
+        Fact::BackupsReady,
+        Fact::C2Blocked,
     ];
 
     /// Stable slug — the key the prompt / registry / builder refer to a fact by.
@@ -87,6 +111,14 @@ impl Fact {
             Fact::PathSevered => "path_severed",
             Fact::AesEnforced => "aes_enforced",
             Fact::PreauthEnforced => "preauth_enforced",
+            Fact::DataExfiltrated => "data_exfiltrated",
+            Fact::ImpactDone => "impact_done",
+            Fact::Persisted => "persisted",
+            Fact::C2Active => "c2_active",
+            Fact::Undetected => "undetected",
+            Fact::EgressBlocked => "egress_blocked",
+            Fact::BackupsReady => "backups_ready",
+            Fact::C2Blocked => "c2_blocked",
         }
     }
 
@@ -104,6 +136,14 @@ impl Fact {
             Fact::PathSevered => "Has the path to Domain Admin been severed?",
             Fact::AesEnforced => "Is AES enforced (Kerberoast neutralized)?",
             Fact::PreauthEnforced => "Is Kerberos pre-auth enforced (AS-REP neutralized)?",
+            Fact::DataExfiltrated => "Have you exfiltrated the target data?",
+            Fact::ImpactDone => "Have you detonated impact (ransomware)?",
+            Fact::Persisted => "Do you hold persistence (survives a cleanup)?",
+            Fact::C2Active => "Do you have a live C2 channel?",
+            Fact::Undetected => "Are you still under the radar (no alerts on your activity)?",
+            Fact::EgressBlocked => "Is egress locked down (exfil blocked)?",
+            Fact::BackupsReady => "Are tested offline backups ready?",
+            Fact::C2Blocked => "Is the C2 destination sinkholed/blocked?",
         }
     }
 
@@ -117,7 +157,12 @@ impl Fact {
             | Fact::Scouted
             | Fact::PathMapped
             | Fact::HasCred
-            | Fact::DomainAdmin => Side::Red,
+            | Fact::DomainAdmin
+            | Fact::DataExfiltrated
+            | Fact::ImpactDone
+            | Fact::Persisted
+            | Fact::C2Active
+            | Fact::Undetected => Side::Red,
             _ => Side::Blue,
         }
     }
@@ -138,6 +183,14 @@ impl Fact {
             Fact::PathSevered => s.acl_path_fixed,
             Fact::AesEnforced => s.rc4_disabled,
             Fact::PreauthEnforced => s.preauth_required,
+            Fact::DataExfiltrated => s.data_exfiltrated,
+            Fact::ImpactDone => s.impact_done,
+            Fact::Persisted => s.red_persisted,
+            Fact::C2Active => s.c2_established,
+            Fact::Undetected => !s.performed.is_empty() && s.performed.iter().all(|t| !s.blue_knows(*t)),
+            Fact::EgressBlocked => s.egress_blocked,
+            Fact::BackupsReady => s.backups_ready,
+            Fact::C2Blocked => s.c2_blocked,
         }
     }
 
@@ -393,7 +446,7 @@ mod tests {
 
     #[test]
     fn hardcoded_detection_facts_are_retired() {
-        assert_eq!(Fact::ALL.len(), 11);
+        assert_eq!(Fact::ALL.len(), 19);
         assert!(Fact::ALL.iter().all(|f| !matches!(f.key(), "scout_detected" | "roast_detected" | "intrusion_detected")));
     }
 
@@ -447,5 +500,26 @@ mod tests {
         assert!(!r.satisfied(&s));
         s.alerts.push(Alert { round: 1, technique: Technique::Pivot, source: "x".into(), rule_id: "r".into(), level: 5 });
         assert!(r.satisfied(&s), "one branch (LateralMovement via Pivot) satisfies AnyOf");
+    }
+
+    #[test]
+    fn new_objective_and_posture_facts_hold() {
+        let mut s = base();
+        assert!(!Fact::DataExfiltrated.holds(&s));
+        s.data_exfiltrated = true;
+        assert!(Fact::DataExfiltrated.holds(&s));
+        s.red_persisted = true;
+        assert!(Fact::Persisted.holds(&s));
+        s.egress_blocked = true;
+        assert!(Fact::EgressBlocked.holds(&s));
+    }
+
+    #[test]
+    fn undetected_is_true_until_blue_holds_an_alert() {
+        let mut s = base();
+        s.performed.push(Technique::Malware);
+        assert!(Fact::Undetected.holds(&s), "red acted, blue has no alert → undetected");
+        s.alerts.push(Alert { round: 1, technique: Technique::Malware, source: "edr".into(), rule_id: "r".into(), level: 8 });
+        assert!(!Fact::Undetected.holds(&s), "blue now holds an alert → detected");
     }
 }
