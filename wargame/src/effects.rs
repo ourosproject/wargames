@@ -8,7 +8,8 @@ use serde_json::Value;
 use crate::graph::Context;
 use crate::state::{grade_rule, Alert, Cred, Detection, GameState, Technique};
 
-/// The six on/off switches the game already tracks. Each maps to one boolean on `GameState`.
+/// The on/off switches the game tracks. Each maps to one boolean on `GameState` — blue defenses
+/// and red posture/objectives alike.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum StateFlag {
     Monitoring,
@@ -17,6 +18,14 @@ pub enum StateFlag {
     AesEnforced,
     PreauthEnforced,
     DomainAdmin,
+    // ── new: red objectives / posture + blue counters ──
+    DataExfiltrated,
+    ImpactDone,
+    Persisted,
+    C2Established,
+    EgressBlocked,
+    BackupsReady,
+    C2Blocked,
 }
 
 impl StateFlag {
@@ -28,6 +37,13 @@ impl StateFlag {
             StateFlag::AesEnforced => s.rc4_disabled = true,
             StateFlag::PreauthEnforced => s.preauth_required = true,
             StateFlag::DomainAdmin => s.red_reached_da = true,
+            StateFlag::DataExfiltrated => s.data_exfiltrated = true,
+            StateFlag::ImpactDone => s.impact_done = true,
+            StateFlag::Persisted => s.red_persisted = true,
+            StateFlag::C2Established => s.c2_established = true,
+            StateFlag::EgressBlocked => s.egress_blocked = true,
+            StateFlag::BackupsReady => s.backups_ready = true,
+            StateFlag::C2Blocked => s.c2_blocked = true,
         }
     }
 }
@@ -52,6 +68,8 @@ pub enum Effect {
     DeployDetection,
     /// Cut every edge out of a zone red holds into one it doesn't.
     SeverForwardEdges,
+    /// Blue kicks red out: burns a persistent implant first, else removes red's deepest zone.
+    Evict,
     /// Write a value to the blackboard (kerberoast's early steps pass values along).
     Produce { key: String, value: Value },
 }
@@ -159,6 +177,22 @@ impl Effect {
                     state.edges.retain(|(f, t)| !(held.iter().any(|z| z == f) && !held.iter().any(|z| z == t)));
                 }
                 EffectResult { success: env_success, narrative: Some(narrative) }
+            }
+
+            Effect::Evict => {
+                if !env_success {
+                    return EffectResult { success: false, narrative: None };
+                }
+                if state.red_persisted {
+                    // persistence absorbs one eviction — burn the implant, red keeps its ground
+                    state.red_persisted = false;
+                    EffectResult { success: true, narrative: Some("evicted the host — but an implant dug back in (persistence burned)".into()) }
+                } else if let Some(i) = state.red_zones.iter().rposition(|z| z != "internet") {
+                    let z = state.red_zones.remove(i);
+                    EffectResult { success: true, narrative: Some(format!("evicted red from {z} — back on the wrong side of the wire")) }
+                } else {
+                    EffectResult { success: false, narrative: Some("nothing to evict — red holds no ground".into()) }
+                }
             }
 
             Effect::Produce { key, value } => {
@@ -286,5 +320,31 @@ mod tests {
         let r = Effect::Attempt.apply(&mut s, &mut ctx(), &Value::Null, true, "", "did it");
         assert!(r.success);
         assert_eq!(serde_json::to_value(&s).unwrap(), before);
+    }
+
+    #[test]
+    fn set_flag_sets_new_objective_and_posture_bits() {
+        let mut s = base();
+        Effect::SetFlag(StateFlag::DataExfiltrated).apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(s.data_exfiltrated);
+        Effect::SetFlag(StateFlag::Persisted).apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(s.red_persisted);
+        Effect::SetFlag(StateFlag::BackupsReady).apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(s.backups_ready);
+    }
+
+    #[test]
+    fn evict_burns_persistence_then_removes_ground() {
+        let mut s = base();
+        s.add_zone("vlan20");
+        s.add_zone("vlan30");
+        s.red_persisted = true;
+        // first evict burns the persistence; red keeps its ground
+        Effect::Evict.apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(!s.red_persisted, "first evict burns persistence");
+        assert!(s.holds("vlan30"), "…but red still holds ground");
+        // second evict removes the deepest held zone
+        Effect::Evict.apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(!s.holds("vlan30"), "second evict kicks red back");
     }
 }
