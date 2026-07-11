@@ -1,0 +1,540 @@
+# Instincts generated from https://github.com/ourosproject/wargames
+# Generated: 2026-07-11T03:13:25.664Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: wargames-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: feat, docs, test
+
+## Evidence
+
+- 11 commits analyzed
+- Detected conventional commit pattern
+- Examples: docs(wargame): move-builder (guided form) design spec, feat(wargame): data-defined compound win conditions (WinCondition; DA default)
+
+---
+id: wargames-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Commit Length
+
+## Action
+
+Write moderate-length commit messages (~75 characters)
+
+## Evidence
+
+- Average commit message length: 75 chars
+- Based on 11 commits
+
+---
+id: wargames-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Naming Files
+
+## Action
+
+Use snake_case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: snake_case
+
+---
+id: wargames-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: wargames-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: wargames-test-naming
+trigger: "when creating a test file"
+confidence: 0.85
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Test Naming
+
+## Action
+
+Name test files using the pattern: *.test.ts
+
+## Evidence
+
+- File pattern: *.test.ts
+- Consistent across test files
+
+---
+id: wargames-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~14x per month
+- Files: **/*.test.*
+
+---
+id: wargames-workflow-design-spec-and-implementation-plan-workflow
+trigger: "when doing design spec and implementation plan workflow"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Workflow Design Spec And Implementation Plan Workflow
+
+## Action
+
+Follow the design-spec-and-implementation-plan-workflow workflow:
+1. Write a design spec as a markdown file in wargame/docs/superpowers/specs/
+2. Commit the design spec with a docs(wargame): ...design spec message.
+3. Write an implementation plan as a markdown file in wargame/docs/superpowers/plans/
+4. Commit the implementation plan with a docs(wargame): ...implementation plan message.
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: wargame/docs/superpowers/specs/*.md, wargame/docs/superpowers/plans/*.md
+
+---
+id: wargames-workflow-arsenal-expansion-workflow
+trigger: "when doing arsenal expansion workflow"
+confidence: 0.55
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Workflow Arsenal Expansion Workflow
+
+## Action
+
+Follow the arsenal-expansion-workflow workflow:
+1. Create new .ron files for each new tool in wargame/tools/
+2. Update wargame/src/arsenal.rs to wire in the new tools.
+3. Update or add relevant tests in wargame/tests/ (e.g., taxonomy.rs, precondition_equivalence.rs).
+4. Update supporting files (e.g., bump arsenal count, update produces-lint logic).
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~1x per month
+- Files: wargame/tools/*.ron, wargame/src/arsenal.rs, wargame/tests/taxonomy.rs
+
+---
+id: wargames-workflow-feature-implementation-and-test-workflow
+trigger: "when doing feature implementation and test workflow"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Workflow Feature Implementation And Test Workflow
+
+## Action
+
+Follow the feature-implementation-and-test-workflow workflow:
+1. Update relevant Rust source files in wargame/src/ (e.g., main.rs, referee.rs, rules.rs, state.rs, facts.rs, effects.rs).
+2. Update or add relevant test files in wargame/tests/ (including fixtures as needed).
+3. Commit with a feat(wargame): ... message.
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: wargame/src/*.rs, wargame/tests/*.rs, wargame/tests/fixtures/*.json
+
+---
+id: wargames-workflow-test-and-balance-validation-workflow
+trigger: "when doing test and balance validation workflow"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ourosproject/wargames
+---
+
+# Wargames Workflow Test And Balance Validation Workflow
+
+## Action
+
+Follow the test-and-balance-validation-workflow workflow:
+1. Add or update test files in wargame/tests/ (e.g., compound_win.rs, balance_note.md).
+2. Commit with a test(wargame): ... message.
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: wargame/tests/*.rs, wargame/tests/*.md
+
+---
+id: wargames-instinct-file-naming
+trigger: "When creating a new file"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct File Naming
+
+## Action
+
+Name the file using snake_case
+
+## Evidence
+
+- Pattern in namingConventions.files: snake_case
+
+---
+id: wargames-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Function Naming
+
+## Action
+
+Name the function using camelCase
+
+## Evidence
+
+- Pattern in namingConventions.functions: camelCase
+
+---
+id: wargames-instinct-class-naming
+trigger: "When defining a new class or struct"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Class Naming
+
+## Action
+
+Name the class using PascalCase
+
+## Evidence
+
+- Pattern in namingConventions.classes: PascalCase
+
+---
+id: wargames-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Constant Naming
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE
+
+## Evidence
+
+- Pattern in namingConventions.constants: SCREAMING_SNAKE_CASE
+
+---
+id: wargames-instinct-import-style
+trigger: "When importing modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Import Style
+
+## Action
+
+Use relative import paths
+
+## Evidence
+
+- Pattern in importStyle: relative
+
+---
+id: wargames-instinct-export-style
+trigger: "When exporting modules or functions"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in exportStyle: named
+
+---
+id: wargames-instinct-test-file-location
+trigger: "When adding a test file"
+confidence: 0.85
+domain: testing
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Test File Location
+
+## Action
+
+Place the test file in the wargame/tests/ directory
+
+## Evidence
+
+- Pattern in testLocation: mixed
+- Example files: wargame/tests/*.rs
+
+---
+id: wargames-instinct-test-file-naming
+trigger: "When naming a test file"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Test File Naming
+
+## Action
+
+Use the pattern *.test.ts for TypeScript or *.rs for Rust
+
+## Evidence
+
+- Pattern in filePattern: *.test.ts
+- Example files: wargame/tests/*.rs
+
+---
+id: wargames-instinct-test-type
+trigger: "When writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Test Type
+
+## Action
+
+Write unit tests
+
+## Evidence
+
+- Pattern in testTypes: unit
+
+---
+id: wargames-instinct-commit-format
+trigger: "When committing code"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Commit Format
+
+## Action
+
+Use conventional commits with prefixes feat, docs, or test, followed by (wargame): and a concise message
+
+## Evidence
+
+- Pattern in commits.prefixes: feat, docs, test
+- Example: feat(wargame): data-defined compound win conditions (WinCondition; DA default)
+
+---
+id: wargames-instinct-commit-length
+trigger: "When writing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Commit Length
+
+## Action
+
+Keep the commit message around 75 characters
+
+## Evidence
+
+- Pattern in commits.averageLength: 75
+
+---
+id: wargames-instinct-design-spec-workflow
+trigger: "When proposing a significant new feature or engine change"
+confidence: 0.95
+domain: workflow
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Design Spec Workflow
+
+## Action
+
+Write a design spec in wargame/docs/superpowers/specs/ and an implementation plan in wargame/docs/superpowers/plans/, committing each with a docs(wargame): ... message
+
+## Evidence
+
+- Workflow: design-spec-and-implementation-plan-workflow
+- Example commits: docs(wargame): move-builder (guided form) design spec
+
+---
+id: wargames-instinct-arsenal-expansion-workflow
+trigger: "When adding new tools, effects, or techniques to the arsenal"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Arsenal Expansion Workflow
+
+## Action
+
+Create .ron files in wargame/tools/, update wargame/src/arsenal.rs, add or update tests in wargame/tests/, and update supporting files
+
+## Evidence
+
+- Workflow: arsenal-expansion-workflow
+- Example files: wargame/tools/*.ron, wargame/src/arsenal.rs, wargame/tests/taxonomy.rs
+
+---
+id: wargames-instinct-feature-implementation-workflow
+trigger: "When implementing a new game mechanic, rule, or fact"
+confidence: 0.88
+domain: workflow
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Feature Implementation Workflow
+
+## Action
+
+Update relevant Rust source files in wargame/src/, update or add tests in wargame/tests/, and commit with a feat(wargame): ... message
+
+## Evidence
+
+- Workflow: feature-implementation-and-test-workflow
+- Example commits: feat(wargame): objective/posture state + expanded technique alphabet
+
+---
+id: wargames-instinct-balance-validation-workflow
+trigger: "When validating correctness or measuring balance after a feature or arsenal change"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: ourosproject/wargames
+---
+
+# Wargames Instinct Balance Validation Workflow
+
+## Action
+
+Add or update test files in wargame/tests/ (including .rs and .md files), and commit with a test(wargame): ... message
+
+## Evidence
+
+- Workflow: test-and-balance-validation-workflow
+- Example commits: test(wargame): compound win proven end-to-end (silent heist: creds + exfil + undetected)
+
