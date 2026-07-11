@@ -24,11 +24,18 @@ pub struct MoveDraft {
     pub narrative: String,
     #[serde(default)]
     pub gate: Vec<GateRow>,
-    pub effect: EffectDraft,
+    /// Single-node authoring (the guided form): the one effect this move performs. Ignored when
+    /// `nodes` is non-empty (the canvas path supplies full nodes instead).
+    #[serde(default)]
+    pub effect: Option<EffectDraft>,
     #[serde(default)]
     pub detection_surface: Vec<String>,
     #[serde(default)]
     pub produces: Vec<String>,
+    /// Multi-node authoring (the node canvas): a wired DAG of steps. When present and non-empty,
+    /// this supersedes the single-node `effect`/`detection_surface`/`narrative` fields.
+    #[serde(default)]
+    pub nodes: Vec<NodeDraft>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -37,6 +44,34 @@ pub enum GateRow {
     Fact { fact: String, want: bool },
     Probe { probe: String, #[serde(default)] arg: Option<String>, want: bool },
     AnyOf { of: Vec<GateRow> },
+}
+
+/// One step of a multi-node move: an effect, optional guards, and the blackboard keys it reads
+/// (`requires`) and writes (`produces_keys`) — the wires the canvas draws between nodes.
+#[derive(Debug, Deserialize)]
+pub struct NodeDraft {
+    pub id: String,
+    #[serde(default)]
+    pub requires: Vec<String>,
+    #[serde(default)]
+    pub produces_keys: Vec<String>,
+    #[serde(default)]
+    pub guards: Vec<GuardDraft>,
+    pub effect: EffectDraft,
+    #[serde(default)]
+    pub detection_surface: Vec<String>,
+    #[serde(default)]
+    pub narrative: String,
+}
+
+/// A per-node guard: a requirement that must hold, plus the message/surface shown when it fails.
+#[derive(Debug, Deserialize)]
+pub struct GuardDraft {
+    pub req: GateRow,
+    #[serde(default)]
+    pub else_narrative: String,
+    #[serde(default)]
+    pub else_surface: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -123,7 +158,40 @@ fn build_effect(e: &EffectDraft) -> Result<Effect, String> {
         "DeployDetection" => Effect::DeployDetection,
         "SeverForwardEdges" => Effect::SeverForwardEdges,
         "Evict" => Effect::Evict,
+        // Produce wires a value onto the blackboard for a later node to read — the mechanism
+        // multi-step moves use to chain (enum → request → crack). Canvas-only.
+        "Produce" => Effect::Produce {
+            key: s("key").ok_or("Produce needs a 'key'")?,
+            value: p.get("value").cloned().unwrap_or(Value::Null),
+        },
         other => return Err(format!("unknown or unsupported effect '{other}'")),
+    })
+}
+
+/// Map a guard draft into a `Guard` (requirement + failure message/surface).
+fn build_guard(g: &GuardDraft) -> Result<Guard, String> {
+    Ok(Guard {
+        req: build_requirement(&g.req)?,
+        else_narrative: g.else_narrative.clone(),
+        else_surface: g.else_surface.iter().map(|k| technique(k)).collect::<Result<Vec<_>, _>>()?,
+    })
+}
+
+/// Map one node draft into a `Node`. The node id is sanitized like a move id (no traversal, no
+/// dots/slashes) since it appears in narratives and keys the environment call.
+fn build_node(n: &NodeDraft) -> Result<Node, String> {
+    let id = slug(&n.id);
+    if id.is_empty() {
+        return Err(format!("node id '{}' produced an empty slug — use letters or digits", n.id));
+    }
+    Ok(Node {
+        id,
+        requires: n.requires.clone(),
+        produces_keys: n.produces_keys.clone(),
+        guards: n.guards.iter().map(build_guard).collect::<Result<Vec<_>, _>>()?,
+        effect: build_effect(&n.effect)?,
+        ok_surface: n.detection_surface.iter().map(|k| technique(k)).collect::<Result<Vec<_>, _>>()?,
+        ok_narrative: n.narrative.clone(),
     })
 }
 
@@ -140,23 +208,38 @@ pub fn draft_to_tooldef(draft: &MoveDraft) -> Result<ToolDef, String> {
     let category = Category::from_key(&draft.category).ok_or_else(|| format!("unknown category '{}'", draft.category))?;
     let tech = technique(&draft.technique)?;
     let gate = draft.gate.iter().map(build_requirement).collect::<Result<Vec<_>, _>>()?;
-    let effect = build_effect(&draft.effect)?;
-    let ok_surface = draft.detection_surface.iter().map(|k| technique(k)).collect::<Result<Vec<_>, _>>()?;
     let produces = draft.produces.iter()
         .map(|k| Fact::from_key(k).ok_or_else(|| format!("unknown fact '{k}'")))
         .collect::<Result<Vec<_>, _>>()?;
-    // DeployDetection carries a params schema (it reads params.technique at play time).
-    let params_schema = if matches!(effect, Effect::DeployDetection) {
+
+    // Two authoring paths → one node list. The canvas supplies full `nodes`; the guided form
+    // supplies a single top-level `effect`. Both produce the same `Vec<Node>`.
+    let nodes = if !draft.nodes.is_empty() {
+        let nodes = draft.nodes.iter().map(build_node).collect::<Result<Vec<_>, _>>()?;
+        let mut seen = std::collections::HashSet::new();
+        for n in &nodes {
+            if !seen.insert(n.id.clone()) {
+                return Err(format!("duplicate node id '{}' — each step needs a distinct id", n.id));
+            }
+        }
+        nodes
+    } else {
+        let effect = build_effect(draft.effect.as_ref().ok_or("a move needs an effect (or a `nodes` list)")?)?;
+        let ok_surface = draft.detection_surface.iter().map(|k| technique(k)).collect::<Result<Vec<_>, _>>()?;
+        vec![Node {
+            id: id.clone(), requires: vec![], produces_keys: vec![], guards: Vec::<Guard>::new(),
+            effect, ok_surface, ok_narrative: draft.narrative.clone(),
+        }]
+    };
+
+    // DeployDetection reads params.technique at play time, so any move containing it needs the schema.
+    let params_schema = if nodes.iter().any(|n| matches!(n.effect, Effect::DeployDetection)) {
         Some(json!({ "type": "object", "properties": { "technique": { "type": "string" } }, "required": ["technique"] }))
     } else { None };
 
     Ok(ToolDef {
-        id: id.clone(), side, technique: tech, category, summary: draft.summary.clone(),
-        gate, produces, params_schema,
-        nodes: vec![Node {
-            id, requires: vec![], produces_keys: vec![], guards: Vec::<Guard>::new(),
-            effect, ok_surface, ok_narrative: draft.narrative.clone(),
-        }],
+        id, side, technique: tech, category, summary: draft.summary.clone(),
+        gate, produces, params_schema, nodes,
     })
 }
 
@@ -229,9 +312,10 @@ mod tests {
                 GateRow::Fact { fact: "aes_enforced".into(), want: false },
                 GateRow::Probe { probe: "Identified".into(), arg: Some("kerberoast".into()), want: true },
             ],
-            effect: EffectDraft { kind: "SetFlag".into(), params: json!({ "flag": "aes_enforced" }) },
+            effect: Some(EffectDraft { kind: "SetFlag".into(), params: json!({ "flag": "aes_enforced" }) }),
             detection_surface: vec![],
             produces: vec!["aes_enforced".into()],
+            nodes: vec![],
         }
     }
 
@@ -291,6 +375,89 @@ mod tests {
         let errs = check(&bad, &reg).unwrap_err();
         assert!(errs.iter().any(|e| e.contains("path_severed")), "got {errs:?}");
         assert!(!dir.exists(), "check must not create the dir or write anything");
+    }
+
+    /// A kerberoast-shaped 3-node draft: enum_spns (Produce spn_targets) → request_tgs
+    /// (requires spn_targets, Produce tgs_hash) → crack_hash (requires tgs_hash, GrantCred,
+    /// guarded on AES-not-enforced). This is the canonical multi-step move the canvas authors.
+    fn composite_draft() -> MoveDraft {
+        MoveDraft {
+            name: "My Roast".into(), side: "Red".into(), category: "credential_access".into(),
+            technique: "kerberoast".into(), summary: "roast".into(), narrative: String::new(),
+            gate: vec![GateRow::Fact { fact: "reaches_dc".into(), want: true }],
+            effect: None,
+            detection_surface: vec![],
+            produces: vec!["has_cred".into()],
+            nodes: vec![
+                NodeDraft {
+                    id: "enum_spns".into(), requires: vec![], produces_keys: vec!["spn_targets".into()],
+                    guards: vec![],
+                    effect: EffectDraft { kind: "Produce".into(), params: json!({ "key": "spn_targets", "value": ["MSSQLSvc/dc01"] }) },
+                    detection_surface: vec!["recon".into()], narrative: "found SPNs".into(),
+                },
+                NodeDraft {
+                    id: "request_tgs".into(), requires: vec!["spn_targets".into()], produces_keys: vec!["tgs_hash".into()],
+                    guards: vec![],
+                    effect: EffectDraft { kind: "Produce".into(), params: json!({ "key": "tgs_hash", "value": "$krb5tgs$" }) },
+                    detection_surface: vec!["kerberoast".into()], narrative: "got TGS".into(),
+                },
+                NodeDraft {
+                    id: "crack_hash".into(), requires: vec!["tgs_hash".into()], produces_keys: vec![],
+                    guards: vec![GuardDraft {
+                        req: GateRow::Fact { fact: "aes_enforced".into(), want: false },
+                        else_narrative: "AES enforced — ticket uncrackable".into(), else_surface: vec![],
+                    }],
+                    effect: EffectDraft { kind: "GrantCred".into(), params: json!({ "principal": "range\\svc", "secret": "pw", "via": "kerberoast" }) },
+                    detection_surface: vec![], narrative: "cracked".into(),
+                },
+            ],
+        }
+    }
+
+    #[test]
+    fn multi_node_draft_maps_validates_and_round_trips() {
+        let def = draft_to_tooldef(&composite_draft()).expect("map composite");
+        assert_eq!(def.id, "my_roast");
+        assert_eq!(def.nodes.len(), 3, "three wired nodes");
+        assert_eq!(def.nodes[0].produces_keys, vec!["spn_targets".to_string()]);
+        assert_eq!(def.nodes[1].requires, vec!["spn_targets".to_string()]);
+        assert_eq!(def.nodes[2].requires, vec!["tgs_hash".to_string()]);
+        assert_eq!(def.nodes[2].guards.len(), 1, "crack step keeps its AES guard");
+        assert!(matches!(def.nodes[2].effect, Effect::GrantCred { .. }));
+        // the DAG resolves + no dangling reads + leaves-behind holds
+        arsenal::validate(&def).expect("composite validates");
+        // round-trips through RON identically
+        let ron = to_ron(&def).expect("serialize");
+        let reparsed = arsenal::parse_tool(&ron).unwrap_or_else(|e| panic!("re-parse: {e}\n{ron}"));
+        assert_eq!(serde_json::to_value(&def).unwrap(), serde_json::to_value(&reparsed).unwrap());
+    }
+
+    #[test]
+    fn multi_node_rejects_a_dangling_wire() {
+        // request_tgs requires a key nothing produces → arsenal::validate must reject it.
+        let dir = std::env::temp_dir().join(format!("pw_builder_dangle_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let reg = arsenal::registry_with_authored(&dir);
+        let mut d = composite_draft();
+        d.nodes[1].requires = vec!["nonexistent_key".into()];
+        let errs = check(&d, &reg).unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("nonexistent_key")), "got {errs:?}");
+    }
+
+    #[test]
+    fn multi_node_rejects_duplicate_node_ids() {
+        let mut d = composite_draft();
+        d.nodes[1].id = "enum_spns".into(); // collide with node 0
+        let err = draft_to_tooldef(&d).unwrap_err();
+        assert!(err.contains("enum_spns") && err.to_lowercase().contains("dupl"), "got {err}");
+    }
+
+    #[test]
+    fn single_node_path_still_works_when_no_nodes_given() {
+        // back-compat: the existing /build form posts a top-level effect and no `nodes`.
+        let def = draft_to_tooldef(&draft()).expect("single-node still maps");
+        assert_eq!(def.nodes.len(), 1);
+        assert_eq!(def.nodes[0].id, "my_test_move");
     }
 
     #[test]
