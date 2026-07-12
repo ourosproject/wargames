@@ -75,6 +75,33 @@ impl Category {
         }
     }
 
+    /// Inverse of `key()`.
+    pub fn from_key(k: &str) -> Option<Category> {
+        Some(match k {
+            "initial_access" => Category::InitialAccess,
+            "discovery" => Category::Discovery,
+            "credential_access" => Category::CredentialAccess,
+            "privilege_escalation" => Category::PrivilegeEscalation,
+            "lateral_movement" => Category::LateralMovement,
+            "exfiltration" => Category::Exfiltration,
+            "detection" => Category::Detection,
+            "defense_evasion" => Category::DefenseEvasion,
+            "reconnaissance" => Category::Reconnaissance,
+            "resource_development" => Category::ResourceDevelopment,
+            "execution" => Category::Execution,
+            "persistence" => Category::Persistence,
+            "collection" => Category::Collection,
+            "command_and_control" => Category::CommandAndControl,
+            "impact" => Category::Impact,
+            "harden" => Category::Harden,
+            "isolate" => Category::Isolate,
+            "evict" => Category::Evict,
+            "deceive" => Category::Deceive,
+            "model" => Category::Model,
+            _ => return None,
+        })
+    }
+
     /// Position in the linear kill chain; `None` for cross-cutting lanes.
     pub fn chain_order(&self) -> Option<u8> {
         match self {
@@ -154,5 +181,13 @@ mod tests {
         assert_eq!(Category::Harden.chain_order(), None);
         assert!(Category::Detection.is_defensive());
         assert!(!Category::DefenseEvasion.is_defensive());
+    }
+
+    #[test]
+    fn category_from_key_round_trips() {
+        for c in [Category::Harden, Category::Isolate, Category::Evict, Category::CredentialAccess, Category::Detection] {
+            assert_eq!(Category::from_key(c.key()), Some(c));
+        }
+        assert_eq!(Category::from_key("nope"), None);
     }
 }

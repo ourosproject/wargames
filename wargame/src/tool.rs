@@ -2,7 +2,7 @@
 //! by `DataTool`, which implements the existing `Card` trait. The interpreter runs the steps in
 //! dependency order, exactly reproducing the old hand-written `play()` bodies.
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::card::{Card, Environment, Outcome};
@@ -12,7 +12,7 @@ use crate::facts::{Fact, Requirement};
 use crate::graph::{resolve_order_keys, Context};
 use crate::state::{GameState, Side, Technique};
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Guard {
     pub req: Requirement,
     pub else_narrative: String,
@@ -20,7 +20,7 @@ pub struct Guard {
     pub else_surface: Vec<Technique>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Node {
     pub id: String,
     #[serde(default)]
@@ -35,7 +35,7 @@ pub struct Node {
     pub ok_narrative: String,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ToolDef {
     pub id: String,
     pub side: Side,

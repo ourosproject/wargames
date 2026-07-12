@@ -1,0 +1,10 @@
+ToolDef(
+    id: "deploy_implant", side: Red, technique: Persistence, category: Persistence,
+    summary: "Drop a persistent implant — outlives a single eviction, so a sweep won't shake us",
+    gate: [Category(fact: Foothold, want: true), Category(fact: Persisted, want: false)],
+    produces: [Persisted],
+    nodes: [ Node(
+        id: "deploy_implant", effect: SetFlag(Persisted), ok_surface: [Persistence, Malware],
+        ok_narrative: "implant tucked into a run-key — we'll be back even if they reimage the box",
+    ) ],
+)

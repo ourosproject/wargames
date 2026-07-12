@@ -1,0 +1,10 @@
+ToolDef(
+    id: "phish", side: Red, technique: Phishing, category: InitialAccess,
+    summary: "Phish a user for the first foothold — a quieter way in than kicking down the front door",
+    gate: [Category(fact: Foothold, want: false), Instance(probe: HasForwardPath, want: true)],
+    produces: [Foothold],
+    nodes: [ Node(
+        id: "phish", effect: Advance, ok_surface: [Phishing],
+        ok_narrative: "spear-phish landed — someone clicked the invoice, and we're inside",
+    ) ],
+)

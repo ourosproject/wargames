@@ -1,0 +1,14 @@
+ToolDef(
+    id: "establish_c2", side: Red, technique: C2, category: CommandAndControl,
+    summary: "Beacon out to command-and-control — dies if the egress to C2 is sinkholed",
+    gate: [Category(fact: Foothold, want: true), Category(fact: C2Active, want: false)],
+    produces: [C2Active],
+    nodes: [ Node(
+        id: "establish_c2",
+        guards: [ Guard(req: Category(fact: C2Blocked, want: false),
+            else_narrative: "C2 sinkholed at the egress — the beacon's screaming into the void",
+            else_surface: [C2]) ],
+        effect: SetFlag(C2Established), ok_surface: [C2],
+        ok_narrative: "C2 online — low-and-slow beacon out to a domain nobody's watching",
+    ) ],
+)

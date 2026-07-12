@@ -47,7 +47,7 @@ fn each_card_has_the_expected_category() {
 fn data_arsenal_loads_and_passes_all_checks() {
     // default_registry panics if any file fails per-move or set validation.
     let reg = purple_wargame::arsenal::default_registry();
-    assert_eq!(reg.len(), 16, "all 16 moves load");
+    assert_eq!(reg.len(), 25, "all 25 moves load (16 base + 9 primitives-expansion)");
 }
 
 #[test]

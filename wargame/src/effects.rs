@@ -8,7 +8,8 @@ use serde_json::Value;
 use crate::graph::Context;
 use crate::state::{grade_rule, Alert, Cred, Detection, GameState, Technique};
 
-/// The six on/off switches the game already tracks. Each maps to one boolean on `GameState`.
+/// The on/off switches the game tracks. Each maps to one boolean on `GameState` — blue defenses
+/// and red posture/objectives alike.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum StateFlag {
     Monitoring,
@@ -17,9 +18,57 @@ pub enum StateFlag {
     AesEnforced,
     PreauthEnforced,
     DomainAdmin,
+    // ── new: red objectives / posture + blue counters ──
+    DataExfiltrated,
+    ImpactDone,
+    Persisted,
+    C2Established,
+    EgressBlocked,
+    BackupsReady,
+    C2Blocked,
 }
 
 impl StateFlag {
+    /// Stable slug for this flag (matches the surfaced fact key it flips).
+    pub fn key(&self) -> &'static str {
+        match self {
+            StateFlag::Monitoring => "monitoring",
+            StateFlag::AutoResponse => "auto_response",
+            StateFlag::PathSevered => "path_severed",
+            StateFlag::AesEnforced => "aes_enforced",
+            StateFlag::PreauthEnforced => "preauth_enforced",
+            StateFlag::DomainAdmin => "domain_admin",
+            // ── arsenal primitives expansion: objective / posture flags (key = the fact each flips) ──
+            StateFlag::Persisted => "persisted",
+            StateFlag::C2Established => "c2_active",
+            StateFlag::DataExfiltrated => "data_exfiltrated",
+            StateFlag::ImpactDone => "impact_done",
+            StateFlag::EgressBlocked => "egress_blocked",
+            StateFlag::BackupsReady => "backups_ready",
+            StateFlag::C2Blocked => "c2_blocked",
+        }
+    }
+
+    /// Inverse of `key()`.
+    pub fn from_key(k: &str) -> Option<StateFlag> {
+        Some(match k {
+            "monitoring" => StateFlag::Monitoring,
+            "auto_response" => StateFlag::AutoResponse,
+            "path_severed" => StateFlag::PathSevered,
+            "aes_enforced" => StateFlag::AesEnforced,
+            "preauth_enforced" => StateFlag::PreauthEnforced,
+            "domain_admin" => StateFlag::DomainAdmin,
+            "persisted" => StateFlag::Persisted,
+            "c2_active" => StateFlag::C2Established,
+            "data_exfiltrated" => StateFlag::DataExfiltrated,
+            "impact_done" => StateFlag::ImpactDone,
+            "egress_blocked" => StateFlag::EgressBlocked,
+            "backups_ready" => StateFlag::BackupsReady,
+            "c2_blocked" => StateFlag::C2Blocked,
+            _ => return None,
+        })
+    }
+
     fn set(&self, s: &mut GameState) {
         match self {
             StateFlag::Monitoring => s.monitoring = true,
@@ -28,6 +77,13 @@ impl StateFlag {
             StateFlag::AesEnforced => s.rc4_disabled = true,
             StateFlag::PreauthEnforced => s.preauth_required = true,
             StateFlag::DomainAdmin => s.red_reached_da = true,
+            StateFlag::DataExfiltrated => s.data_exfiltrated = true,
+            StateFlag::ImpactDone => s.impact_done = true,
+            StateFlag::Persisted => s.red_persisted = true,
+            StateFlag::C2Established => s.c2_established = true,
+            StateFlag::EgressBlocked => s.egress_blocked = true,
+            StateFlag::BackupsReady => s.backups_ready = true,
+            StateFlag::C2Blocked => s.c2_blocked = true,
         }
     }
 }
@@ -52,6 +108,8 @@ pub enum Effect {
     DeployDetection,
     /// Cut every edge out of a zone red holds into one it doesn't.
     SeverForwardEdges,
+    /// Blue kicks red out: burns a persistent implant first, else removes red's deepest zone.
+    Evict,
     /// Write a value to the blackboard (kerberoast's early steps pass values along).
     Produce { key: String, value: Value },
 }
@@ -161,12 +219,60 @@ impl Effect {
                 EffectResult { success: env_success, narrative: Some(narrative) }
             }
 
+            Effect::Evict => {
+                if !env_success {
+                    return EffectResult { success: false, narrative: None };
+                }
+                if state.red_persisted {
+                    // persistence absorbs one eviction — burn the implant, red keeps its ground
+                    state.red_persisted = false;
+                    EffectResult { success: true, narrative: Some("evicted the host — but an implant dug back in (persistence burned)".into()) }
+                } else if let Some(i) = state.red_zones.iter().rposition(|z| z != "internet") {
+                    let z = state.red_zones.remove(i);
+                    EffectResult { success: true, narrative: Some(format!("evicted red from {z} — back on the wrong side of the wire")) }
+                } else {
+                    EffectResult { success: false, narrative: Some("nothing to evict — red holds no ground".into()) }
+                }
+            }
+
             Effect::Produce { key, value } => {
                 ctx.set(key, value.clone());
                 EffectResult { success: env_success, narrative: None }
             }
         }
     }
+}
+
+/// Palette metadata for the builder: each authorable effect (Produce is excluded — it is only
+/// meaningful inside a multi-step chain, which the guided form does not build). `params` names
+/// the fields the form must collect; `kind` tells the form which input to render.
+pub fn effect_descriptors() -> Vec<serde_json::Value> {
+    use serde_json::json;
+    vec![
+        json!({ "key": "Attempt", "label": "Perform the technique (no state change)",
+                "desc": "Just performs the technique; the referee records it (this is how recon/bloodhound leave 'scouted' behind).", "params": [] }),
+        json!({ "key": "Advance", "label": "Move one zone closer",
+                "desc": "Takes the next forward hop toward the objective. Use {dest} in the narrative for the zone name.", "params": [] }),
+        json!({ "key": "SetFlag", "label": "Flip a defense/progress switch on",
+                "desc": "Turns one on/off switch true (e.g. AES enforced, path severed, monitoring).",
+                "params": [ { "name": "flag", "kind": "state_flag" } ] }),
+        json!({ "key": "GrantCred", "label": "Steal a credential",
+                "desc": "Adds a cracked credential.",
+                "params": [ { "name": "principal", "kind": "text" }, { "name": "secret", "kind": "text", "optional": true }, { "name": "via", "kind": "technique" } ] }),
+        json!({ "key": "RevokeKnownCreds", "label": "Cancel detected stolen credentials",
+                "desc": "Cancels any cracked credential whose technique the defender has already detected. It decides which — no parameters.", "params": [] }),
+        json!({ "key": "HuntGap", "label": "Threat-hunt for the top undetected technique",
+                "desc": "Finds the highest-value technique the attacker performed but you haven't detected, and surfaces it. It picks the target itself — no parameters.", "params": [] }),
+        json!({ "key": "DeployDetection", "label": "Write a detection rule",
+                "desc": "Writes a graded detection rule for a technique (the move takes a 'technique' parameter at play time).", "params": [] }),
+        json!({ "key": "SeverForwardEdges", "label": "Cut the network in front of the attacker",
+                "desc": "Drops the attacker's forward network edges. It computes which — no parameters.", "params": [] }),
+        json!({ "key": "Evict", "label": "Evict the attacker from a host",
+                "desc": "Kicks the attacker off its deepest foothold — but a persistent implant absorbs the first eviction (burns the implant instead). It decides what to remove — no parameters.", "params": [] }),
+        json!({ "key": "Produce", "label": "Produce a value for a later step",
+                "desc": "Writes a value onto the move's blackboard under a key, so a later node can require it. This is how a multi-step move chains (enum → request → crack). Canvas moves only.",
+                "params": [ { "name": "key", "kind": "text" }, { "name": "value", "kind": "text" } ] }),
+    ]
 }
 
 #[cfg(test)]
@@ -280,11 +386,45 @@ mod tests {
     }
 
     #[test]
+    fn state_flag_from_key_round_trips() {
+        for (k, want) in [("monitoring", StateFlag::Monitoring), ("path_severed", StateFlag::PathSevered), ("domain_admin", StateFlag::DomainAdmin)] {
+            assert_eq!(StateFlag::from_key(k), Some(want));
+        }
+        assert_eq!(StateFlag::from_key("nope"), None);
+    }
+
+    #[test]
     fn attempt_changes_no_state() {
         let mut s = base();
         let before = serde_json::to_value(&s).unwrap();
         let r = Effect::Attempt.apply(&mut s, &mut ctx(), &Value::Null, true, "", "did it");
         assert!(r.success);
         assert_eq!(serde_json::to_value(&s).unwrap(), before);
+    }
+
+    #[test]
+    fn set_flag_sets_new_objective_and_posture_bits() {
+        let mut s = base();
+        Effect::SetFlag(StateFlag::DataExfiltrated).apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(s.data_exfiltrated);
+        Effect::SetFlag(StateFlag::Persisted).apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(s.red_persisted);
+        Effect::SetFlag(StateFlag::BackupsReady).apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(s.backups_ready);
+    }
+
+    #[test]
+    fn evict_burns_persistence_then_removes_ground() {
+        let mut s = base();
+        s.add_zone("vlan20");
+        s.add_zone("vlan30");
+        s.red_persisted = true;
+        // first evict burns the persistence; red keeps its ground
+        Effect::Evict.apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(!s.red_persisted, "first evict burns persistence");
+        assert!(s.holds("vlan30"), "…but red still holds ground");
+        // second evict removes the deepest held zone
+        Effect::Evict.apply(&mut s, &mut ctx(), &Value::Null, true, "", "");
+        assert!(!s.holds("vlan30"), "second evict kicks red back");
     }
 }

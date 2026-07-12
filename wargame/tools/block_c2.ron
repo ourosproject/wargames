@@ -1,0 +1,8 @@
+ToolDef(
+    id: "block_c2", side: Blue, technique: C2, category: Isolate,
+    summary: "Sinkhole/deny the C2 destination — cuts the beacon dead",
+    gate: [Instance(probe: SawCategory(CommandAndControl), want: true), Category(fact: C2Blocked, want: false)],
+    produces: [C2Blocked],
+    nodes: [ Node(id: "block_c2", effect: SetFlag(C2Blocked), ok_surface: [],
+        ok_narrative: "C2 domain sinkholed at the resolver — the beacon's talking to nobody") ],
+)

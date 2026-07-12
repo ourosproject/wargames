@@ -15,6 +15,7 @@
 //! See `wargame/WARGAME.md` for the full design spec.
 
 pub mod arsenal;
+pub mod builder;
 pub mod card;
 pub mod category;
 pub mod effects;
