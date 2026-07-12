@@ -24,6 +24,15 @@ pub enum Technique {
     CredSpray,
     LateralMove,
     Exfil,
+    // ── expanded alphabet: break-in variants, a cred variant, and the new families ──
+    Phishing,
+    ExploitPublicApp,
+    ValidAccounts,
+    LsassDump,
+    Malware,
+    C2,
+    Persistence,
+    Ransomware,
 }
 
 impl Technique {
@@ -38,6 +47,14 @@ impl Technique {
             Technique::CredSpray => "credspray",
             Technique::LateralMove => "lateral",
             Technique::Exfil => "exfil",
+            Technique::Phishing => "phishing",
+            Technique::ExploitPublicApp => "exploit",
+            Technique::ValidAccounts => "valid_accounts",
+            Technique::LsassDump => "lsass_dump",
+            Technique::Malware => "malware",
+            Technique::C2 => "c2",
+            Technique::Persistence => "persistence",
+            Technique::Ransomware => "ransomware",
         }
     }
     pub fn from_key(s: &str) -> Option<Technique> {
@@ -51,6 +68,14 @@ impl Technique {
             "credspray" => Technique::CredSpray,
             "lateral" => Technique::LateralMove,
             "exfil" => Technique::Exfil,
+            "phishing" => Technique::Phishing,
+            "exploit" => Technique::ExploitPublicApp,
+            "valid_accounts" => Technique::ValidAccounts,
+            "lsass_dump" => Technique::LsassDump,
+            "malware" => Technique::Malware,
+            "c2" => Technique::C2,
+            "persistence" => Technique::Persistence,
+            "ransomware" => Technique::Ransomware,
             _ => return None,
         })
     }
@@ -62,6 +87,10 @@ impl Technique {
             Technique::InitialAccess => 6,
             Technique::Pivot => 5,
             Technique::Recon => 3,
+            Technique::LsassDump | Technique::Ransomware => 9,
+            Technique::Persistence => 8,
+            Technique::Malware | Technique::C2 => 7,
+            Technique::Phishing | Technique::ExploitPublicApp | Technique::ValidAccounts => 6,
             _ => 4,
         }
     }
@@ -77,6 +106,14 @@ impl Technique {
             Technique::CredSpray => "T1110.003",
             Technique::LateralMove => "T1003.006",
             Technique::Exfil => "T1041",
+            Technique::Phishing => "T1566",
+            Technique::ExploitPublicApp => "T1190",
+            Technique::ValidAccounts => "T1078",
+            Technique::LsassDump => "T1003.001",
+            Technique::Malware => "T1204",
+            Technique::C2 => "T1071",
+            Technique::Persistence => "T1547",
+            Technique::Ransomware => "T1486",
         }
     }
     pub fn attack_name(&self) -> &'static str {
@@ -90,6 +127,14 @@ impl Technique {
             Technique::CredSpray => "Password Spraying",
             Technique::LateralMove => "DCSync (OS Credential Dumping)",
             Technique::Exfil => "Exfiltration Over C2",
+            Technique::Phishing => "Phishing",
+            Technique::ExploitPublicApp => "Exploit Public-Facing App",
+            Technique::ValidAccounts => "Valid Accounts",
+            Technique::LsassDump => "LSASS Memory Dump",
+            Technique::Malware => "Malware Execution",
+            Technique::C2 => "Command & Control",
+            Technique::Persistence => "Persistence (autostart)",
+            Technique::Ransomware => "Data Encrypted for Impact",
         }
     }
     /// The ATT&CK tactic (kill-chain stage) this technique belongs to.
@@ -102,6 +147,12 @@ impl Technique {
             Technique::Kerberoast | Technique::AsRepRoast | Technique::CredSpray
                 | Technique::LateralMove => Category::CredentialAccess,
             Technique::Exfil => Category::Exfiltration,
+            Technique::Phishing | Technique::ExploitPublicApp | Technique::ValidAccounts => Category::InitialAccess,
+            Technique::LsassDump => Category::CredentialAccess,
+            Technique::Malware => Category::Execution,
+            Technique::C2 => Category::CommandAndControl,
+            Technique::Persistence => Category::Persistence,
+            Technique::Ransomware => Category::Impact,
         }
     }
     /// The telemetry a detection for this technique should key on — so a GAP names the rule to write.
@@ -116,6 +167,14 @@ impl Technique {
             Technique::CredSpray => "Security 4625/4771 · many accounts, one source",
             Technique::LateralMove => "Security 4662 · DS-Replication-Get-Changes GUIDs",
             Technique::Exfil => "netflow · DLP · large egress",
+            Technique::Phishing => "mail gateway · attachment/link detonation",
+            Technique::ExploitPublicApp => "WAF/edge · anomalous request → shell",
+            Technique::ValidAccounts => "4624 type-10 from a new geo/asset",
+            Technique::LsassDump => "Sysmon 10 · handle to lsass.exe",
+            Technique::Malware => "EDR · unsigned binary / script child proc",
+            Technique::C2 => "netflow · beaconing to a rare destination",
+            Technique::Persistence => "autoruns · new run-key / service / task",
+            Technique::Ransomware => "mass file-rename entropy spike · shadow-copy delete",
         }
     }
 }
@@ -250,6 +309,8 @@ pub struct GameState {
     pub alerts: Vec<Alert>,
     pub scoreboard: Scoreboard,
     pub red_reached_da: bool,
+    /// The name of the win condition red satisfied (feed/report flavor).
+    pub win_reason: String,
     pub performed: Vec<Technique>,
     pub honeytokens: u32,
     /// Every red technique firing + whether/when blue detected it — drives the coverage report.
@@ -266,6 +327,17 @@ pub struct GameState {
     pub preauth_required: bool,
     /// The Helpdesk->GenericAll->DA path removed / admins tiered — the escalation is gone.
     pub acl_path_fixed: bool,
+
+    // ── red objectives (goals reached, beyond DA) ──
+    pub data_exfiltrated: bool,
+    pub impact_done: bool,
+    // ── red posture (mirrors blue's; persistence resists eviction) ──
+    pub red_persisted: bool,
+    pub c2_established: bool,
+    // ── blue counters to the new red primitives ──
+    pub egress_blocked: bool,
+    pub backups_ready: bool,
+    pub c2_blocked: bool,
 
     // ── the scenario: this match's environment (see `scenario` module) ──
     pub scenario: String,
@@ -298,6 +370,7 @@ impl GameState {
             alerts: vec![],
             scoreboard: Scoreboard::default(),
             red_reached_da: false,
+            win_reason: String::new(),
             performed: vec![],
             honeytokens: 0,
             attacks: vec![],
@@ -306,6 +379,13 @@ impl GameState {
             rc4_disabled: false,
             preauth_required: false,
             acl_path_fixed: false,
+            data_exfiltrated: false,
+            impact_done: false,
+            red_persisted: false,
+            c2_established: false,
+            egress_blocked: false,
+            backups_ready: false,
+            c2_blocked: false,
             // default scenario = the classic weak-svc lab (overridden per match via `apply_scenario`)
             scenario: "flat-net · weak service acct".into(),
             seed: 0,
@@ -476,5 +556,29 @@ mod tests {
         for t in [InitialAccess, Recon, Pivot, Kerberoast, AsRepRoast, BloodHound, CredSpray, LateralMove, Exfil] {
             assert!(!t.category().is_defensive(), "attack technique must map to an attack category");
         }
+    }
+
+    #[test]
+    fn new_state_has_no_new_objectives_or_posture() {
+        let s = GameState::new(vec![]);
+        assert!(!s.data_exfiltrated && !s.impact_done && !s.red_persisted && !s.c2_established);
+        assert!(!s.egress_blocked && !s.backups_ready && !s.c2_blocked);
+    }
+
+    #[test]
+    fn new_techniques_round_trip_and_categorize() {
+        use crate::category::Category;
+        for t in [Technique::Phishing, Technique::ExploitPublicApp, Technique::ValidAccounts,
+                  Technique::LsassDump, Technique::Malware, Technique::C2,
+                  Technique::Persistence, Technique::Ransomware] {
+            assert_eq!(Technique::from_key(t.as_key()), Some(t), "round-trip {}", t.as_key());
+            assert!(!t.attack_id().is_empty());
+            assert!(!t.category().is_defensive(), "attack technique must map to an attack category");
+        }
+        assert_eq!(Technique::Phishing.category(), Category::InitialAccess);
+        assert_eq!(Technique::Ransomware.category(), Category::Impact);
+        assert_eq!(Technique::C2.category(), Category::CommandAndControl);
+        assert_eq!(Technique::Persistence.category(), Category::Persistence);
+        assert_eq!(Technique::LsassDump.category(), Category::CredentialAccess);
     }
 }

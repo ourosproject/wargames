@@ -354,9 +354,13 @@ impl Referee {
                 }
             }
 
-            if self.rules.red_wins_on_da && state.red_reached_da {
-                finished = true;
-                winner = Some(Side::Red);
+            for wc in &self.rules.red_win_conditions {
+                if wc.all_of.iter().all(|r| r.satisfied(state)) {
+                    finished = true;
+                    winner = Some(Side::Red);
+                    state.win_reason = wc.name.clone();
+                    break;
+                }
             }
         }
 

@@ -1,0 +1,8 @@
+ToolDef(
+    id: "block_egress", side: Blue, technique: Exfil, category: Isolate,
+    summary: "Lock down egress / DLP — nothing large leaves the network (kills exfil)",
+    gate: [Instance(probe: SawCategory(Exfiltration), want: true), Category(fact: EgressBlocked, want: false)],
+    produces: [EgressBlocked],
+    nodes: [ Node(id: "block_egress", effect: SetFlag(EgressBlocked), ok_surface: [],
+        ok_narrative: "egress filtered to a whitelist — the crown jewels stay put") ],
+)

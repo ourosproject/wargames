@@ -1,0 +1,14 @@
+ToolDef(
+    id: "exfil_data", side: Red, technique: Exfil, category: Exfiltration,
+    summary: "Stage and exfiltrate the crown-jewel data — dies if egress is locked down",
+    gate: [Category(fact: HasCred, want: true), Category(fact: DataExfiltrated, want: false)],
+    produces: [DataExfiltrated],
+    nodes: [ Node(
+        id: "exfil_data",
+        guards: [ Guard(req: Category(fact: EgressBlocked, want: false),
+            else_narrative: "egress filtered to a whitelist — the data isn't leaving the building",
+            else_surface: [Exfil]) ],
+        effect: SetFlag(DataExfiltrated), ok_surface: [Exfil],
+        ok_narrative: "data staged and shipped out over the wire — the crown jewels are gone",
+    ) ],
+)

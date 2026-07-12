@@ -1,0 +1,14 @@
+ToolDef(
+    id: "ransomware", side: Red, technique: Ransomware, category: Impact,
+    summary: "Detonate ransomware across the estate — worthless the moment they have clean backups",
+    gate: [Category(fact: Foothold, want: true), Category(fact: ImpactDone, want: false)],
+    produces: [ImpactDone],
+    nodes: [ Node(
+        id: "ransomware",
+        guards: [ Guard(req: Category(fact: BackupsReady, want: false),
+            else_narrative: "they had clean offline backups — restore in progress, the extortion's a bust",
+            else_surface: [Ransomware]) ],
+        effect: SetFlag(ImpactDone), ok_surface: [Ransomware],
+        ok_narrative: "everything's encrypted, shadow copies deleted — bitcoin or bust",
+    ) ],
+)

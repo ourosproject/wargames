@@ -1,0 +1,8 @@
+ToolDef(
+    id: "backups", side: Blue, technique: Ransomware, category: Harden,
+    summary: "Ready tested, offline backups — makes ransomware a shrug instead of a crisis",
+    gate: [Category(fact: BackupsReady, want: false)],
+    produces: [BackupsReady],
+    nodes: [ Node(id: "backups", effect: SetFlag(BackupsReady), ok_surface: [],
+        ok_narrative: "offline backups verified — if they encrypt us, we just roll back") ],
+)
